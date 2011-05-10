@@ -31,6 +31,9 @@ setopt AUTOCD
 # ls colors
 export CLICOLOR=1
 
+# less case-insensitive search, colors, line numbers
+export LESS='-iNR'
+
 # output colored grep
 export GREP_OPTIONS='--color=auto' 
 export GREP_COLOR='7;31'
@@ -41,7 +44,6 @@ export GREP_COLOR='7;31'
 # basic shortcuts
 alias ..='cd ..'
 alias -- -='cd -'
-alias -- --='cd +2'
 alias ls='ls -AF'
 
 # show history
@@ -55,6 +57,9 @@ alias start_pg="su - postgres -c '/usr/local/Cellar/postgresql/9.0.3/bin/pg_ctl 
 alias stop_pg="su - postgres -c '/usr/local/Cellar/postgresql/9.0.3/bin/pg_ctl stop -D /usr/local/Cellar/postgresql/9.0.3/data'"
 alias redis-server="~/software/redis-2.2.6/src/redis-server"
 alias redis-cli="~/software/redis-2.2.6/src/redis-cli"
+
+# rails-specific
+alias ss='script/server'
 
 # make cd do an ls afterwards
 function chpwd() {

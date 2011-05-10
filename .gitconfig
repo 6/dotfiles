@@ -1,0 +1,18 @@
+[user]
+	name = Peter Graham
+	email = INSERT_EMAIL
+[github]
+	user = 6
+	token = INSERT_TOKEN
+[core]
+	pager = less
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+[alias]
+	ci = commit
+	co = checkout
+	br = branch
+	st = status
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
