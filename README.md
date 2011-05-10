@@ -12,7 +12,7 @@ Use colemak bindings for less/more/man:
 
     lesskey
 
-Edit the email and token values in `.gitconfig` with the followinj commands:
+Edit the email and token values in `.gitconfig` with the following commands:
 
     git config --global user.email YOUR_EMAIL
     git config --global github.token YOUR_TOKEN
