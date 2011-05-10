@@ -18,4 +18,3 @@ Edit the email and token values in `.gitconfig` with the followinj commands:
     git config --global github.token YOUR_TOKEN
 
 That's it!
-

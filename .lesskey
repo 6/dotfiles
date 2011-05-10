@@ -8,6 +8,3 @@ E back-scroll
 
 k forw-search
 K back-search
-
-# make less search case insensitive and 
-LESS=-iR
