@@ -6,6 +6,10 @@ Installation
 ============
 Change default shell to ZSH:
 
-    chsh -s /bin/zsh
+    chsh -s `which zsh`
 
+Use colemak bindings for less/more/man:
 
+    lesskey
+
+That's it!
