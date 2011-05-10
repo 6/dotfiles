@@ -1,0 +1,10 @@
+# colemak bindings for less/more/man
+# run 'lesskey' to activate
+n forw-line
+e back-line
+
+N forw-scroll
+E back-scroll
+
+k forw-search
+K back-search
