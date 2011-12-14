@@ -1,14 +1,10 @@
-Overview
-========
-My dotfiles. Sloppily put together, taking random pieces from various other public dotfiles, but it works. This is more for my own use than anything.
-
 Installation
 ============
 Change default shell to ZSH:
 
     chsh -s `which zsh`
 
-Use colemak bindings for less/more/man:
+Use colemak bindings for less/more/man ([see here](http://apple.stackexchange.com/questions/27269/is-less1-missing-lesskey-functionality) for Mac OS X Lion lesskey info):
 
     lesskey
 
