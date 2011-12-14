@@ -6,6 +6,7 @@
 	token = INSERT_TOKEN
 [core]
 	pager = less
+	editor = /usr/bin/vim
 [color]
 	diff = auto
 	status = auto
