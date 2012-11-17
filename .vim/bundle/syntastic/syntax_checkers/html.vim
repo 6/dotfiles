@@ -14,23 +14,16 @@ if exists("loaded_html_syntax_checker")
 endif
 let loaded_html_syntax_checker = 1
 
-"bail if the user doesnt have tidy or grep installed
-if !executable("tidy") || !executable("grep")
-    finish
+if !exists('g:syntastic_html_checker')
+    let g:syntastic_html_checker = "tidy"
 endif
 
-function! SyntaxCheckers_html_GetLocList()
-
-    "grep out the '<table> lacks "summary" attribute' since it is almost
-    "always present and almost always useless
-    let makeprg="tidy --new-blocklevel-tags 'section, article, aside, hgroup, header, footer, nav, figure, figcaption' --new-inline-tags 'video, audio, embed, mark, progress, meter, time, ruby, rt, rp, canvas, command, details, datalist' --new-empty-tags 'wbr, keygen' -e ".shellescape(expand('%'))." 2>&1 \\| grep -v '\<table\> lacks \"summary\" attribute' \\| grep -v 'not approved by W3C'"
-    let errorformat='%Wline %l column %c - Warning: %m,%Eline %l column %c - Error: %m,%-G%.%#,%-G%.%#'
-    let loclist = SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
-
-    "the file name isnt in the output so stick in the buf num manually
-    for i in loclist
-        let i['bufnr'] = bufnr("")
-    endfor
-
-    return loclist
-endfunction
+if g:syntastic_html_checker == "tidy"
+    if executable("tidy") && executable("grep")
+        runtime! syntax_checkers/html/tidy.vim
+    endif
+elseif g:syntastic_html_checker == "w3"
+    if executable("curl") && executable("sed")
+        runtime! syntax_checkers/html/w3.vim
+    endif
+endif

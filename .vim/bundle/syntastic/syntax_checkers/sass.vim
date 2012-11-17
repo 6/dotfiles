@@ -19,15 +19,25 @@ if !executable("sass")
     finish
 endif
 
-function! SyntaxCheckers_sass_GetLocList()
-    let makeprg='sass --check '.shellescape(expand('%'))
-    let errorformat = '%Wwarning on line %l:,%Z%m,Syntax %trror on line %l: %m'
-    let loclist = SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
+"By default do not check partials as unknown variables are a syntax error
+if !exists("g:syntastic_sass_check_partials")
+    let g:syntastic_sass_check_partials = 0
+endif
 
-    let bn = bufnr("")
-    for i in loclist
-        let i['bufnr'] = bn
-    endfor
+"use compass imports if available
+let s:imports = ""
+if executable("compass")
+    let s:imports = "--compass"
+endif
+
+function! SyntaxCheckers_sass_GetLocList()
+    if !g:syntastic_sass_check_partials && expand('%:t')[0] == '_'
+        return []
+    end
+    let makeprg='sass --no-cache '.s:imports.' --check '.shellescape(expand('%'))
+    let errorformat = '%ESyntax %trror:%m,%C        on line %l of %f,%Z%.%#'
+    let errorformat .= ',%Wwarning on line %l:,%Z%m,Syntax %trror on line %l: %m'
+    let loclist = SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
 
     return loclist
 endfunction

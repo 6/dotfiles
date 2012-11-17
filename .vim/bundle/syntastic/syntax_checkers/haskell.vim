@@ -9,22 +9,23 @@
 "             See http://sam.zoy.org/wtfpl/COPYING for more details.
 "
 "============================================================================
-if exists("loaded_haskell_syntax_checker")
+if exists('g:loaded_haskell_syntax_checker')
     finish
 endif
-let loaded_haskell_syntax_checker = 1
+let g:loaded_haskell_syntax_checker = 1
 
-"bail if the user doesnt have ghc installed
-if !executable("ghc")
-    finish
+if !exists('g:syntastic_haskell_checker')
+    if executable('hdevtools')
+        runtime! syntax_checkers/haskell/hdevtools.vim
+    elseif executable('ghc-mod')
+        runtime! syntax_checkers/haskell/ghc-mod.vim
+    endif
+elseif g:syntastic_haskell_checker == 'hdevtools'
+    if executable('hdevtools')
+        runtime! syntax_checkers/haskell/hdevtools.vim
+    endif
+elseif g:syntastic_haskell_checker == 'ghc-mod'
+    if executable('ghc-mod')
+        runtime! syntax_checkers/haskell/ghc-mod.vim
+    endif
 endif
-
-" As this calls ghc, it can take a few seconds... maybe hlint or something
-" could do a good enough job?
-function! SyntaxCheckers_haskell_GetLocList()
-    let makeprg = 'ghc '.shellescape(expand('%')).' -e :q'
-    let errorformat = '%-G\\s%#,%f:%l:%c:%m,%E%f:%l:%c:,%Z%m,'
-
-
-    return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
-endfunction
