@@ -1,16 +1,7 @@
-Installation
-============
-Change default shell to ZSH:
+Update bash to version 4 for autocd:
 
-    chsh -s `which zsh`
+    brew install bash
+    sudo bash -c "echo /usr/local/bin/bash >> /private/etc/shells"
+    chsh -s /usr/local/bin/bash
 
-Use colemak bindings for less/more/man ([see here](http://apple.stackexchange.com/questions/27269/is-less1-missing-lesskey-functionality) for Mac OS X Lion lesskey info):
-
-    lesskey
-
-Edit the email and token values in `.gitconfig` with the following commands:
-
-    git config --global user.email YOUR_EMAIL
-    git config --global github.token YOUR_TOKEN
-
-That's it!
+`rake install` to add symlinks to home directory, and `rake uninstall` to remove them.
