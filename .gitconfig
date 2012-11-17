@@ -1,4 +1,6 @@
 [alias]
+	# Amend without prompting for message
+	amend = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
 	b = branch
 	co = checkout
 	d = diff
