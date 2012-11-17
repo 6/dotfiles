@@ -1,20 +1,21 @@
 # From https://github.com/holman/dotfiles (MIT)
 require 'rake'
 
+current_directory_dotfiles = '\.[^\.]*'
+
 desc "Hook our dotfiles into system-standard positions."
 task :install do
-  linkables = Dir.glob('**/*{.symlink}')
-
   skip_all = false
   overwrite_all = false
   backup_all = false
 
-  linkables.each do |linkable|
+  Dir.glob(current_directory_dotfiles).each do |file|
+    next  if %w[.DS_Store .git].include?(file)
+
     overwrite = false
     backup = false
 
-    file = linkable.split('/').last.split('.symlink').last
-    target = "#{ENV["HOME"]}/.#{file}"
+    target = "#{ENV["HOME"]}/#{file}"
 
     if File.exists?(target) || File.symlink?(target)
       unless skip_all || overwrite_all || backup_all
@@ -29,18 +30,17 @@ task :install do
         end
       end
       FileUtils.rm_rf(target) if overwrite || overwrite_all
-      `mv "$HOME/.#{file}" "$HOME/.#{file}.backup"` if backup || backup_all
+      `mv "$HOME/#{file}" "$HOME/#{file}.backup"` if backup || backup_all
     end
-    `ln -s "$PWD/#{linkable}" "#{target}"`
+    `ln -s "$PWD/#{file}" "#{target}"`
   end
 end
 
 task :uninstall do
 
-  Dir.glob('**/*.symlink').each do |linkable|
+  Dir.glob(current_directory_dotfiles).each do |file|
 
-    file = linkable.split('/').last.split('.symlink').last
-    target = "#{ENV["HOME"]}/.#{file}"
+    target = "#{ENV["HOME"]}/#{file}"
 
     # Remove all symlinks created during installation
     if File.symlink?(target)
@@ -48,8 +48,8 @@ task :uninstall do
     end
 
     # Replace any backups made during installation
-    if File.exists?("#{ENV["HOME"]}/.#{file}.backup")
-      `mv "$HOME/.#{file}.backup" "$HOME/.#{file}"`
+    if File.exists?("#{ENV["HOME"]}/#{file}.backup")
+      `mv "$HOME/#{file}.backup" "$HOME/#{file}"`
     end
 
   end
