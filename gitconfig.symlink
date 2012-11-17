@@ -1,20 +1,21 @@
-[user]
-	name = Peter Graham
-	email = INSERT_EMAIL
-[github]
-	user = 6
-	token = INSERT_TOKEN
-[core]
-	pager = less
-	editor = /usr/bin/vim
-[color]
-	diff = auto
-	status = auto
-	branch = auto
 [alias]
-	ci = commit
+	b = branch
 	co = checkout
-	br = branch
-	st = status
-	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-	sn = status --untracked-files=no
+	d = diff
+	l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	p = push
+	s = status
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+[core]
+	excludesfile = ~/.gitignore
+[credential]
+	helper = osxkeychain
+[push]
+	default = current
+[user]
+	email = peterghm@gmail.com
+	name = Peter Graham
