@@ -4,7 +4,10 @@
 	b = branch
 	co = checkout
 	d = diff
+	fc = !sh -c 'git ll | grep \"$1\"' -
+	ff = !sh -c 'git ll -S$1' -
 	l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	ll = log --oneline --decorate
 	p = push
 	s = status
 [color]
