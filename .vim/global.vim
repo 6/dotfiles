@@ -21,10 +21,10 @@ set ruler               " line and column number of the cursor position
 set wildmenu            " enhanced command completion
 set laststatus=2        " always show the status line
 hi SpellErrors guibg=red guifg=black ctermbg=red ctermfg=black " highlight spell errors
-" status line
-set statusline=%<%1*%f%*\ %h%m%r%#warningmsg#%{SyntasticStatuslineFlag()}%*%=%-14.(%l,%c%V%)\ %P
-" highlihgt status line file name
-hi User1 term=bold,reverse cterm=bold ctermfg=4 ctermbg=2 gui=bold guifg=Blue guibg=#44aa00
+colorscheme eclipse
+" column marker
+set colorcolumn=80
+hi ColorColumn guibg=#fafafa
 
 " behavior
 " ignore these files when completing names and in explorer
