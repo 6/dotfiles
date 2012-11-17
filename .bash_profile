@@ -9,7 +9,6 @@ export PAGER=less
 alias ..="cd .."
 alias -- -="cd -"
 alias ls="ls -aGp"
-alias g="git"
 alias history='fc -l 1'
 
 # `cd` just by typing folder name and hitting enter
