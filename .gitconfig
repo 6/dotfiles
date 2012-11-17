@@ -4,6 +4,7 @@
 	b = branch
 	co = checkout
 	d = diff
+	dm = !sh -c 'git diff HEAD~$1 HEAD' -
 	fc = !sh -c 'git ll | grep \"$1\"' -
 	ff = !sh -c 'git ll -S$1' -
 	l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
