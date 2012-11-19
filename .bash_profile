@@ -17,7 +17,13 @@ shopt -s autocd
 # Load RVM into a shell session *as a function*
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
+command_exists () {
+  type "$1" &> /dev/null ;
+}
+
 # Add more colors
-source "`brew --prefix grc`/etc/grc.bashrc"
+if command_exists brew ; then
+  source "`brew --prefix grc`/etc/grc.bashrc"
+fi
 
 cat $HOME/.misc/ascii_totoro
