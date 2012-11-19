@@ -8,7 +8,11 @@ export PAGER=less
 
 alias ..="cd .."
 alias -- -="cd -"
-alias ls="ls -aGp"
+if [[ `uname` == 'Linux' ]] ; then
+  alias ls="ls -ap --color=auto"
+else
+  alias ls="ls -aGp"
+fi
 alias history='fc -l 1'
 
 # `cd` just by typing folder name and hitting enter
