@@ -1,11 +1,11 @@
 PS1='\[\e[0;34m\]\w\[\e[m\] '
 
-export GIT_PS1_SHOWDIRTYSTATE=1
 export PATH=/Applications/Postgres.app/Contents/MacOS/bin:$HOME/.rvm/bin:$HOME/bin:/usr/local/bin:$PATH
 export EDITOR=vim
 export GREP_OPTIONS='--color=auto'
 export LESS='-iNR'
 export PAGER=less
+export GIT_PS1_SHOWDIRTYSTATE=1
 
 alias ..="cd .."
 alias -- -="cd -"
