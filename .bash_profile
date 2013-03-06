@@ -1,5 +1,6 @@
 PS1='\[\e[0;34m\]\w\[\e[m\] '
 
+export GIT_PS1_SHOWDIRTYSTATE=1
 export PATH=/Applications/Postgres.app/Contents/MacOS/bin:$HOME/.rvm/bin:$HOME/bin:/usr/local/bin:$PATH
 export EDITOR=vim
 export GREP_OPTIONS='--color=auto'
@@ -25,9 +26,13 @@ command_exists () {
   type "$1" &> /dev/null ;
 }
 
-# Add more colors
+# Add more colors and git branch
 if command_exists brew ; then
   source "`brew --prefix grc`/etc/grc.bashrc"
+  if [ -f `brew --prefix`/etc/bash_completion.d/git-prompt.sh ]; then
+    source `brew --prefix`/etc/bash_completion.d/git-prompt.sh
+    PS1='\[\e[0;34m\]\w\[\e[m\] \[\033[31m\]$(__git_ps1 "(%s) ")\[\033[00m\]'
+  fi
 fi
 
 cat $HOME/.misc/ascii_totoro
