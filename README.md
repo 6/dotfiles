@@ -10,7 +10,7 @@ Add some fancy colors to command output:
     
 Bash and Git completion, including Git branch in PS1:
 
-    brew install git bash-completion
+    brew install bash-completion
 
 If you have RVM installed, the following will enable `ls` after `cd`:
 
