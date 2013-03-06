@@ -31,7 +31,7 @@ if command_exists brew ; then
   source "`brew --prefix grc`/etc/grc.bashrc"
   if [ -f `brew --prefix`/etc/bash_completion.d/git-prompt.sh ]; then
     source `brew --prefix`/etc/bash_completion.d/git-prompt.sh
-    PS1='\[\e[0;34m\]\w\[\e[m\] \[\033[31m\]$(__git_ps1 "(%s) ")\[\033[00m\]'
+    PS1='\[\e[0;34m\]\w\[\e[m\] \[\033[31m\]$(__git_ps1 "%s ")\[\033[00m\]'
   fi
 fi
 
