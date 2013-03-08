@@ -7,10 +7,10 @@ Update bash to version 4 for autocd:
 Add some fancy colors to command output:
 
     brew install grc
-    
+
 Bash and Git completion, including Git branch in PS1:
 
-    brew install bash-completion
+    brew install git bash-completion
 
 If you have RVM installed, the following will enable `ls` after `cd`:
 
