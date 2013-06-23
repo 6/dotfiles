@@ -35,4 +35,5 @@ if command_exists brew ; then
   fi
 fi
 
+source $HOME/dotfiles/z.sh
 cat $HOME/.misc/ascii_totoro
