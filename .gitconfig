@@ -18,6 +18,7 @@
 	status = auto
 [core]
 	excludesfile = ~/.gitignore
+	editor = "/usr/bin/vim"
 [credential]
 	helper = osxkeychain
 [push]
@@ -25,3 +26,6 @@
 [user]
 	email = peterghm@gmail.com
 	name = Peter Graham
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
