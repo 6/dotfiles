@@ -7,3 +7,7 @@
 # ZSH
 
 Install [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
+
+# Font
+
+Install [Meslo](https://github.com/andreberg/Meslo-Font)
