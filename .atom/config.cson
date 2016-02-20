@@ -17,9 +17,12 @@
     softWrap: true
   "exception-reporting":
     userId: "ec786d8d-e1a4-ea9b-6ead-1ce10d21b220"
+  "highlight-selected": {}
   linter: {}
   "linter-erb": {}
   "linter-haml": {}
+  "linter-jshint": {}
+  "linter-ruby": {}
   "linter-scss-lint": {}
   "package-sync":
     forceOverwrite: true

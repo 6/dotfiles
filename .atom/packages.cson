@@ -1,5 +1,8 @@
 packages: [
+  "angularjs"
   "atom-beautify"
+  "highlight-selected"
+  "language-babel"
   "language-haml"
   "linter"
   "linter-erb"
