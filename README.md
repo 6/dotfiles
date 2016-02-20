@@ -18,4 +18,8 @@ Install [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
 
 # Atom
 
-Install [Atom](https://atom.io/) and install the [parcel](https://atom.io/packages/parcel) plugin for it, which will automatically install all other plugins.
+Install [Atom](https://atom.io/) and install the [package-sync](https://atom.io/packages/package-sync) package.
+
+- Sync all packages with Cmd+Shift+P > `Package Sync: Sync`
+- After installing a new package, update the list with Cmd+Shift+P > `Package Sync: Create Package List`
+
