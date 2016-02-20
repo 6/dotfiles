@@ -1,0 +1,25 @@
+"*":
+  core:
+    audioBeep: false
+    destroyEmptyPanes: false
+    packagesWithKeymapsDisabled: [
+      "term2"
+    ]
+    themes: [
+      "atom-light-ui"
+      "atom-light-syntax"
+    ]
+  editor:
+    invisibles: {}
+    scrollSensitivity: 80
+    softWrap: true
+  "exception-reporting":
+    userId: "ec786d8d-e1a4-ea9b-6ead-1ce10d21b220"
+  pigments: {}
+  rspec:
+    command: "zeus test"
+  term2: {}
+  "tree-view": {}
+  welcome:
+    showOnStartup: false
+  whitespace: {}
