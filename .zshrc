@@ -13,11 +13,6 @@ eval "$(rbenv init -)"
 export NVM_DIR=~/.nvm
 . $(brew --prefix nvm)/nvm.sh
 
-# LS after CD:
-function chpwd() {
-  ls -A
-}
-
 source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
