@@ -1,5 +1,6 @@
 "*":
-  "atom-beautify": {}
+  "atom-beautify":
+    analytics: false
   core:
     audioBeep: false
     destroyEmptyPanes: false
