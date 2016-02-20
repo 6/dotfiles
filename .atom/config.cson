@@ -12,6 +12,7 @@
       "atom-light-syntax"
     ]
   editor:
+    fontFamily: "Meslo LG M DZ"
     invisibles: {}
     scrollSensitivity: 80
     softWrap: true
