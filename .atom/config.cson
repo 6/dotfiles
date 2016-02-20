@@ -1,4 +1,5 @@
 "*":
+  "atom-beautify": {}
   core:
     audioBeep: false
     destroyEmptyPanes: false
@@ -15,6 +16,8 @@
     softWrap: true
   "exception-reporting":
     userId: "ec786d8d-e1a4-ea9b-6ead-1ce10d21b220"
+  "package-sync":
+    forceOverwrite: true
   pigments: {}
   rspec:
     command: "zeus test"
