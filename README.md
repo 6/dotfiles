@@ -1,5 +1,9 @@
 `rake install` to add symlinks to home directory, and `rake uninstall` to remove them.
 
+# Font
+
+Install [Meslo](https://github.com/andreberg/Meslo-Font)
+
 # iTerm2
 
 Point preferences to dotfiles directory:
@@ -11,7 +15,3 @@ Then quit and reopen iTerm.
 # ZSH
 
 Install [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
-
-# Font
-
-Install [Meslo](https://github.com/andreberg/Meslo-Font)
