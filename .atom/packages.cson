@@ -8,7 +8,6 @@ packages: [
   "linter-erb"
   "linter-haml"
   "linter-jshint"
-  "linter-ruby"
   "linter-scss-lint"
   "package-sync"
   "pigments"
