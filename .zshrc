@@ -18,6 +18,13 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 plugins=(bundler git)
 
+function web_search() {
+  emulate -L zsh
+  url="https://www.google.com/search?q=${(j:+:)@[2,-1]}"
+  open_command "$url"
+}
+
+alias google='web_search google'
 alias youtube-mp3="youtube-dl --extract-audio --audio-format mp3"
 
 eval "$(rbenv init -)"
