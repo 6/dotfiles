@@ -23,3 +23,5 @@ else
 fi
 
 cat $HOME/.misc/ascii_totoro
+
+alias youtube-mp3="youtube-dl --extract-audio --audio-format mp3"
