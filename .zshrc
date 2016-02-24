@@ -24,6 +24,7 @@ function web_search() {
   open_command "$url"
 }
 
+alias a="atom ."
 alias google='web_search google'
 alias youtube-mp3="youtube-dl --extract-audio --audio-format mp3"
 
