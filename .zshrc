@@ -33,4 +33,10 @@ alias youtube-mp3="youtube-dl --extract-audio --audio-format mp3"
 eval "$(rbenv init -)"
 . $(brew --prefix nvm)/nvm.sh
 source $ZSH/oh-my-zsh.sh
+
+# Load machine-specific ZSH configuration (if present)
+if [ -f ~/.zsh_custom ]; then
+  source ~/.zsh_custom
+fi
+
 cat $HOME/.misc/ascii_totoro
