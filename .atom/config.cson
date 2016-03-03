@@ -24,6 +24,10 @@
   pigments: {}
   rspec:
     command: "zeus test"
+  "svg-preview": {}
+  tablr:
+    csvEditor: {}
+    tableEditor: {}
   term2: {}
   "tree-view": {}
   welcome:

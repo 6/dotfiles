@@ -10,4 +10,6 @@ packages: [
   "rspec"
   "ruby-block"
   "Sublime-Style-Column-Selection"
+  "svg-preview"
+  "tablr"
 ]
