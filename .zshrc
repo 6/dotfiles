@@ -26,8 +26,6 @@ function web_search() {
 
 alias a="atom ."
 alias google='web_search google'
-alias lolping="ping 104.160.131.1"
-alias lolpingeuw="ping 185.40.65.1"
 alias youtube-mp3="youtube-dl --extract-audio --audio-format mp3"
 
 eval "$(rbenv init -)"
