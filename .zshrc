@@ -26,7 +26,7 @@ function web_search() {
 
 alias a="atom ."
 alias google='web_search google'
-alias youtube-mp3="youtube-dl --extract-audio --audio-format mp3"
+alias mp3="youtube-dl --extract-audio --audio-format mp3"
 
 eval "$(rbenv init -)"
 . $(brew --prefix nvm)/nvm.sh
