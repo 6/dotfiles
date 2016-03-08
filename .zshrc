@@ -3,13 +3,7 @@ export UPDATE_ZSH_DAYS=7
 export NVM_DIR=~/.nvm
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
-
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='vim'
-fi
+export EDITOR='vim'
 
 # Set name of the theme to load ( ~/.oh-my-zsh/themes/ )
 ZSH_THEME="robbyrussell"
