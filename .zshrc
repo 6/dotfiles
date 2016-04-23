@@ -1,5 +1,5 @@
 export ZSH=/Users/petergraham/.oh-my-zsh
-export UPDATE_ZSH_DAYS=7
+export UPDATE_ZSH_DAYS=30
 export NVM_DIR=~/.nvm
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
