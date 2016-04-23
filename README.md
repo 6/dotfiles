@@ -22,4 +22,3 @@ Install [Atom](https://atom.io/) and install the [package-sync](https://atom.io/
 
 - Sync all packages with Cmd+Shift+P > `Package Sync: Sync`
 - After installing a new package, update the list with Cmd+Shift+P > `Package Sync: Create Package List`
-
