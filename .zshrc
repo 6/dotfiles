@@ -31,4 +31,5 @@ if [ -f ~/.zsh_custom ]; then
   source ~/.zsh_custom
 fi
 
-cat $HOME/.misc/ascii_totoro
+ASCII=("totoro" "beach" "stars") 
+cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
