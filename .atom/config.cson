@@ -23,7 +23,7 @@
     forceOverwrite: true
   pigments: {}
   rspec:
-    command: "zeus test"
+    command: "bundle exec zeus test"
   "svg-preview": {}
   tablr:
     csvEditor: {}
