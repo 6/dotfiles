@@ -26,6 +26,7 @@
 [user]
 	email = peterghm@gmail.com
 	name = Peter Graham
+	signingkey = 61299CA3
 [filter "media"]
 	clean = git-media-clean %f
 	smudge = git-media-smudge %f
@@ -33,3 +34,5 @@
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
 	required = true
+[commit]
+	gpgsign = true

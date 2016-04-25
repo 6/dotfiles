@@ -1,22 +1,16 @@
 export ZSH=/Users/petergraham/.oh-my-zsh
-export UPDATE_ZSH_DAYS=7
+export UPDATE_ZSH_DAYS=30
 export NVM_DIR=~/.nvm
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
-
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='vim'
-fi
+export EDITOR='vim'
 
 # Set name of the theme to load ( ~/.oh-my-zsh/themes/ )
 ZSH_THEME="robbyrussell"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(bundler git)
+plugins=(bundler git git-extras)
 
 function web_search() {
   emulate -L zsh
@@ -26,7 +20,7 @@ function web_search() {
 
 alias a="atom ."
 alias google='web_search google'
-alias youtube-mp3="youtube-dl --extract-audio --audio-format mp3"
+alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
 
 eval "$(rbenv init -)"
 . $(brew --prefix nvm)/nvm.sh
@@ -37,4 +31,5 @@ if [ -f ~/.zsh_custom ]; then
   source ~/.zsh_custom
 fi
 
-cat $HOME/.misc/ascii_totoro
+ASCII=("totoro" "beach" "stars") 
+cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
