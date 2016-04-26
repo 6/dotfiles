@@ -28,3 +28,6 @@
 
 'atom-text-editor':
   'alt-x': 'command-palette:toggle'
+'body':
+    'cmd-q': 'core:save'
+    'cmd-q cmd-q': 'application:quit'
