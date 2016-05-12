@@ -4,6 +4,7 @@ export NVM_DIR=~/.nvm
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 export EDITOR='vim'
+export GOPATH="$HOME/go"
 
 # Set name of the theme to load ( ~/.oh-my-zsh/themes/ )
 ZSH_THEME="robbyrussell"
