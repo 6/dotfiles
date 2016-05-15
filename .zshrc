@@ -32,5 +32,5 @@ if [ -f ~/.zsh_custom ]; then
   source ~/.zsh_custom
 fi
 
-ASCII=("totoro" "beach" "stars") 
+ASCII=("totoro" "beach" "stars")
 cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
