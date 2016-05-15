@@ -22,6 +22,7 @@ function web_search() {
 alias a="atom ."
 alias google='web_search google'
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
+alias screenshot="screencapture -x -t png ~/Desktop/screenshot-$(date +"%Y-%m-%d-%H-%M-%S").png"
 
 eval "$(rbenv init -)"
 . $(brew --prefix nvm)/nvm.sh
