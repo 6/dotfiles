@@ -19,10 +19,15 @@ function web_search() {
   open_command "$url"
 }
 
+function screenshot() {
+  local seconds=0
+  if [[ $1 ]]; then seconds=$1; fi
+  screencapture -x -T $seconds -t png ~/Desktop/screenshot-$(date +"%Y-%m-%d-%H-%M-%S").png
+}
+
 alias a="atom ."
 alias google='web_search google'
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
-alias screenshot="screencapture -x -t png ~/Desktop/screenshot-$(date +"%Y-%m-%d-%H-%M-%S").png"
 
 eval "$(rbenv init -)"
 . $(brew --prefix nvm)/nvm.sh
