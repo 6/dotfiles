@@ -28,6 +28,7 @@ function screenshot() {
 alias a="atom ."
 alias google='web_search google'
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
+alias vid="youtube-dl"
 
 eval "$(rbenv init -)"
 . $(brew --prefix nvm)/nvm.sh
