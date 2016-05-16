@@ -29,6 +29,7 @@ alias a="atom ."
 alias google='web_search google'
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
 alias vid="youtube-dl"
+alias most="du -hs * | gsort -rh | head -10"
 
 eval "$(rbenv init -)"
 . $(brew --prefix nvm)/nvm.sh
