@@ -12,4 +12,5 @@ packages: [
   "Sublime-Style-Column-Selection"
   "svg-preview"
   "tablr"
+  "wakatime"
 ]

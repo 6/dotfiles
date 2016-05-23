@@ -30,6 +30,8 @@
     tableEditor: {}
   term2: {}
   "tree-view": {}
+  wakatime:
+    apikey: "2e3fc603-2d4b-4d99-bb3b-08a84c3e3b06"
   welcome:
     showOnStartup: false
   whitespace: {}
