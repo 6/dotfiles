@@ -48,3 +48,9 @@ atom-text-editor, atom-text-editor::shadow {
     border-color: #bbb;
   }
 }
+
+// Temporary fix for https://github.com/atom/tree-view/issues/473
+atom-text-editor[mini] {
+  height: auto;
+  max-height: none;
+}
