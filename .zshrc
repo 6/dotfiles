@@ -3,6 +3,7 @@ export UPDATE_ZSH_DAYS=30
 export NVM_DIR=~/.nvm
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
+export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/tools:$PATH"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
 
