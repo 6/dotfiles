@@ -3,7 +3,9 @@
     general:
       analytics: false
   core:
+    allowPendingPaneItems: false
     audioBeep: false
+    closeEmptyWindows: false
     destroyEmptyPanes: false
     packagesWithKeymapsDisabled: [
       "term2"
