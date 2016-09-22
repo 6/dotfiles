@@ -33,6 +33,7 @@ alias vid="youtube-dl"
 alias most="du -hs * | gsort -rh | head -10"
 
 eval "$(rbenv init -)"
+[[ -s "$HOME/.avn/bin/avn.sh" ]] && source "$HOME/.avn/bin/avn.sh" # load avn
 . $(brew --prefix nvm)/nvm.sh
 source $ZSH/oh-my-zsh.sh
 
