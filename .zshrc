@@ -1,6 +1,6 @@
 export ZSH=/Users/petergraham/.oh-my-zsh
 export UPDATE_ZSH_DAYS=30
-export NVM_DIR="$HOME/.nvm"
+export N_PREFIX="$HOME/n"
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/tools:$PATH"
@@ -33,7 +33,7 @@ alias vid="youtube-dl"
 alias most="du -hs * | gsort -rh | head -10"
 
 eval "$(rbenv init -)"
-[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh" # load nvm
+[[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
 [[ -s "$HOME/.avn/bin/avn.sh" ]] && source "$HOME/.avn/bin/avn.sh" # load avn
 source $ZSH/oh-my-zsh.sh
 
