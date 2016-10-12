@@ -12,3 +12,8 @@ Thumbs.db
 node_modules
 npm-debug.log
 venv
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
