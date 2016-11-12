@@ -10,6 +10,7 @@
     packagesWithKeymapsDisabled: [
       "term2"
     ]
+    telemetryConsent: "no"
     themes: [
       "atom-light-ui"
       "atom-light-syntax"
@@ -36,7 +37,7 @@
   wakatime:
     apikey: "Saved in your ~/.wakatime.cfg file"
   "wakatime-hidden":
-    lastInit: 1474512477
+    lastInit: 1478869051
   welcome:
     showOnStartup: false
   whitespace: {}
