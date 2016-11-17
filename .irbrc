@@ -14,3 +14,7 @@ unless defined?(reload!)
     $files.each { |f| load f }
   end
 end
+
+# Save IRB history between sessions
+# http://stackoverflow.com/a/11137143
+IRB.conf[:SAVE_HISTORY] = 1000
