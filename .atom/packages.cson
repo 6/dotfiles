@@ -11,6 +11,4 @@ packages: [
   "ruby-block"
   "Sublime-Style-Column-Selection"
   "svg-preview"
-  "tablr"
-  "wakatime"
 ]

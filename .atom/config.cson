@@ -29,15 +29,8 @@
   rspec:
     command: "bundle exec zeus test"
   "svg-preview": {}
-  tablr:
-    csvEditor: {}
-    tableEditor: {}
   term2: {}
   "tree-view": {}
-  wakatime:
-    apikey: "Saved in your ~/.wakatime.cfg file"
-  "wakatime-hidden":
-    lastInit: 1478869051
   welcome:
     showOnStartup: false
   whitespace: {}
