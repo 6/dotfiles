@@ -26,6 +26,12 @@ function screenshot() {
   screencapture -x -T $seconds -t png ~/Desktop/screenshot-$(date +"%Y-%m-%d-%H-%M-%S").png
 }
 
+function mp3ltrim() {
+  local seconds=$1
+  local file=$2
+  ffmpeg -ss $seconds -i $file -acodec copy $file-ltrim.mp3
+}
+
 alias a="atom ."
 alias google='web_search google'
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
