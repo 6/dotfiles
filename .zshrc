@@ -32,6 +32,11 @@ function mp3ltrim() {
   ffmpeg -ss $seconds -i $file -acodec copy $file-ltrim.mp3
 }
 
+# Usage: calc "123.5 + 345"
+function calc() {
+  bc -l <<< "$@"
+}
+
 alias a="atom ."
 alias google='web_search google'
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
