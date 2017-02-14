@@ -9,6 +9,7 @@ packages: [
   "rails-open-rspec"
   "rspec"
   "ruby-block"
+  "show-invisibles-plus"
   "Sublime-Style-Column-Selection"
   "svg-preview"
 ]
