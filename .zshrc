@@ -38,6 +38,12 @@ function calc() {
   bc -l <<< "$@"
 }
 
+# Useful if you have to force-shutdown and leave Postgres in a weird state.
+function fix_pg() {
+  rm -f /usr/local/var/postgres/postmaster.pid
+  brew services restart postgresql
+}
+
 alias a="atom ."
 alias google='web_search google'
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
