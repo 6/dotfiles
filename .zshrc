@@ -1,4 +1,4 @@
-export ZSH=/Users/petergraham/.oh-my-zsh
+export ZSH="$HOME/.oh-my-zsh"
 export UPDATE_ZSH_DAYS=30
 export N_PREFIX="$HOME/n"
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
