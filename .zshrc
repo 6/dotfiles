@@ -39,9 +39,14 @@ function calc() {
 }
 
 # Useful if you have to force-shutdown and leave Postgres in a weird state.
-function fix_pg() {
+function fixpg() {
   rm -f /usr/local/var/postgres/postmaster.pid
   brew services restart postgresql
+}
+
+# Fix LoL config file (gets overwritten sometimes).
+function fixlol() {
+  cp ~/.misc/PersistedSettings.json "/Applications/League of Legends.app/Contents/LoL/Config/PersistedSettings.json"
 }
 
 alias a="atom ."
