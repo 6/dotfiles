@@ -55,6 +55,9 @@ alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
 alias vid="youtube-dl"
 alias vidsub="youtube-dl --write-srt --sub-lang en"
 alias most="du -hs * | gsort -rh | head -10"
+alias gti='git'
+alias igt='git'
+alias gt='git'
 
 eval "$(rbenv init -)"
 [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
