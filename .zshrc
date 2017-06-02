@@ -1,6 +1,5 @@
 export ZSH="$HOME/.oh-my-zsh"
 export UPDATE_ZSH_DAYS=30
-export N_PREFIX="$HOME/n"
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/tools:$PATH"
@@ -60,8 +59,8 @@ alias igt='git'
 alias gt='git'
 
 eval "$(rbenv init -)"
-[[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
-[[ -s "$HOME/.avn/bin/avn.sh" ]] && source "$HOME/.avn/bin/avn.sh" # load avn
+eval "$(nodenv init -)"
+
 source $ZSH/oh-my-zsh.sh
 
 # Load machine-specific ZSH configuration (if present)
