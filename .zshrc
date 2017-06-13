@@ -43,6 +43,11 @@ function fixpg() {
   brew services restart postgresql
 }
 
+# When OS X camera stops working occasionally.
+function fixcamera {
+  sudo killall VDCAssistant
+}
+
 # Fix LoL config file (gets overwritten sometimes).
 function fixlol() {
   cp ~/.misc/PersistedSettings.json "/Applications/League of Legends.app/Contents/LoL/Config/PersistedSettings.json"
