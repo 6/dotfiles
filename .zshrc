@@ -4,8 +4,10 @@ export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/tools:$PATH"
 export PATH="$PATH:`yarn global bin`"
+export PATH="$HOME/.nodenv/shims:$PATH"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
+export PHANTOMJS_BIN=/usr/local/bin/phantomjs
 
 # Set name of the theme to load ( ~/.oh-my-zsh/themes/ )
 ZSH_THEME="robbyrussell"
