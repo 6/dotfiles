@@ -19,7 +19,6 @@
     fontFamily: "Meslo LG M DZ"
     invisibles: {}
     scrollSensitivity: 80
-    showInvisibles: true
     softWrap: true
   "exception-reporting":
     userId: "ec786d8d-e1a4-ea9b-6ead-1ce10d21b220"
@@ -28,7 +27,9 @@
     forceOverwrite: true
   pigments: {}
   rspec:
-    command: "bundle exec zeus test"
+    command: "bundle exec spring rspec"
+  "show-invisibles-plus":
+    show: false
   "svg-preview": {}
   term2: {}
   "tree-view": {}

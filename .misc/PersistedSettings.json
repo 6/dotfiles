@@ -1,0 +1,274 @@
+{
+    "description": "The settings in this file are persisted server-side. This file is generated automatically. Editing it is not recommended.",
+    "files": [
+        {
+            "name": "Game.cfg",
+            "sections": [
+                {
+                    "name": "Chat",
+                    "settings": [
+                        {
+                            "name": "ChatX",
+                            "value": "0"
+                        },
+                        {
+                            "name": "ChatY",
+                            "value": "0"
+                        },
+                        {
+                            "name": "EnableChatFilter",
+                            "value": "1"
+                        },
+                        {
+                            "name": "Transparency",
+                            "value": "0.0000"
+                        }
+                    ]
+                },
+                {
+                    "name": "ColorPalette",
+                    "settings": [
+                        {
+                            "name": "ColorPalette",
+                            "value": "1"
+                        }
+                    ]
+                },
+                {
+                    "name": "General",
+                    "settings": [
+                        {
+                            "name": "AutoAcquireTarget",
+                            "value": "1"
+                        },
+                        {
+                            "name": "EnableTargetedAttackMove",
+                            "value": "1"
+                        },
+                        {
+                            "name": "OSXMouseAcceleration",
+                            "value": "0"
+                        },
+                        {
+                            "name": "PredictMovement",
+                            "value": "0"
+                        },
+                        {
+                            "name": "RelativeTeamColors",
+                            "value": "1"
+                        },
+                        {
+                            "name": "ShowTurretRangeIndicators",
+                            "value": "1"
+                        },
+                        {
+                            "name": "SnapCameraOnRespawn",
+                            "value": "1"
+                        }
+                    ]
+                },
+                {
+                    "name": "HUD",
+                    "settings": [
+                        {
+                            "name": "CameraLockMode",
+                            "value": "0"
+                        },
+                        {
+                            "name": "DisableHudSpellClick",
+                            "value": "0"
+                        },
+                        {
+                            "name": "DisableMouseCaptureDebugger",
+                            "value": "0"
+                        },
+                        {
+                            "name": "EnableLineMissileVis",
+                            "value": "1"
+                        },
+                        {
+                            "name": "FlipMiniMap",
+                            "value": "0"
+                        },
+                        {
+                            "name": "GlobalScale",
+                            "value": "1.0000"
+                        },
+                        {
+                            "name": "ItemShopItemDisplayMode",
+                            "value": "1"
+                        },
+                        {
+                            "name": "ItemShopPrevResizeHeight",
+                            "value": "800"
+                        },
+                        {
+                            "name": "ItemShopPrevResizeWidth",
+                            "value": "1280"
+                        },
+                        {
+                            "name": "ItemShopResizeHeight",
+                            "value": "0"
+                        },
+                        {
+                            "name": "ItemShopResizeWidth",
+                            "value": "260"
+                        },
+                        {
+                            "name": "ItemShopStartPane",
+                            "value": "1"
+                        },
+                        {
+                            "name": "KeyboardScrollSpeed",
+                            "value": "0.5000"
+                        },
+                        {
+                            "name": "MapScrollSpeed",
+                            "value": "0.5000"
+                        },
+                        {
+                            "name": "MiddleClickDragScrollEnabled",
+                            "value": "0"
+                        },
+                        {
+                            "name": "MiddleMouseScrollSpeed",
+                            "value": "0.5000"
+                        },
+                        {
+                            "name": "MinimapScale",
+                            "value": "1.0000"
+                        },
+                        {
+                            "name": "MirroredScoreboard",
+                            "value": "0"
+                        },
+                        {
+                            "name": "NameTagDisplay",
+                            "value": "1"
+                        },
+                        {
+                            "name": "NumericCooldownFormat",
+                            "value": "1"
+                        },
+                        {
+                            "name": "PracticeToolScale",
+                            "value": "1.0000"
+                        },
+                        {
+                            "name": "ScrollSmoothingEnabled",
+                            "value": "0"
+                        },
+                        {
+                            "name": "ShowAttackRadius",
+                            "value": "1"
+                        },
+                        {
+                            "name": "ShowChampionIndicator",
+                            "value": "0"
+                        },
+                        {
+                            "name": "ShowSpellCosts",
+                            "value": "0"
+                        },
+                        {
+                            "name": "ShowSummonerNames",
+                            "value": "0"
+                        },
+                        {
+                            "name": "ShowSummonerNamesInScoreboard",
+                            "value": "0"
+                        },
+                        {
+                            "name": "ShowTeamFramesOnLeft",
+                            "value": "0"
+                        },
+                        {
+                            "name": "ShowTimestamps",
+                            "value": "1"
+                        },
+                        {
+                            "name": "SmartCastOnKeyRelease",
+                            "value": "1"
+                        },
+                        {
+                            "name": "SmartCastWithIndicator_CastWhenNewSpellSelected",
+                            "value": "0"
+                        }
+                    ]
+                },
+                {
+                    "name": "Performance",
+                    "settings": [
+                        {
+                            "name": "EnableHUDAnimations",
+                            "value": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Input.ini",
+            "sections": [
+                {
+                    "name": "GameEvents",
+                    "settings": [
+                        {
+                            "name": "evntHudMoveableSelect",
+                            "value": "[Button 1],[Shift][Button 1]"
+                        },
+                        {
+                            "name": "evtOnUIMouse1",
+                            "value": "[Button 1],[Shift][Button 1]"
+                        },
+                        {
+                            "name": "evtPlayerAttackMoveClick",
+                            "value": "[Button 1]"
+                        },
+                        {
+                            "name": "evtPlayerMoveClick",
+                            "value": "[Button 2],[Shift][Button 2]"
+                        },
+                        {
+                            "name": "evtPlayerSelectClick",
+                            "value": "[Button 1],[Shift][Button 1]"
+                        }
+                    ]
+                },
+                {
+                    "name": "Quickbinds",
+                    "settings": [
+                        {
+                            "name": "evtUseItem1smart",
+                            "value": "1"
+                        },
+                        {
+                            "name": "evtUseItem2smart",
+                            "value": "1"
+                        },
+                        {
+                            "name": "evtUseItem3smart",
+                            "value": "1"
+                        },
+                        {
+                            "name": "evtUseItem4smart",
+                            "value": "1"
+                        },
+                        {
+                            "name": "evtUseItem5smart",
+                            "value": "1"
+                        },
+                        {
+                            "name": "evtUseItem6smart",
+                            "value": "1"
+                        },
+                        {
+                            "name": "evtUseVisionItemsmart",
+                            "value": "1"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

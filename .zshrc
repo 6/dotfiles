@@ -1,12 +1,13 @@
-export ZSH=/Users/petergraham/.oh-my-zsh
+export ZSH="$HOME/.oh-my-zsh"
 export UPDATE_ZSH_DAYS=30
-export N_PREFIX="$HOME/n"
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/tools:$PATH"
 export PATH="$PATH:`yarn global bin`"
+export PATH="$HOME/.nodenv/shims:$PATH"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
+export PHANTOMJS_BIN=/usr/local/bin/phantomjs
 
 # Set name of the theme to load ( ~/.oh-my-zsh/themes/ )
 ZSH_THEME="robbyrussell"
@@ -38,22 +39,46 @@ function calc() {
   bc -l <<< "$@"
 }
 
+# Useful if you have to force-shutdown and leave Postgres in a weird state.
+function fixpg() {
+  rm -f /usr/local/var/postgres/postmaster.pid
+  brew services restart postgresql
+}
+
+# When OS X camera stops working occasionally.
+function fixcamera {
+  sudo killall VDCAssistant
+}
+
+# Fix LoL config file (gets overwritten sometimes).
+function fixlol() {
+  cp ~/.misc/PersistedSettings.json "/Applications/League of Legends.app/Contents/LoL/Config/PersistedSettings.json"
+}
+
 alias a="atom ."
 alias google='web_search google'
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
 alias vid="youtube-dl"
 alias vidsub="youtube-dl --write-srt --sub-lang en"
 alias most="du -hs * | gsort -rh | head -10"
+alias gti='git'
+alias igt='git'
+alias gt='git'
+alias canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --remote-debugging-port=9222"
+alias canaryh="echo 'Starting canary in headless mode.\nPress Ctrl+C to exit.' && canary --disable-gpu --headless"
 
 eval "$(rbenv init -)"
-[[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
-[[ -s "$HOME/.avn/bin/avn.sh" ]] && source "$HOME/.avn/bin/avn.sh" # load avn
+eval "$(nodenv init -)"
+
 source $ZSH/oh-my-zsh.sh
 
 # Load machine-specific ZSH configuration (if present)
 if [ -f ~/.zsh_custom ]; then
   source ~/.zsh_custom
 fi
+
+source ~/google-cloud-sdk/completion.zsh.inc
+source ~/google-cloud-sdk/path.zsh.inc
 
 ASCII=("totoro" "beach" "stars")
 cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
