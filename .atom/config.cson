@@ -17,6 +17,7 @@
     ]
   editor:
     fontFamily: "Meslo LG M DZ"
+    fontSize: 17
     invisibles: {}
     scrollSensitivity: 80
     softWrap: true
