@@ -4,7 +4,7 @@ curl -fsSL 'https://raw.githubusercontent.com/Homebrew/install/master/install' |
 brew update
 
 brew install git postgresql redis awscli
-brew install n rbenv ruby-build
+brew install nodenv node-build rbenv ruby-build
 brew install openssl libyaml libffi
 brew install ffmpeg youtube-dl graphviz wget
 
