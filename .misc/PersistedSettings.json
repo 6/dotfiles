@@ -204,6 +204,15 @@
                             "value": "0"
                         }
                     ]
+                },
+                {
+                    "name": "Volume",
+                    "settings": [
+                        {
+                            "name": "MusicMute",
+                            "value": "1"
+                        }
+                    ]
                 }
             ]
         },
