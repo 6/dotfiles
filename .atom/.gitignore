@@ -1,8 +1,9 @@
-blob-store
-compile-cache
-dev
-packages
-storage
-.node-gyp
-.apm
+blob-store/
+compile-cache/
+dev/
+packages/
+recovery/
+storage/
+.node-gyp/
+.apm/
 .npm
