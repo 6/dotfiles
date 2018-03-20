@@ -66,6 +66,7 @@ alias igt='git'
 alias gt='git'
 alias canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --remote-debugging-port=9222"
 alias canaryh="echo 'Starting canary in headless mode.\nPress Ctrl+C to exit.' && canary --disable-gpu --headless"
+alias ap='osascript ~/.misc/airpods.applescript'
 
 eval "$(rbenv init -)"
 eval "$(nodenv init -)"
