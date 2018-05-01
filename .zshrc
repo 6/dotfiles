@@ -3,6 +3,7 @@ export UPDATE_ZSH_DAYS=30
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/tools:$PATH"
+export PATH="$HOME/.nodenv/shims:$PATH"
 export PATH="$PATH:`yarn global bin`"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
@@ -68,30 +69,7 @@ alias canaryh="echo 'Starting canary in headless mode.\nPress Ctrl+C to exit.' &
 alias ap='osascript ~/.misc/airpods.applescript'
 
 eval "$(rbenv init -)"
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-
-autoload -U add-zsh-hook
-load-nvmrc() {
-  local node_version="$(nvm version)"
-  local nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$node_version" ]; then
-      nvm use
-    fi
-  elif [ "$node_version" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
-  fi
-}
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
+eval "$(nodenv init -)"
 
 source $ZSH/oh-my-zsh.sh
 
