@@ -19,3 +19,4 @@ venv
 !.elasticbeanstalk/*.global.yml
 
 /.config/gcloud
+/.config/configstore
