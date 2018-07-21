@@ -3,11 +3,17 @@ export UPDATE_ZSH_DAYS=30
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/tools:$PATH"
+export PATH="/Applications/Genymotion.app/Contents/MacOS/tools/:$PATH"
 export PATH="$HOME/.nodenv/shims:$PATH"
 export PATH="$PATH:`yarn global bin`"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
+export PATH="$HOME/flutter/bin:$PATH"
 export PHANTOMJS_BIN=/usr/local/bin/phantomjs
+
+# For ruby/fastlane:
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 # Set name of the theme to load ( ~/.oh-my-zsh/themes/ )
 ZSH_THEME="robbyrussell"
