@@ -20,3 +20,5 @@ venv
 
 /.config/gcloud
 /.config/configstore
+
+.rbenv-gemsets
