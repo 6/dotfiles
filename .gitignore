@@ -12,6 +12,7 @@ Thumbs.db
 node_modules
 npm-debug.log
 venv
+.rbenv-gemsets
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
