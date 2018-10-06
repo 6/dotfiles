@@ -84,8 +84,10 @@ if [ -f ~/.zsh_custom ]; then
   source ~/.zsh_custom
 fi
 
-source ~/google-cloud-sdk/completion.zsh.inc
-source ~/google-cloud-sdk/path.zsh.inc
+if [ -f ~/google-cloud-sdk/completion.zsh.inc ]; then
+  source ~/google-cloud-sdk/completion.zsh.inc
+  source ~/google-cloud-sdk/path.zsh.inc
+fi
 
 ASCII=("totoro" "beach" "stars")
 cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
