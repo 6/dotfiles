@@ -6,6 +6,7 @@ export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/
 export PATH="/Applications/Genymotion.app/Contents/MacOS/tools/:$PATH"
 export PATH="$HOME/.nodenv/shims:$HOME/.nodenv/bin:$PATH"
 export PATH="$PATH:`yarn global bin`"
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
 export PATH="$HOME/flutter/bin:$PATH"
@@ -61,7 +62,7 @@ function fixlol() {
   cp ~/.misc/PersistedSettings.json "/Applications/League of Legends.app/Contents/LoL/Config/PersistedSettings.json"
 }
 
-alias a="atom ."
+alias a="code ."
 alias google='web_search google'
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
 alias v="youtube-dl"
