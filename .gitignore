@@ -20,7 +20,6 @@ venv
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 
-/.config/gcloud
-/.config/configstore
+/.config/*
 
 .rbenv-gemsets
