@@ -4,7 +4,7 @@ export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/tools:$PATH"
 export PATH="/Applications/Genymotion.app/Contents/MacOS/tools/:$PATH"
-export PATH="$HOME/.nodenv/shims:$PATH"
+export PATH="$HOME/.nodenv/shims:$HOME/.nodenv/bin:$PATH"
 export PATH="$PATH:`yarn global bin`"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
@@ -84,8 +84,10 @@ if [ -f ~/.zsh_custom ]; then
   source ~/.zsh_custom
 fi
 
-source ~/google-cloud-sdk/completion.zsh.inc
-source ~/google-cloud-sdk/path.zsh.inc
+if [ -f ~/google-cloud-sdk/completion.zsh.inc ]; then
+  source ~/google-cloud-sdk/completion.zsh.inc
+  source ~/google-cloud-sdk/path.zsh.inc
+fi
 
 ASCII=("totoro" "beach" "stars")
 cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]

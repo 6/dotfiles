@@ -16,6 +16,18 @@ Then quit and reopen iTerm.
 
 Install [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
 
+# Rbenv/Nodenv
+
+set default globals:
+
+```
+rbenv install ...latest...
+nodenv install ...latest...
+
+rbenv global ...latest...
+nodenv global ...latest...
+```
+
 # Atom
 
 Install [Atom](https://atom.io/) and install the [package-sync](https://atom.io/packages/package-sync) package.
