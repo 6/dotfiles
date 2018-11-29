@@ -11,6 +11,8 @@ export EDITOR='vim'
 export GOPATH="$HOME/go"
 export PATH="$HOME/flutter/bin:$PATH"
 export PHANTOMJS_BIN=/usr/local/bin/phantomjs
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
 
 # For ruby/fastlane:
 export LC_ALL=en_US.UTF-8
@@ -77,6 +79,7 @@ alias ap='osascript ~/.misc/airpods.applescript'
 
 eval "$(rbenv init -)"
 eval "$(nodenv init -)"
+eval "$(pyenv init -)"
 
 source $ZSH/oh-my-zsh.sh
 
