@@ -34,3 +34,12 @@ Install [Atom](https://atom.io/) and install the [package-sync](https://atom.io/
 
 - Sync all packages with Cmd+Shift+P > `Package Sync: Sync`
 - After installing a new package, update the list with Cmd+Shift+P > `Package Sync: Create Package List`
+
+# Xcode
+
+Install command line tools and headers:
+
+```
+xcode-select --install
+open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
+```
