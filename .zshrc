@@ -13,6 +13,7 @@ export PATH="$HOME/flutter/bin:$PATH"
 export PHANTOMJS_BIN=/usr/local/bin/phantomjs
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
+export ZSH_DISABLE_COMPFIX=true
 
 # For ruby/fastlane:
 export LC_ALL=en_US.UTF-8
