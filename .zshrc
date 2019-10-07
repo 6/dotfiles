@@ -13,6 +13,7 @@ export PATH="$HOME/flutter/bin:$PATH"
 export PHANTOMJS_BIN=/usr/local/bin/phantomjs
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
+export ZSH_DISABLE_COMPFIX=true
 
 # For ruby/fastlane:
 export LC_ALL=en_US.UTF-8
@@ -23,7 +24,7 @@ ZSH_THEME="robbyrussell"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(bundler git git-extras)
+plugins=(bundler git git-extras gitfast)
 
 function web_search() {
   emulate -L zsh
@@ -52,7 +53,7 @@ function calc() {
 function fixpg() {
   rm -f /usr/local/var/postgres/postmaster.pid
   brew services restart postgresql
-  echo 'If still not working, try running `pg_ctl -D /usr/local/var/postgres` to see full output.'
+  echo 'If still not working, try running `pg_ctl -D /usr/local/var/postgres start` to see full output.'
 }
 
 # When OS X camera stops working occasionally.
