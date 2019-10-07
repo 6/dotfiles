@@ -11,6 +11,12 @@
 	ll = log --oneline --decorate
 	p = push
 	s = status
+
+[diff "ansible-vault"]
+   	textconv = ansible-vault view
+   	cachetextconv = false
+
+
 [color]
 	branch = auto
 	diff = auto
