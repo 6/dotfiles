@@ -65,6 +65,11 @@ function fixlol() {
   cp ~/.misc/PersistedSettings.json "/Applications/League of Legends.app/Contents/LoL/Config/PersistedSettings.json"
 }
 
+function spec() {
+  test -e package.json && grep -q '"test":' package.json && yarn test $1
+  test -e .rspec && bundle exec rspec $1
+}
+
 alias a="code ."
 alias google='web_search google'
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
