@@ -71,6 +71,12 @@ function spec() {
   test -e .rspec && bundle exec rspec $1
 }
 
+function vpn() {
+  # Copy OTP from 1password (UUID of entry)
+  echo -n "$(op get totp oekd5j4dwrakbfviljh5lzj6w4)" | pbcopy
+  osascript -e 'tell application "/Applications/Tunnelblick.app"' -e 'connect "workvpn"' -e "end tell"
+}
+
 alias a="code ."
 alias google='web_search google'
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
