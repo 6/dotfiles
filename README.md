@@ -1,3 +1,5 @@
+First, install Xcode along with command line tools.
+
 `rake install` to add symlinks to home directory, and `rake uninstall` to remove them.
 
 # Font
@@ -28,18 +30,14 @@ rbenv global ...latest...
 nodenv global ...latest...
 ```
 
-# Atom
+# VS Code
 
-Install [Atom](https://atom.io/) and install the [package-sync](https://atom.io/packages/package-sync) package.
+Install the `Settings Sync` extension and run Cmd+Opt+D to sync from private gist.
 
-- Sync all packages with Cmd+Shift+P > `Package Sync: Sync`
-- After installing a new package, update the list with Cmd+Shift+P > `Package Sync: Create Package List`
+# Other
 
-# Xcode
-
-Install command line tools and headers:
+Go to https://github.com/settings/tokens/new and create a `repo` scope access token. Then run:
 
 ```
-xcode-select --install
-open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
+bundle config --global github.com [GITHUB_USERNAME]:[ACCESS_TOKEN]
 ```
