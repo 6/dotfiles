@@ -39,7 +39,7 @@ Install the `Settings Sync` extension and run Cmd+Opt+D to sync from private gis
 Install brew. Then run:
 
 ```
-brew install git postgres redis libyaml libffi cmake imagemagick graphviz ffmpeg
+brew install git postgres redis libyaml libffi cmake imagemagick graphviz ffmpeg node yarn
 
 mkdir -p ~/Library/LaunchAgents
 
@@ -51,8 +51,6 @@ launchctl load ~/Library/LaunchAgents/homebrew.mxcl.redis.plist
 launchctl start io.redis.redis-server
 
 createuser -s postgres
-
-brew install yarn --ignore-dependencies
 ```
 
 # Other
