@@ -34,6 +34,27 @@ nodenv global ...latest...
 
 Install the `Settings Sync` extension and run Cmd+Opt+D to sync from private gist.
 
+# other software
+
+Install brew. Then run:
+
+```
+brew install git postgres redis libyaml libffi cmake imagemagick graphviz ffmpeg
+
+mkdir -p ~/Library/LaunchAgents
+
+ln -sfv /usr/local/opt/postgresql/*.plist ~/Library/LaunchAgents
+launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
+
+ln -sfv /usr/local/opt/redis/*.plist ~/Library/LaunchAgents
+launchctl load ~/Library/LaunchAgents/homebrew.mxcl.redis.plist
+launchctl start io.redis.redis-server
+
+createuser -s postgres
+
+brew install yarn --ignore-dependencies
+```
+
 # Other
 
 Go to https://github.com/settings/tokens/new and create a `repo` scope access token. Then run:
