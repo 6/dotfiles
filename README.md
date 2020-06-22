@@ -55,6 +55,15 @@ createuser -s postgres
 bundle config --global build.libxml-ruby --with-xml2-config="$(brew --prefix libxml2)/bin/xml2-config"
 ```
 
+# clearing up disk space
+
+```
+yarn cache clean
+xcrun simctl delete unavailable
+```
+
+OmniDiskSweeper: https://www.omnigroup.com/more/
+
 # Other
 
 Go to https://github.com/settings/tokens/new and create a `repo` scope access token. Then run:
