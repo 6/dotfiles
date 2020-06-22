@@ -55,6 +55,15 @@ createuser -s postgres
 bundle config --global build.libxml-ruby --with-xml2-config="$(brew --prefix libxml2)/bin/xml2-config"
 ```
 
+# finder settings
+
+```
+# Show hidden folders/files:
+defaults write com.apple.Finder AppleShowAllFiles true
+
+killall Finder
+```
+
 # clearing up disk space
 
 ```
