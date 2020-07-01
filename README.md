@@ -64,6 +64,8 @@ xcrun simctl delete unavailable
 
 OmniDiskSweeper: https://www.omnigroup.com/more/
 
+Clear old iOS device support folders at `open ~/Library/Developer/Xcode/iOS\ DeviceSupport`
+
 # Other
 
 Go to https://github.com/settings/tokens/new and create a `repo` scope access token. Then run:
