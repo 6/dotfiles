@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 export ZSH="$HOME/.oh-my-zsh"
 export UPDATE_ZSH_DAYS=30
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
@@ -21,11 +28,15 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
 # Set name of the theme to load ( ~/.oh-my-zsh/themes/ )
-ZSH_THEME="robbyrussell"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+# Disable autosuggest for large buffers
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+ZSH_AUTOSUGGEST_USE_ASYNC=true
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(bundler git git-extras gitfast)
+plugins=(bundler git git-extras gitfast zsh-autosuggestions)
 
 function web_search() {
   emulate -L zsh
@@ -103,3 +114,6 @@ fi
 
 ASCII=("totoro" "beach" "stars")
 cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
