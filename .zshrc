@@ -21,6 +21,7 @@ export PHANTOMJS_BIN=/usr/local/bin/phantomjs
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
+export PATH=$PATH:/usr/local/go/bin
 export ZSH_DISABLE_COMPFIX=true
 
 # For ruby/fastlane:
@@ -38,27 +39,10 @@ ZSH_AUTOSUGGEST_USE_ASYNC=true
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 plugins=(bundler git git-extras gitfast zsh-autosuggestions)
 
-function web_search() {
-  emulate -L zsh
-  url="https://www.google.com/search?q=${(j:+:)@[2,-1]}"
-  open_command "$url"
-}
-
 function screenshot() {
   local seconds=0
   if [[ $1 ]]; then seconds=$1; fi
   screencapture -x -T $seconds -t png ~/Desktop/screenshot-$(date +"%Y-%m-%d-%H-%M-%S").png
-}
-
-function mp3ltrim() {
-  local seconds=$1
-  local file=$2
-  ffmpeg -ss $seconds -i $file -acodec copy $file-ltrim.mp3
-}
-
-# Usage: calc "123.5 + 345"
-function calc() {
-  bc -l <<< "$@"
 }
 
 # Useful if you have to force-shutdown and leave Postgres in a weird state.
@@ -84,10 +68,7 @@ function spec() {
 }
 
 alias a="code ."
-alias google='web_search google'
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
-alias v="youtube-dl"
-alias vsub="youtube-dl --write-srt --sub-lang en"
 alias most="du -hs * | gsort -rh | head -10"
 alias gti='git'
 alias igt='git'
