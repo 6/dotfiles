@@ -18,6 +18,10 @@ Then quit and reopen iTerm.
 
 Install [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
 
+Install [p10k](https://github.com/romkatv/powerlevel10k#oh-my-zsh)
+
+Install [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md)
+
 # Rbenv/Nodenv
 
 set default globals:
@@ -53,6 +57,13 @@ launchctl start io.redis.redis-server
 createuser -s postgres
 
 bundle config --global build.libxml-ruby --with-xml2-config="$(brew --prefix libxml2)/bin/xml2-config"
+```
+
+Also install fzf:
+
+```
+brew install fzf
+$(brew --prefix)/opt/fzf/install
 ```
 
 # clearing up disk space

@@ -20,4 +20,4 @@ launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
 
 # Non-critical software
 brew install cask
-brew cask install spectacle qlvideo
+brew cask install spectacle qlvideo imageoptim
