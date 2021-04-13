@@ -8,6 +8,7 @@ fi
 export ZSH="$HOME/.oh-my-zsh"
 export UPDATE_ZSH_DAYS=30
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH="$PATH:/opt/homebrew/bin"
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/tools:$PATH"
 export PATH="/Applications/Genymotion.app/Contents/MacOS/tools/:$PATH"
@@ -20,6 +21,7 @@ export PATH="$HOME/flutter/bin:$PATH"
 export PHANTOMJS_BIN=/usr/local/bin/phantomjs
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
+export PATH="$PATH:$(brew --prefix)/opt/fzf/bin"
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 export PATH=$PATH:/usr/local/go/bin
 export ZSH_DISABLE_COMPFIX=true
@@ -80,6 +82,7 @@ alias ap='osascript ~/.misc/airpods.applescript'
 eval "$(rbenv init -)"
 eval "$(nodenv init -)"
 eval "$(pyenv init -)"
+eval "$($(brew --prefix)/bin/brew shellenv)"
 
 source $ZSH/oh-my-zsh.sh
 
