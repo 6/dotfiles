@@ -47,12 +47,15 @@ brew install git postgres redis libyaml libffi cmake imagemagick graphviz ffmpeg
 
 mkdir -p ~/Library/LaunchAgents
 
-ln -sfv /usr/local/opt/postgresql/*.plist ~/Library/LaunchAgents
-launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
+ln -sfv /opt/homebrew/opt/postgresql/*.plist ~/Library/LaunchAgents
+ln -sfv /opt/homebrew/opt/redis/*.plist ~/Library/LaunchAgents
 
-ln -sfv /usr/local/opt/redis/*.plist ~/Library/LaunchAgents
-launchctl load ~/Library/LaunchAgents/homebrew.mxcl.redis.plist
-launchctl start io.redis.redis-server
+echo $UID => 501
+
+launchctl enable gui/501/homebrew.mxcl.postgresql
+launchctl kickstart -kp gui/501/homebrew.mxcl.postgresql
+
+launchctl enable gui/501/homebrew.mxcl.redis.plist
 
 createuser -s postgres
 
