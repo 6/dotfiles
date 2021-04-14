@@ -30,6 +30,9 @@ export ZSH_DISABLE_COMPFIX=true
 export CPATH=/opt/homebrew/include
 export LIBRARY_PATH=/opt/homebrew/lib
 
+alias ibrew='arch -x86_64 /opt/homebrew/bin/brew'
+alias inodenv='arch -x86_64 nodenv'
+
 # For ruby/fastlane:
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
