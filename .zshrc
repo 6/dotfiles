@@ -26,6 +26,10 @@ export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 export PATH=$PATH:/usr/local/go/bin
 export ZSH_DISABLE_COMPFIX=true
 
+# ARM/M1 libs:
+export CPATH=/opt/homebrew/include
+export LIBRARY_PATH=/opt/homebrew/lib
+
 # For ruby/fastlane:
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
