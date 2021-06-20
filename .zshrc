@@ -76,12 +76,22 @@ function spec() {
   test -e .rspec && bundle exec rspec $1
 }
 
+function main() {
+  # If main branch exists, use it, otherwise fall back to master:
+  if git show-ref --quiet refs/heads/main; then
+    git checkout main
+  else
+    git checkout master
+  fi
+}
+
 alias a="code ."
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
 alias most="du -hs * | gsort -rh | head -10"
 alias gti='git'
 alias igt='git'
 alias gt='git'
+alias mainp='main && git pull'
 alias canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --remote-debugging-port=9222"
 alias canaryh="echo 'Starting canary in headless mode.\nPress Ctrl+C to exit.' && canary --disable-gpu --headless"
 alias ap='osascript ~/.misc/airpods.applescript'
