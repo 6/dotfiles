@@ -32,6 +32,7 @@ export LIBRARY_PATH=/opt/homebrew/lib
 
 alias ibrew='arch -x86_64 /opt/homebrew/bin/brew'
 alias inodenv='arch -x86_64 nodenv'
+alias fixdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 
 # For ruby/fastlane:
 export LC_ALL=en_US.UTF-8
