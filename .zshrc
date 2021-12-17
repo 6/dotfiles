@@ -15,6 +15,7 @@ export PATH="/Applications/Genymotion.app/Contents/MacOS/tools/:$PATH"
 export PATH="$HOME/.nodenv/shims:$HOME/.nodenv/bin:$PATH"
 export PATH="$PATH:`yarn global bin`"
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+export PATH="`brew --prefix openssl`/bin:$PATH"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
 export PATH="$HOME/flutter/bin:$PATH"
