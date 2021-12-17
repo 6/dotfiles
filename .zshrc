@@ -121,3 +121,8 @@ cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# heroku autocomplete setup
+HEROKU_AC_ZSH_SETUP_PATH=/Users/peter/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
+# Created by `pipx` on 2021-08-29 21:14:12
+export PATH="$PATH:/Users/peter/.local/bin"
