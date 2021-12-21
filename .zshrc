@@ -61,6 +61,7 @@ function fixpg() {
   rm -f /usr/local/var/postgres/postmaster.pid
   brew services restart postgresql
   echo 'If still not working, try running `pg_ctl -D /usr/local/var/postgres start` to see full output.'
+  echo 'or on M1: `pg_ctl -D /opt/homebrew/var/postgres start`'
 }
 
 # When OS X camera stops working occasionally.
