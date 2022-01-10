@@ -12,8 +12,6 @@ export PATH="$PATH:/opt/homebrew/bin"
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/tools:$PATH"
 export PATH="/Applications/Genymotion.app/Contents/MacOS/tools/:$PATH"
-export PATH="$HOME/.nodenv/shims:$HOME/.nodenv/bin:$PATH"
-export PATH="$PATH:`yarn global bin`"
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 export PATH="`brew --prefix openssl`/bin:$PATH"
 export EDITOR='vim'
@@ -32,7 +30,6 @@ export CPATH=/opt/homebrew/include
 export LIBRARY_PATH=/opt/homebrew/lib
 
 alias ibrew='arch -x86_64 /opt/homebrew/bin/brew'
-alias inodenv='arch -x86_64 nodenv'
 alias fixdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 
 # For ruby/fastlane:
@@ -101,7 +98,6 @@ alias canaryh="echo 'Starting canary in headless mode.\nPress Ctrl+C to exit.' &
 alias ap='osascript ~/.misc/airpods.applescript'
 
 eval "$(rbenv init -)"
-eval "$(nodenv init -)"
 eval "$(pyenv init -)"
 eval "$($(brew --prefix)/bin/brew shellenv)"
 
@@ -129,3 +125,9 @@ cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
 HEROKU_AC_ZSH_SETUP_PATH=/Users/peter/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
 # Created by `pipx` on 2021-08-29 21:14:12
 export PATH="$PATH:/Users/peter/.local/bin"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export PATH="$PATH:`yarn global bin`"
