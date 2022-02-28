@@ -21,6 +21,8 @@ export PHANTOMJS_BIN=/usr/local/bin/phantomjs
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PATH="$PATH:$(brew --prefix)/opt/fzf/bin"
+export PATH="$PATH:$HOME/.foundry/bin"
+export PATH="$PATH:$HOME/.cargo/bin"
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 export PATH=$PATH:/usr/local/go/bin
 export ZSH_DISABLE_COMPFIX=true
