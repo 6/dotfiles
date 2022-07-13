@@ -19,6 +19,7 @@ export GOPATH="$HOME/go"
 export PATH="$HOME/flutter/bin:$PATH"
 export PHANTOMJS_BIN=/usr/local/bin/phantomjs
 export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$HOME/.jenv/bin:$PATH"
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PATH="$PATH:$(brew --prefix)/opt/fzf/bin"
 export PATH="$PATH:$HOME/.foundry/bin"
@@ -101,6 +102,7 @@ alias ap='osascript ~/.misc/airpods.applescript'
 
 eval "$(rbenv init -)"
 eval "$(pyenv init -)"
+eval "$(jenv init -)"
 eval "$($(brew --prefix)/bin/brew shellenv)"
 
 source $ZSH/oh-my-zsh.sh
