@@ -5,34 +5,41 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-export ZSH="$HOME/.oh-my-zsh"
-export UPDATE_ZSH_DAYS=30
+# Couple of critical exports first:
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="$PATH:/opt/homebrew/bin"
+
+# Set homebrew env vars like $HOMEBREW_PREFIX
+eval "$(brew shellenv)"
+
+export ZSH="$HOME/.oh-my-zsh"
+export UPDATE_ZSH_DAYS=30
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/tools:$PATH"
 export PATH="/Applications/Genymotion.app/Contents/MacOS/tools/:$PATH"
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-export PATH="`brew --prefix openssl`/bin:$PATH"
+export PATH="$HOMEBREW_PREFIX/opt/openssl@1.1/bin:$PATH"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
 export PATH="$HOME/flutter/bin:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$HOME/.jenv/bin:$PATH"
 export PATH="$PYENV_ROOT/bin:$PATH"
-export PATH="$PATH:$(brew --prefix)/opt/fzf/bin"
+export PATH="$PATH:$HOMEBREW_PREFIX/opt/fzf/bin"
 export PATH="$PATH:$HOME/.foundry/bin"
 export PATH="$PATH:$HOME/.cargo/bin"
-export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
+export PATH="$PATH:$HOME/.local/bin"
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$HOMEBREW_PREFIX/opt/openssl@1.1"
 export PATH=$PATH:/usr/local/go/bin
 export ZSH_DISABLE_COMPFIX=true
 
-# ARM/M1 libs:
-export CPATH=/opt/homebrew/include
-export LIBRARY_PATH=/opt/homebrew/lib
+export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export ANDROID_AVD_HOME="$HOME/.android/avd"
 
-alias ibrew='arch -x86_64 /opt/homebrew/bin/brew'
-alias fixdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
+# ARM/M1 libs:
+export CPATH="$HOMEBREW_PREFIX/include"
+export LIBRARY_PATH="$HOMEBREW_PREFIX/lib"
 
 # For ruby/fastlane:
 export LC_ALL=en_US.UTF-8
@@ -87,6 +94,7 @@ function main() {
   fi
 }
 
+alias fixdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 alias a="code ."
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
 alias most="du -hs * | gsort -rh | head -10"
@@ -102,32 +110,6 @@ alias ap='osascript ~/.misc/airpods.applescript'
 eval "$(rbenv init -)"
 eval "$(pyenv init -)"
 eval "$(jenv init -)"
-eval "$($(brew --prefix)/bin/brew shellenv)"
-
-source $ZSH/oh-my-zsh.sh
-
-# Load machine-specific ZSH configuration (if present)
-if [ -f ~/.zsh_custom ]; then
-  source ~/.zsh_custom
-fi
-
-if [ -f ~/google-cloud-sdk/completion.zsh.inc ]; then
-  source ~/google-cloud-sdk/completion.zsh.inc
-  source ~/google-cloud-sdk/path.zsh.inc
-fi
-
-ASCII=("totoro" "beach" "stars")
-cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# heroku autocomplete setup
-HEROKU_AC_ZSH_SETUP_PATH="$HOME/Library/Caches/heroku/autocomplete/zsh_setup" && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
-# Created by `pipx` on 2021-08-29 21:14:12
-export PATH="$PATH:$HOME/.local/bin"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -136,8 +118,25 @@ export NVM_DIR="$HOME/.nvm"
 export GVM_DIR="$HOME/.gvm"
 [[ -s "$GVM_DIR/scripts/gvm" ]] && source "$GVM_DIR/scripts/gvm"
 
-export PATH="$PATH:`yarn global bin`"
+source $ZSH/oh-my-zsh.sh
 
-export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
-export ANDROID_HOME="$HOME/Library/Android/sdk"
-export ANDROID_AVD_HOME="$HOME/.android/avd"
+# Load machine-specific ZSH configuration (if present)
+if [ -f $HOME/.zsh_custom ]; then
+  source "$HOME/.zsh_custom"
+fi
+
+if [ -f ~/google-cloud-sdk/completion.zsh.inc ]; then
+  source ~/google-cloud-sdk/completion.zsh.inc
+  source ~/google-cloud-sdk/path.zsh.inc
+fi
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# heroku autocomplete setup
+HEROKU_AC_ZSH_SETUP_PATH="$HOME/Library/Caches/heroku/autocomplete/zsh_setup" && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
+
+ASCII=("totoro" "beach" "stars")
+cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
