@@ -135,7 +135,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export GVM_DIR="$HOME/.gvm"
-[[ -s "$GVM_DIR/scripts/gvm" ]] && source "$GVM_DIR/.gvm/scripts/gvm"
+[[ -s "$GVM_DIR/scripts/gvm" ]] && source "$GVM_DIR/scripts/gvm"
 
 export PATH="$PATH:`yarn global bin`"
 
