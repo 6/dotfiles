@@ -17,7 +17,6 @@ export PATH="`brew --prefix openssl`/bin:$PATH"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
 export PATH="$HOME/flutter/bin:$PATH"
-export PHANTOMJS_BIN=/usr/local/bin/phantomjs
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$HOME/.jenv/bin:$PATH"
 export PATH="$PYENV_ROOT/bin:$PATH"
