@@ -62,13 +62,6 @@ createuser -s postgres
 bundle config --global build.libxml-ruby --with-xml2-config="$(brew --prefix libxml2)/bin/xml2-config"
 ```
 
-Also install fzf:
-
-```
-brew install fzf
-$(brew --prefix)/opt/fzf/install
-```
-
 # clearing up disk space
 
 ```

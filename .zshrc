@@ -25,7 +25,6 @@ export PATH="$HOME/flutter/bin:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$HOME/.jenv/bin:$PATH"
 export PATH="$PYENV_ROOT/bin:$PATH"
-export PATH="$PATH:$HOMEBREW_PREFIX/opt/fzf/bin"
 export PATH="$PATH:$HOME/.foundry/bin"
 export PATH="$PATH:$HOME/.cargo/bin"
 export PATH="$PATH:$HOME/.local/bin"
@@ -132,8 +131,6 @@ fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # heroku autocomplete setup
 HEROKU_AC_ZSH_SETUP_PATH="$HOME/Library/Caches/heroku/autocomplete/zsh_setup" && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
