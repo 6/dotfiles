@@ -93,6 +93,23 @@ function main() {
   fi
 }
 
+function pastesim() {
+  local textToPaste=$1
+  if [ -z "$textToPaste" ]; then
+    echo 'Usage: pastesim "Text to paste"'
+    return
+  fi
+
+  # Grab the udid of the first booted simulator:
+  local booted=`idb list-targets | grep "Booted" | grep -Eio "[0-9a-f]{8}-[-0-9a-f]+" | head -1`
+  if [ -z "$booted" ]; then
+    echo "No iOS Simulator currently booted!"
+  else
+    echo "Pasting text to iOS simulator ($booted)"
+    idb ui text "$textToPaste" --udid "$booted"
+  fi
+}
+
 alias fixdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 alias a="code ."
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
