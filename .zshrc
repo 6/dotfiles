@@ -28,6 +28,7 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 export PATH="$PATH:$HOME/.foundry/bin"
 export PATH="$PATH:$HOME/.cargo/bin"
 export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:/nix/var/nix/profiles/default/bin"
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$HOMEBREW_PREFIX/opt/openssl@1.1"
 export PATH=$PATH:/usr/local/go/bin
 export ZSH_DISABLE_COMPFIX=true
