@@ -22,44 +22,30 @@ Install [p10k](https://github.com/romkatv/powerlevel10k#oh-my-zsh)
 
 Install [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md)
 
-# Rbenv/Nodenv
+# NVM
 
-set default globals:
-
-```
-rbenv install ...latest...
-nodenv install ...latest...
-
-rbenv global ...latest...
-nodenv global ...latest...
-```
-
-# VS Code
-
-Install the `Settings Sync` extension and run Cmd+Opt+D to sync from private gist.
+Install nvm without brew: https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
 
 # other software
 
 Install brew. Then run:
 
 ```
-brew install git postgres redis libyaml libffi cmake imagemagick graphviz ffmpeg node yarn libxml2
+brew install git postgresql redis libyaml libffi cmake imagemagick graphviz ffmpeg yarn libxml2
 
 mkdir -p ~/Library/LaunchAgents
 
-ln -sfv /opt/homebrew/opt/postgresql/*.plist ~/Library/LaunchAgents
+# Note: replace `postgresql@14` with the version you installed:
+ln -sfv /opt/homebrew/opt/postgresql@14/*.plist ~/Library/LaunchAgents
 ln -sfv /opt/homebrew/opt/redis/*.plist ~/Library/LaunchAgents
 
 echo $UID => 501
 
 launchctl enable gui/501/homebrew.mxcl.postgresql
-launchctl kickstart -kp gui/501/homebrew.mxcl.postgresql
-
 launchctl enable gui/501/homebrew.mxcl.redis.plist
 
+# Restart computer, then run:
 createuser -s postgres
-
-bundle config --global build.libxml-ruby --with-xml2-config="$(brew --prefix libxml2)/bin/xml2-config"
 ```
 
 # clearing up disk space
