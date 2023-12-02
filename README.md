@@ -69,3 +69,12 @@ Go to https://github.com/settings/tokens/new and create a `repo` scope access to
 ```
 bundle config --global github.com [GITHUB_USERNAME]:[ACCESS_TOKEN]
 ```
+
+If allowing Remote Login, add these in target computer's `/etc/ssh/sshd_config` to allow only public key authentication:
+
+```
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+```
+
+and then modify target computer's `~/.ssh/authorized_keys` to include the public key of the source computer.
