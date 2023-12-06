@@ -1,4 +1,4 @@
-First, install Xcode along with command line tools and run `sudo xcode-select --switch /Applications/Xcode.app`
+First, install Xcode along with command line tools and run `xcode-select --install`
 
 `rake install` to add symlinks to home directory, and `rake uninstall` to remove them.
 
