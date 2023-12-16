@@ -116,6 +116,15 @@ function pastesim() {
   fi
 }
 
+function linkmodels() {
+  # Clean up broken symlinks:
+  find -L ~/oss/llama.cpp/models/ -type l -exec rm -f {} \;
+  find -L ~/oss/text-generation-webui/models/ -type l -exec rm -f {} \;
+
+  ln -vs ~/models/* ~/oss/llama.cpp/models
+  ln -vs ~/models/* ~/oss/text-generation-webui/models
+}
+
 alias fixdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 alias a="code ."
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
