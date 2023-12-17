@@ -1,6 +1,9 @@
-First, install Xcode along with command line tools and run `xcode-select --install`
+On macOS:
+- First, install Xcode along with command line tools and run `xcode-select --install`
+- `rake install` to add symlinks to home directory, and `rake uninstall` to remove them.
 
-`rake install` to add symlinks to home directory, and `rake uninstall` to remove them.
+On Linux:
+- Run `./install_linux.sh`
 
 # Font
 

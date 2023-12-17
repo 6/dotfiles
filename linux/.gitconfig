@@ -1,0 +1,40 @@
+[alias]
+	# Amend without prompting for message
+	amend = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
+	b = !git --no-pager branch
+	co = checkout
+	d = diff
+	dm = !sh -c 'git diff HEAD~$1 HEAD' -
+	fc = !sh -c 'git ll | grep \"$1\"' -
+	ff = !sh -c 'git ll -S$1' -
+	l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	ll = log --oneline --decorate
+	p = push
+	s = status
+
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+[core]
+	excludesfile = ~/.gitignore
+	editor = "/usr/bin/vim"
+[push]
+	default = current
+[user]
+	email = peterghm@gmail.com
+	name = Peter Graham
+	signingkey = 61299CA3
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+[pull]
+	rebase = false
+[init]
+	defaultBranch = main
