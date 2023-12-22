@@ -42,9 +42,9 @@ export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
-# ARM/M1 libs:
-export CPATH="$HOMEBREW_PREFIX/include"
-export LIBRARY_PATH="$HOMEBREW_PREFIX/lib"
+# ARM/M1 libs (appears to break some things like Android builds, so disabled for now):
+# export CPATH="$HOMEBREW_PREFIX/include"
+# export LIBRARY_PATH="$HOMEBREW_PREFIX/lib"
 
 # For ruby/fastlane:
 export LC_ALL=en_US.UTF-8
