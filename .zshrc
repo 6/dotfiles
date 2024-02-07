@@ -100,6 +100,11 @@ function main() {
   fi
 }
 
+# Return PID of process running on the given port:
+function port() {
+  lsof -i tcp:"$1"
+}
+
 function pastesim() {
   local textToPaste=$1
   if [ -z "$textToPaste" ]; then
