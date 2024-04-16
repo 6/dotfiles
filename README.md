@@ -34,7 +34,7 @@ Install nvm without brew: https://github.com/nvm-sh/nvm?tab=readme-ov-file#insta
 Install brew. Then run:
 
 ```
-brew install git postgresql redis libyaml libffi cmake imagemagick graphviz ffmpeg yarn libxml2 ansible jq watchman cocoapods
+brew install git postgresql@14 redis libyaml libffi cmake imagemagick graphviz ffmpeg yarn libxml2 ansible jq watchman cocoapods
 
 brew tap facebook/fb
 brew install idb-companion
