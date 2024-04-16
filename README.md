@@ -50,7 +50,7 @@ echo $UID => 501
 launchctl enable gui/501/homebrew.mxcl.postgresql
 launchctl enable gui/501/homebrew.mxcl.redis.plist
 
-# Restart computer, then run:
+brew services start postgresql@14
 createuser -s postgres
 ```
 
