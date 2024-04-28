@@ -11,11 +11,9 @@ export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
 export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$HOME/.jenv/bin:$PATH"
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PATH="$PATH:$HOME/.cargo/bin"
 export PATH="$PATH:$HOME/.local/bin"
-export PATH="$PATH:/nix/var/nix/profiles/default/bin"
 export PATH=$PATH:/usr/local/go/bin
 export ZSH_DISABLE_COMPFIX=true
 
@@ -51,7 +49,6 @@ alias mainpd='mainp && git b -d @{-1}'
 
 eval "$(rbenv init -)"
 eval "$(pyenv init -)"
-eval "$(jenv init -)"
 eval "$(direnv hook zsh)"
 
 export NVM_DIR="$HOME/.nvm"
