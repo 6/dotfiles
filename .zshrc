@@ -132,6 +132,7 @@ function linkmodels() {
 }
 
 alias fixdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
+alias fixsim='sudo killall -9 com.apple.CoreSimulator.CoreSimulatorService'
 alias a="code ."
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
 alias most="du -hs * | gsort -rh | head -10"
