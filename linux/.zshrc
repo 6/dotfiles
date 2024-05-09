@@ -41,6 +41,15 @@ function main() {
   fi
 }
 
+function stats() {
+  df -PkBM . | sed 1d | grep -v used | awk '{ print "disk=" $3 " / " $4 }'
+  cat /proc/stat |grep cpu |tail -1|awk '{print ($5*100)/($2+$3+$4+$5+$6+$7+$8+$9+$10)}'|awk '{printf("cpu=%.2f%%\n", 100-$1)}'
+  free | grep Mem | awk '{printf("mem=%.2f%%\n", $3/$2 * 100.0)}'
+  if command -v vcgencmd &> /dev/null; then
+    vcgencmd measure_temp
+  fi
+}
+
 alias gti='git'
 alias igt='git'
 alias gt='git'
