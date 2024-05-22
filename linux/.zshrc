@@ -10,8 +10,6 @@ export UPDATE_ZSH_DAYS=30
 export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
 export PATH="$PATH:$HOME/.cargo/bin"
 export PATH="$PATH:$HOME/.local/bin"
 export PATH=$PATH:/usr/local/go/bin
@@ -57,8 +55,9 @@ alias mainp='main && git pull'
 alias mainpd='mainp && git b -d @{-1}'
 
 eval "$(rbenv init -)"
-eval "$(pyenv init -)"
 eval "$(direnv hook zsh)"
+
+source "$HOME/.rye/env"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

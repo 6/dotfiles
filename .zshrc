@@ -22,9 +22,7 @@ export PATH="$HOMEBREW_PREFIX/opt/openssl@1.1/bin:$PATH"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
 export PATH="$HOME/flutter/bin:$PATH"
-export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$HOME/.jenv/bin:$PATH"
-export PATH="$PYENV_ROOT/bin:$PATH"
 export PATH="$PATH:$HOME/.foundry/bin"
 export PATH="$PATH:$HOME/.cargo/bin"
 export PATH="$PATH:$HOME/.local/bin"
@@ -146,9 +144,10 @@ alias canaryh="echo 'Starting canary in headless mode.\nPress Ctrl+C to exit.' &
 alias ap='osascript ~/.misc/airpods.applescript'
 
 eval "$(rbenv init -)"
-eval "$(pyenv init -)"
 eval "$(jenv init -)"
 eval "$(direnv hook zsh)"
+
+source "$HOME/.rye/env"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
