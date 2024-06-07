@@ -147,6 +147,7 @@ eval "$(rbenv init -)"
 eval "$(jenv init -)"
 eval "$(direnv hook zsh)"
 
+source "$HOME/.cargo/env"
 source "$HOME/.rye/env"
 
 export NVM_DIR="$HOME/.nvm"
