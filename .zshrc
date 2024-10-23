@@ -143,21 +143,12 @@ alias canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Ch
 alias canaryh="echo 'Starting canary in headless mode.\nPress Ctrl+C to exit.' && canary --disable-gpu --headless"
 alias ap='osascript ~/.misc/airpods.applescript'
 
-eval "$(rbenv init -)"
-eval "$(jenv init -)"
 eval "$(direnv hook zsh)"
+eval "$($HOME/.local/bin/mise activate zsh)"
 
-source "$HOME/.cargo/env"
 source "$HOME/.rye/env"
 
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-export GVM_DIR="$HOME/.gvm"
-[[ -s "$GVM_DIR/scripts/gvm" ]] && source "$GVM_DIR/scripts/gvm"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -186,11 +177,3 @@ cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:$HOME/.cache/lm-studio/bin"
-
-# pnpm
-export PNPM_HOME="$HOME/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
