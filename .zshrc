@@ -41,6 +41,9 @@ export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
+export OLLAMA_HOST=0.0.0.0
+export OLLAMA_ORIGINS=*
+
 # ARM/M1 libs (appears to break some things like Android builds, so disabled for now):
 # export CPATH="$HOMEBREW_PREFIX/include"
 # export LIBRARY_PATH="$HOMEBREW_PREFIX/lib"
