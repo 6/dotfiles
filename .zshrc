@@ -144,6 +144,7 @@ alias canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Ch
 alias canaryh="echo 'Starting canary in headless mode.\nPress Ctrl+C to exit.' && canary --disable-gpu --headless"
 alias ap='osascript ~/.misc/airpods.applescript'
 
+eval "$(jenv init -)"
 eval "$(direnv hook zsh)"
 eval "$($HOME/.local/bin/mise activate zsh)"
 
