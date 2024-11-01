@@ -148,6 +148,8 @@ eval "$(jenv init -)"
 eval "$(direnv hook zsh)"
 eval "$($HOME/.local/bin/mise activate zsh)"
 
+export JAVA_HOME="$(jenv javahome)"
+
 source "$HOME/.rye/env"
 
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
