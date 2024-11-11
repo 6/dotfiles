@@ -104,21 +104,11 @@ function port() {
   lsof -i tcp:"$1"
 }
 
-function pastesim() {
-  local textToPaste=$1
-  if [ -z "$textToPaste" ]; then
-    echo 'Usage: pastesim "Text to paste"'
-    return
-  fi
-
-  # Grab the udid of the first booted simulator:
-  local booted=`idb list-targets | grep "Booted" | grep -Eio "[0-9a-f]{8}-[-0-9a-f]+" | head -1`
-  if [ -z "$booted" ]; then
-    echo "No iOS Simulator currently booted!"
-  else
-    echo "Pasting text to iOS simulator ($booted)"
-    idb ui text "$textToPaste" --udid "$booted"
-  fi
+# https://docs.openwebui.com/getting-started/quick-start#updating
+function upgradeoui() {
+  docker rm -f open-webui
+  docker pull ghcr.io/open-webui/open-webui:main
+  docker run -d -p 4455:8080 -v open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:main
 }
 
 function linkmodels() {
