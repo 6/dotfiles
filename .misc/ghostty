@@ -6,3 +6,5 @@ font-size = 18
 shell-integration-features = no-cursor
 theme = NvimDark
 window-inherit-font-size = false
+window-padding-x = 12
+window-padding-y = 8
