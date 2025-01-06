@@ -1,0 +1,6 @@
+cursor-style = block
+cursor-style-blink = false
+font-family = "Meslo LG M DZ"
+font-size = 18
+theme = NvimDark
+window-inherit-font-size = false
