@@ -21,7 +21,6 @@ export PATH="$HOMEBREW_PREFIX/opt/openssl@1.1/bin:$PATH"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
 export PATH="$HOME/flutter/bin:$PATH"
-export PATH="$HOME/.jenv/bin:$PATH"
 export PATH="$PATH:$HOME/.foundry/bin"
 export PATH="$PATH:$HOME/.cargo/bin"
 export PATH="$PATH:$HOME/.local/bin"
