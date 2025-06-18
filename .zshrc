@@ -1,8 +1,22 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# Set Oh My Zsh theme conditionally
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+  ZSH_THEME=""  # Disable Powerlevel10k for Cursor
+else
+  # Set name of the theme to load ( ~/.oh-my-zsh/themes/ )
+  ZSH_THEME="powerlevel10k/powerlevel10k"
+
+  # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+  # Initialization code that may require console input (password prompts, [y/n]
+  # confirmations, etc.) must go above this block; everything else may go below.
+  if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+  fi
+
+  export ZSH="$HOME/.oh-my-zsh"
+  source $ZSH/oh-my-zsh.sh
+  # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+  # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+  plugins=(bundler git git-extras gitfast zsh-autosuggestions)
 fi
 
 # Couple of critical exports first:
@@ -12,7 +26,6 @@ export PATH="$PATH:/opt/homebrew/bin"
 # Set homebrew env vars like $HOMEBREW_PREFIX
 eval "$(brew shellenv)"
 
-export ZSH="$HOME/.oh-my-zsh"
 export UPDATE_ZSH_DAYS=30
 export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/tools:$PATH"
 export PATH="$PATH:/Applications/Android Studio.app/Contents/MacOS"
@@ -40,6 +53,9 @@ export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:$HOME/.cache/lm-studio/bin"
+
 export OLLAMA_HOST=0.0.0.0
 export OLLAMA_ORIGINS=*
 
@@ -51,16 +67,9 @@ export OLLAMA_ORIGINS=*
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-# Set name of the theme to load ( ~/.oh-my-zsh/themes/ )
-ZSH_THEME="powerlevel10k/powerlevel10k"
-
 # Disable autosuggest for large buffers
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 ZSH_AUTOSUGGEST_USE_ASYNC=true
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(bundler git git-extras gitfast zsh-autosuggestions)
 
 function screenshot() {
   local seconds=0
@@ -140,8 +149,6 @@ eval "$($HOME/.local/bin/mise activate zsh)"
 
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
 
-source $ZSH/oh-my-zsh.sh
-
 # Load machine-specific ZSH configuration (if present)
 if [ -f $HOME/.zsh_custom ]; then
   source "$HOME/.zsh_custom"
@@ -152,18 +159,23 @@ if [ -f ~/google-cloud-sdk/completion.zsh.inc ]; then
   source ~/google-cloud-sdk/path.zsh.inc
 fi
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# Use a minimal prompt in Cursor to avoid command detection issues
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+  PROMPT='%n@%m:%~%# '
+  RPROMPT=''
+else
+  # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+  [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+fi
 
-# Terraform autocomplete
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /opt/homebrew/bin/terraform terraform
+if [[ "$TERM_PROGRAM" != "vscode" ]]; then
+  # Terraform autocomplete
+  autoload -U +X bashcompinit && bashcompinit
+  complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
-# heroku autocomplete setup
-HEROKU_AC_ZSH_SETUP_PATH="$HOME/Library/Caches/heroku/autocomplete/zsh_setup" && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
+  # heroku autocomplete setup
+  HEROKU_AC_ZSH_SETUP_PATH="$HOME/Library/Caches/heroku/autocomplete/zsh_setup" && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
 
-ASCII=("totoro" "beach" "stars")
-cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:$HOME/.cache/lm-studio/bin"
+  ASCII=("totoro" "beach" "stars")
+  cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
+fi
