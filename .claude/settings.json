@@ -53,6 +53,8 @@
       "Bash(npm:*)",
       "Bash(npx:*)",
       "Bash(ps:*)",
+      "Bash(rake:*)",
+      "Bash(ruby:*)",
       "Bash(pwd:*)",
       "Bash(sed:*)",
       "Bash(sort:*)",
