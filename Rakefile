@@ -16,9 +16,7 @@ task :install do
       # For directories, recursively find all files inside
       Dir.glob("#{file}/**/*", File::FNM_DOTMATCH).each do |nested_file|
         next if File.directory?(nested_file)
-        next if File.symlink?(nested_file)
         next if nested_file.include?('.git/')
-        next if nested_file.end_with?('settings.local.json')
         
         install_file(nested_file, skip_all, overwrite_all, backup_all)
       end
@@ -66,9 +64,7 @@ task :uninstall do
       # For directories, recursively find all files inside
       Dir.glob("#{file}/**/*", File::FNM_DOTMATCH).each do |nested_file|
         next if File.directory?(nested_file)
-        next if File.symlink?(nested_file)
         next if nested_file.include?('.git/')
-        next if nested_file.end_with?('settings.local.json')
         
         uninstall_file(nested_file)
       end
