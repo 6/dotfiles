@@ -21,3 +21,6 @@ venv
 !.elasticbeanstalk/*.global.yml
 
 .rbenv-gemsets
+
+# Claude
+.claude/settings.local.json
