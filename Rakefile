@@ -10,7 +10,7 @@ task :install do
   backup_all = false
 
   Dir.glob(current_directory_dotfiles).each do |file|
-    next  if %w[.DS_Store .git].include?(file)
+    next  if %w[.DS_Store .git settings.local.json].include?(file)
 
     overwrite = false
     backup = false
