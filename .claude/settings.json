@@ -82,6 +82,7 @@
       "Bash(wc:*)",
       "Bash(which:*)",
       "Bash(whoami:*)",
+      "Bash(wrangler:*)",
       "Bash(yarn:*)"
     ],
     "deny": []
