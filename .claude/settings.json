@@ -35,6 +35,7 @@
       "WebFetch(domain:supabase.com)",
       "WebFetch(domain:superuser.com)",
       "WebFetch(domain:tauri.app)",
+      "WebFetch(domain:wealthsimple.com)",
       "WebFetch(domain:yarnpkg.com)",
       "Bash(bundle:*)",
       "Bash(cargo:*)",
