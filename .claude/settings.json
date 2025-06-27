@@ -68,6 +68,7 @@
       "Bash(node:*)",
       "Bash(npm:*)",
       "Bash(npx:*)",
+      "Bash(pkill:*)",
       "Bash(ps:*)",
       "Bash(rake:*)",
       "Bash(ruby:*)",
