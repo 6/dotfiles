@@ -88,6 +88,7 @@
       "Bash(wrangler:*)",
       "Bash(xcdebug:*)",
       "Bash(xcodebuild:*)",
+      "Bash(xcode-select:*)",
       "Bash(xcrun:*)",
       "Bash(xctrace:*)",
       "Bash(yarn:*)"
