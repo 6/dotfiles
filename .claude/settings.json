@@ -75,6 +75,7 @@
       "Bash(pwd:*)",
       "Bash(sed:*)",
       "Bash(sort:*)",
+      "Bash(swift:*)",
       "Bash(tail:*)",
       "Bash(test:*)",
       "Bash(time:*)",
