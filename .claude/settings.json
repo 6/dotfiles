@@ -85,6 +85,10 @@
       "Bash(which:*)",
       "Bash(whoami:*)",
       "Bash(wrangler:*)",
+      "Bash(xcdebug:*)",
+      "Bash(xcodebuild:*)",
+      "Bash(xcrun:*)",
+      "Bash(xctrace:*)",
       "Bash(yarn:*)"
     ],
     "deny": []
