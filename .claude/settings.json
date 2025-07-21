@@ -72,6 +72,7 @@
       "Bash(ps:*)",
       "Bash(rake:*)",
       "Bash(ruby:*)",
+      "Bash(pod:*)",
       "Bash(pwd:*)",
       "Bash(sed:*)",
       "Bash(sort:*)",
