@@ -78,6 +78,7 @@
       "Bash(git status:*)",
       "Bash(grep:*)",
       "Bash(head:*)",
+      "Bash(heroku:*)",
       "Bash(history:*)",
       "Bash(ln:*)",
       "Bash(ls:*)",
