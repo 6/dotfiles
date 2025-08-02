@@ -21,6 +21,7 @@
       "WebFetch(domain:docs.rs)",
       "WebFetch(domain:elevenlabs.io)",
       "WebFetch(domain:fly.io)",
+      "WebFetch(domain:gist.github.com)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:github.io)",
       "WebFetch(domain:gitlab.com)",
@@ -120,5 +121,9 @@
       "Bash(yarn:*)"
     ],
     "deny": []
-  }
+  },
+  "feedbackSurveyState": {
+    "lastShownTime": 1754093691446
+  },
+  "$schema": "https://json.schemastore.org/claude-code-settings.json"
 }
