@@ -72,6 +72,22 @@
       "Bash(fc-scan:*)",
       "Bash(find:*)",
       "Bash(for:*)",
+      "Bash(gh api:*)",
+      "Bash(gh browse:*)",
+      "Bash(gh co:*)",
+      "Bash(gh gist:*)",
+      "Bash(gh issue:*)",
+      "Bash(gh label:*)",
+      "Bash(gh org:*)",
+      "Bash(gh pr:*)",
+      "Bash(gh project:*)",
+      "Bash(gh repo:*)",
+      "Bash(gh release:*)",
+      "Bash(gh ruleset:*)",
+      "Bash(gh run:*)",
+      "Bash(gh search:*)",
+      "Bash(gh status:*)",
+      "Bash(gh workflow:*)",
       "Bash(git add:*)",
       "Bash(git branch:*)",
       "Bash(git checkout:*)",
@@ -131,6 +147,6 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "input=$(cat); get_cost() { echo \"$1\" | jq -r '.cost.total_cost_usd // \"0.00\"'; }; model_name=$(echo \"$input\" | jq -r '.model.display_name'); cost=$(get_cost \"$input\"); printf \"Model: %s | Cost: $%s\" \"$model_name\" \"$cost\""
+    "command": "input=$(cat); get_cost() { echo \"$1\" | jq -r '.cost.total_cost_usd // \"0.00\"'; }; model_name=$(echo \"$input\" | jq -r '.model.display_name'); cost=$(get_cost \"$input\"); if (( $(echo \"$cost >= 0.01\" | bc -l) )); then formatted_cost=$(printf \"%.2f\" \"$cost\"); else formatted_cost=$(printf \"%.4f\" \"$cost\"); fi; printf \"Model: %s | Cost: $%s\" \"$model_name\" \"$formatted_cost\""
   }
 }
