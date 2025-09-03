@@ -54,6 +54,7 @@
       "WebFetch(domain:superuser.com)",
       "WebFetch(domain:tauri.app)",
       "WebFetch(domain:wealthsimple.com)",
+      "WebFetch(domain:www.npmjs.com)",
       "WebFetch(domain:yarnpkg.com)",
       "Bash(assetutil:*)",
       "Bash(bundle:*)",
