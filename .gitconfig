@@ -32,7 +32,7 @@
 [user]
 	email = peterghm@gmail.com
 	name = Peter Graham
-	signingkey = 61299CA3
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA8+spDSOMyENmBt5lCyJysKdl3KeK7hSzSQKIocpJ/D
 [filter "media"]
 	clean = git-media-clean %f
 	smudge = git-media-smudge %f
@@ -45,3 +45,9 @@
 	rebase = false
 [init]
 	defaultBranch = main
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[commit]
+	gpgsign = true
