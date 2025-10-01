@@ -99,6 +99,10 @@
       "Bash(git log:*)",
       "Bash(git pull:*)",
       "Bash(git status:*)",
+      "Bash(go build:*)",
+      "Bash(go run:*)",
+      "Bash(go fmt:*)",
+      "Bash(go test:*)",
       "Bash(grep:*)",
       "Bash(head:*)",
       "Bash(heroku:*)",
@@ -144,12 +148,11 @@
     ],
     "deny": []
   },
-  "model": "opusplan",
-  "feedbackSurveyState": {
-    "lastShownTime": 1754093691446
-  },
   "statusLine": {
     "type": "command",
     "command": "input=$(cat); get_cost() { echo \"$1\" | jq -r '.cost.total_cost_usd // \"0.00\"'; }; model_name=$(echo \"$input\" | jq -r '.model.display_name'); cost=$(get_cost \"$input\"); if (( $(echo \"$cost >= 0.01\" | bc -l) )); then formatted_cost=$(printf \"%.2f\" \"$cost\"); else formatted_cost=$(printf \"%.4f\" \"$cost\"); fi; printf \"Model: %s | Cost: $%s\" \"$model_name\" \"$formatted_cost\""
+  },
+  "feedbackSurveyState": {
+    "lastShownTime": 1754093691446
   }
 }
