@@ -3,16 +3,20 @@
   "permissions": {
     "allow": [
       "WebSearch",
+      "WebFetch(domain:ai.google.dev)",
       "WebFetch(domain:amazon.com)",
       "WebFetch(domain:anthropic.com)",
       "WebFetch(domain:apple.com)",
       "WebFetch(domain:arxiv.org)",
       "WebFetch(domain:brew.sh)",
+      "WebFetch(domain:claude.ai)",
+      "WebFetch(domain:claude.com)",
       "WebFetch(domain:coinbase.com)",
       "WebFetch(domain:containers.dev)",
       "WebFetch(domain:devcenter.heroku.com)",
       "WebFetch(domain:developer.android.com)",
       "WebFetch(domain:developer.apple.com)",
+      "WebFetch(domain:developer.atlassian.com)",
       "WebFetch(domain:developers.cloudflare.com)",
       "WebFetch(domain:developer.mozilla.org)",
       "WebFetch(domain:docs.anthropic.com)",
@@ -29,6 +33,7 @@
       "WebFetch(domain:github.io)",
       "WebFetch(domain:gitlab.com)",
       "WebFetch(domain:google.com)",
+      "WebFetch(domain:help.wealthsimple.com)",
       "WebFetch(domain:heroku.com)",
       "WebFetch(domain:huggingface.co)",
       "WebFetch(domain:llmstxt.org)",
@@ -56,7 +61,9 @@
       "WebFetch(domain:superuser.com)",
       "WebFetch(domain:tauri.app)",
       "WebFetch(domain:wealthsimple.com)",
+      "WebFetch(domain:www.anthropic.com)",
       "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:www.wealthsimple.com)",
       "WebFetch(domain:yarnpkg.com)",
       "Bash(assetutil:*)",
       "Bash(bundle:*)",
@@ -152,6 +159,7 @@
     "type": "command",
     "command": "input=$(cat); get_cost() { echo \"$1\" | jq -r '.cost.total_cost_usd // \"0.00\"'; }; model_name=$(echo \"$input\" | jq -r '.model.display_name'); cost=$(get_cost \"$input\"); if (( $(echo \"$cost >= 0.01\" | bc -l) )); then formatted_cost=$(printf \"%.2f\" \"$cost\"); else formatted_cost=$(printf \"%.4f\" \"$cost\"); fi; printf \"Model: %s | Cost: $%s\" \"$model_name\" \"$formatted_cost\""
   },
+  "alwaysThinkingEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 1754093691446
   }
