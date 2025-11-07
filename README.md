@@ -1,5 +1,3 @@
-# Installation
-
 First, install Xcode along with command line tools (macOS only):
 ```sh
 xcode-select --install
@@ -82,10 +80,6 @@ Install [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
 Install [p10k](https://github.com/romkatv/powerlevel10k#oh-my-zsh)
 
 Install [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md)
-
-# NVM
-
-Install nvm without brew: https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
 
 # other software
 
