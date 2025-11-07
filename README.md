@@ -1,4 +1,4 @@
-First, install Xcode along with command line tools (macOS only):
+First, install Xcode along with command line tools:
 ```sh
 xcode-select --install
 ```
@@ -12,8 +12,6 @@ This will automatically discover and symlink:
 - All root-level dotfiles (`.zshrc`, `.gitconfig`, `.gitignore`, etc.) to your home directory
 - Everything in `.config/` to `~/.config/` (e.g., `.config/ghostty/` → `~/.config/ghostty/`)
 - Contents of other dot directories (e.g., `.claude/commands/` → `~/.claude/commands/`, `.claude/settings.json` → `~/.claude/settings.json`)
-
-**No manual configuration needed** - just add files to the repo and they're auto-symlinked!
 
 The script supports both macOS and Linux. On Linux, it will use Linux-specific configs from the `linux/` folder.
 
