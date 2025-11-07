@@ -10,12 +10,14 @@ Then run the install script:
 ./install.sh
 ```
 
-This will automatically symlink:
-- All root-level dotfiles (`.zshrc`, `.gitconfig`, etc.) to your home directory
-- Everything in `.config/` directory to `~/.config/` (auto-discovered)
-- Specific subdirectories listed in the manifest (`.claude/commands`, `.claude/settings.json`)
+This will automatically discover and symlink:
+- All root-level dotfiles (`.zshrc`, `.gitconfig`, `.gitignore`, etc.) to your home directory
+- Everything in `.config/` to `~/.config/` (e.g., `.config/ghostty/` → `~/.config/ghostty/`)
+- Contents of other dot directories (e.g., `.claude/commands/` → `~/.claude/commands/`, `.claude/settings.json` → `~/.claude/settings.json`)
 
-The script supports both macOS and Linux. On Linux, it will use the Linux-specific configs from the `linux/` folder.
+**No manual configuration needed** - just add files to the repo and they're auto-symlinked!
+
+The script supports both macOS and Linux. On Linux, it will use Linux-specific configs from the `linux/` folder.
 
 To remove all symlinks:
 ```sh
@@ -24,14 +26,36 @@ To remove all symlinks:
 
 ## Adding New Configs
 
-**For XDG-compliant apps** (modern apps using `~/.config/`):
-- Just create the directory/file in `dotfiles/.config/`
-- Example: Add `dotfiles/.config/nvim/init.vim` → auto-symlinks to `~/.config/nvim/init.vim`
-- No need to edit install.sh!
+Everything is auto-discovered - just add files to the repo:
 
-**For partial directory linking** (when you don't want to symlink an entire directory):
-- Edit the `SUBDIR_LINKS` array in `install.sh`
-- Example: `.claude/commands` is symlinked, but other files in `.claude/` are not
+**XDG-compliant apps** (modern apps using `~/.config/`):
+```bash
+# Create config in .config/
+mkdir -p dotfiles/.config/nvim
+echo "set number" > dotfiles/.config/nvim/init.vim
+
+# Run install - auto-discovered!
+./install.sh
+# Result: ~/.config/nvim/ → dotfiles/.config/nvim/
+```
+
+**Other dot directories** (partial directory linking):
+```bash
+# Add files/folders to any dot directory
+mkdir -p dotfiles/.aws
+echo "[default]" > dotfiles/.aws/config
+
+# Run install - auto-discovered!
+./install.sh
+# Result: ~/.aws/config → dotfiles/.aws/config
+```
+
+**Global gitignore**:
+- `.gitignore` in repo root → symlinked to `~/.gitignore` (global gitignore)
+
+**Files are excluded automatically**:
+- Gitignored files (like `.claude/settings.local.json`) won't be symlinked
+- Script files (`install.sh`, `README.md`) won't be symlinked
 
 ## Conflict Handling
 

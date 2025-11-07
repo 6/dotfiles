@@ -24,20 +24,14 @@ fi
 
 echo -e "${BLUE}Detected platform: $PLATFORM${NC}"
 
-# Configuration: Subdirectory/file symlinks (for partial directory linking)
-# Format: "target_path:source_path"
-# Creates: ~/$target_path -> $DOTFILES_DIR/$source_path
-SUBDIR_LINKS=(
-    ".claude/commands:.claude/commands"
-    ".claude/settings.json:.claude/settings.json"
-)
-
-# Files to exclude from root-level dotfile symlinking
-EXCLUDE_FILES=(
+# Directories and files to exclude from symlinking
+EXCLUDE_PATTERNS=(
     ".DS_Store"
     ".git"
-    ".gitignore"
     "settings.local.json"
+    "README.md"
+    "install.sh"
+    "linux"
 )
 
 # Conflict resolution state
@@ -48,7 +42,7 @@ BACKUP_ALL=false
 # Function to check if file should be excluded
 should_exclude() {
     local file="$1"
-    for exclude in "${EXCLUDE_FILES[@]}"; do
+    for exclude in "${EXCLUDE_PATTERNS[@]}"; do
         if [[ "$file" == *"$exclude"* ]]; then
             return 0
         fi
@@ -185,7 +179,7 @@ install_dotfiles() {
         fi
 
         # Skip directories (we handle them separately)
-        if [[ "$filename" == ".misc" ]] || [[ "$filename" == ".claude" ]] || [[ "$filename" == ".config" ]]; then
+        if [[ -d "$file" ]]; then
             continue
         fi
 
@@ -222,18 +216,41 @@ install_dotfiles() {
         done < <(find "$DOTFILES_DIR/.config" -mindepth 1 -maxdepth 1 -print0)
     fi
 
-    # 4. Symlink subdirectories and specific files
-    if [[ ${#SUBDIR_LINKS[@]} -gt 0 ]]; then
-        echo -e "\n${BLUE}Installing subdirectory links...${NC}"
-        for link in "${SUBDIR_LINKS[@]}"; do
-            IFS=':' read -r target_path source_path <<< "$link"
+    # 4. Auto-discover and symlink other dot directories (like .claude/)
+    # These are directories where we want to symlink contents, not the directory itself
+    echo -e "\n${BLUE}Installing other dot directory contents...${NC}"
+    for dir in "$DOTFILES_DIR"/.[^.]*; do
+        [[ -d "$dir" ]] || continue
 
-            local source="$DOTFILES_DIR/$source_path"
-            local target="$HOME/$target_path"
+        local dirname=$(basename "$dir")
+
+        # Skip if in exclude list
+        if should_exclude "$dirname"; then
+            continue
+        fi
+
+        # Skip directories we've already handled
+        if [[ "$dirname" == ".misc" ]] || [[ "$dirname" == ".config" ]]; then
+            continue
+        fi
+
+        # Symlink top-level items within this directory
+        for item in "$dir"/*; do
+            [[ -e "$item" ]] || continue
+
+            local itemname=$(basename "$item")
+
+            # Skip if in exclude list
+            if should_exclude "$itemname"; then
+                continue
+            fi
+
+            local source="$item"
+            local target="$HOME/$dirname/$itemname"
 
             create_symlink "$source" "$target"
         done
-    fi
+    done
 
     echo -e "\n${GREEN}=== Installation Complete! ===${NC}\n"
 }
@@ -286,15 +303,40 @@ uninstall_dotfiles() {
         done < <(find "$DOTFILES_DIR/.config" -mindepth 1 -maxdepth 1 -print0)
     fi
 
-    # Remove subdirectory symlinks
-    for link in "${SUBDIR_LINKS[@]}"; do
-        IFS=':' read -r target_path source_path <<< "$link"
-        local target="$HOME/$target_path"
+    # Remove other dot directory symlinks
+    for dir in "$DOTFILES_DIR"/.[^.]*; do
+        [[ -d "$dir" ]] || continue
 
-        if [[ -L "$target" ]]; then
-            rm "$target"
-            echo -e "${GREEN}Removed:${NC} $target"
+        local dirname=$(basename "$dir")
+
+        # Skip if in exclude list
+        if should_exclude "$dirname"; then
+            continue
         fi
+
+        # Skip directories we've already handled
+        if [[ "$dirname" == ".misc" ]] || [[ "$dirname" == ".config" ]]; then
+            continue
+        fi
+
+        # Remove top-level item symlinks within this directory
+        for item in "$dir"/*; do
+            [[ -e "$item" ]] || continue
+
+            local itemname=$(basename "$item")
+
+            # Skip if in exclude list
+            if should_exclude "$itemname"; then
+                continue
+            fi
+
+            local target="$HOME/$dirname/$itemname"
+
+            if [[ -L "$target" ]] && [[ "$(readlink "$target")" == "$item" ]]; then
+                rm "$target"
+                echo -e "${GREEN}Removed:${NC} $target"
+            fi
+        done
     done
 
     echo -e "\n${GREEN}=== Uninstallation Complete! ===${NC}\n"
