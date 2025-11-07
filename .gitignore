@@ -24,3 +24,4 @@ venv
 
 # Claude
 .claude/settings.local.json
+.claude/commands/private-*.md

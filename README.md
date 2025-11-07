@@ -18,6 +18,14 @@ ln -s ~/dotfiles/.misc/ghostty ~/.config/ghostty/config
 
 Then quit and reopen Ghostty.
 
+# Claude Code
+
+```sh
+ln -s ~/dotfiles/.claude/commands ~/.claude/commands
+```
+
+Commands starting with `private-` are gitignored for sensitive/machine-specific commands.
+
 # ZSH
 
 Install [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
