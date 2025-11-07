@@ -11,9 +11,9 @@ Then run the install script:
 ```
 
 This will automatically symlink:
-- All dotfiles (`.zshrc`, `.gitconfig`, etc.) to your home directory
-- Ghostty config to `~/.config/ghostty/config`
-- Claude Code commands to `~/.claude/commands`
+- All root-level dotfiles (`.zshrc`, `.gitconfig`, etc.) to your home directory
+- Everything in `.config/` directory to `~/.config/` (auto-discovered)
+- Specific subdirectories listed in the manifest (`.claude/commands`, `.claude/settings.json`)
 
 The script supports both macOS and Linux. On Linux, it will use the Linux-specific configs from the `linux/` folder.
 
@@ -21,6 +21,17 @@ To remove all symlinks:
 ```sh
 ./install.sh uninstall
 ```
+
+## Adding New Configs
+
+**For XDG-compliant apps** (modern apps using `~/.config/`):
+- Just create the directory/file in `dotfiles/.config/`
+- Example: Add `dotfiles/.config/nvim/init.vim` → auto-symlinks to `~/.config/nvim/init.vim`
+- No need to edit install.sh!
+
+**For partial directory linking** (when you don't want to symlink an entire directory):
+- Edit the `SUBDIR_LINKS` array in `install.sh`
+- Example: `.claude/commands` is symlinked, but other files in `.claude/` are not
 
 ## Conflict Handling
 

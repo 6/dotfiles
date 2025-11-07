@@ -24,14 +24,7 @@ fi
 
 echo -e "${BLUE}Detected platform: $PLATFORM${NC}"
 
-# Configuration: XDG config symlinks
-# Format: "target_dir:source_path:filename"
-# Creates: ~/.config/$target_dir/$filename -> $DOTFILES_DIR/$source_path
-XDG_CONFIGS=(
-    "ghostty:.misc/ghostty:config"
-)
-
-# Configuration: Subdirectory/file symlinks
+# Configuration: Subdirectory/file symlinks (for partial directory linking)
 # Format: "target_path:source_path"
 # Creates: ~/$target_path -> $DOTFILES_DIR/$source_path
 SUBDIR_LINKS=(
@@ -206,17 +199,27 @@ install_dotfiles() {
         create_symlink "$DOTFILES_DIR/.misc" "$HOME/.misc"
     fi
 
-    # 3. Symlink XDG config files
-    if [[ ${#XDG_CONFIGS[@]} -gt 0 ]]; then
-        echo -e "\n${BLUE}Installing XDG config files...${NC}"
-        for config in "${XDG_CONFIGS[@]}"; do
-            IFS=':' read -r target_dir source_path filename <<< "$config"
+    # 3. Auto-discover and symlink .config directory contents
+    if [[ -d "$DOTFILES_DIR/.config" ]]; then
+        echo -e "\n${BLUE}Installing .config directory contents...${NC}"
 
-            local source="$DOTFILES_DIR/$source_path"
-            local target="$HOME/.config/$target_dir/$filename"
+        # Use find to get all files and directories in .config, preserving structure
+        while IFS= read -r -d '' item; do
+            # Get relative path from .config directory
+            local rel_path="${item#$DOTFILES_DIR/.config/}"
 
-            create_symlink "$source" "$target"
-        done
+            # Skip the .config directory itself
+            [[ "$rel_path" == "" ]] && continue
+
+            local source="$item"
+            local target="$HOME/.config/$rel_path"
+
+            # Only symlink top-level items in .config (let subdirectories be handled by their parent symlinks)
+            # This prevents creating individual symlinks for every file when we can symlink the directory
+            if [[ "$rel_path" != */* ]]; then
+                create_symlink "$source" "$target"
+            fi
+        done < <(find "$DOTFILES_DIR/.config" -mindepth 1 -maxdepth 1 -print0)
     fi
 
     # 4. Symlink subdirectories and specific files
@@ -265,16 +268,23 @@ uninstall_dotfiles() {
         echo -e "${GREEN}Removed:${NC} $HOME/.misc"
     fi
 
-    # Remove XDG config symlinks
-    for config in "${XDG_CONFIGS[@]}"; do
-        IFS=':' read -r target_dir source_path filename <<< "$config"
-        local target="$HOME/.config/$target_dir/$filename"
+    # Remove .config directory symlinks
+    if [[ -d "$DOTFILES_DIR/.config" ]]; then
+        while IFS= read -r -d '' item; do
+            local rel_path="${item#$DOTFILES_DIR/.config/}"
+            [[ "$rel_path" == "" ]] && continue
 
-        if [[ -L "$target" ]]; then
-            rm "$target"
-            echo -e "${GREEN}Removed:${NC} $target"
-        fi
-    done
+            local target="$HOME/.config/$rel_path"
+
+            # Only check top-level items
+            if [[ "$rel_path" != */* ]]; then
+                if [[ -L "$target" ]] && [[ "$(readlink "$target")" == "$item" ]]; then
+                    rm "$target"
+                    echo -e "${GREEN}Removed:${NC} $target"
+                fi
+            fi
+        done < <(find "$DOTFILES_DIR/.config" -mindepth 1 -maxdepth 1 -print0)
+    fi
 
     # Remove subdirectory symlinks
     for link in "${SUBDIR_LINKS[@]}"; do
