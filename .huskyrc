@@ -1,5 +1,7 @@
 # Fixes "npx command not found", "gitleaks command not found"
 # and similar issues for Husky:
 # https://typicode.github.io/husky/troubleshoot.html
-PATH="/opt/homebrew/bin/:$PATH"
+export PATH="/opt/homebrew/bin/:$PATH"
 PATH="$HOME/.local/share/mise/shims:$PATH"
+#export HUSKY=0
+export PATH="$HOME/.local/share/mise/shims:$PATH"

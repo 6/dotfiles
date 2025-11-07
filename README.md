@@ -1,28 +1,75 @@
-On macOS:
-- First, install Xcode along with command line tools and run `xcode-select --install`
-- `rake install` to add symlinks to home directory, and `rake uninstall` to remove them.
+First, install Xcode along with command line tools (macOS only):
+```sh
+xcode-select --install
+```
 
-On Linux:
-- Run `./install_linux.sh`
+Then run the install script:
+```sh
+./install.sh
+```
+
+This will automatically discover and symlink:
+- All root-level dotfiles (`.zshrc`, `.gitconfig`, `.gitignore`, etc.) to your home directory
+- Everything in `.config/` to `~/.config/` (e.g., `.config/ghostty/` → `~/.config/ghostty/`)
+- Contents of other dot directories (e.g., `.claude/commands/` → `~/.claude/commands/`, `.claude/settings.json` → `~/.claude/settings.json`)
+
+**No manual configuration needed** - just add files to the repo and they're auto-symlinked!
+
+The script supports both macOS and Linux. On Linux, it will use Linux-specific configs from the `linux/` folder.
+
+To remove all symlinks:
+```sh
+./install.sh uninstall
+```
+
+## Adding New Configs
+
+Everything is auto-discovered - just add files to the repo:
+
+**XDG-compliant apps** (modern apps using `~/.config/`):
+```bash
+# Create config in .config/
+mkdir -p dotfiles/.config/nvim
+echo "set number" > dotfiles/.config/nvim/init.vim
+
+# Run install - auto-discovered!
+./install.sh
+# Result: ~/.config/nvim/ → dotfiles/.config/nvim/
+```
+
+**Other dot directories** (partial directory linking):
+```bash
+# Add files/folders to any dot directory
+mkdir -p dotfiles/.aws
+echo "[default]" > dotfiles/.aws/config
+
+# Run install - auto-discovered!
+./install.sh
+# Result: ~/.aws/config → dotfiles/.aws/config
+```
+
+**Global gitignore**:
+- `.gitignore` in repo root → symlinked to `~/.gitignore` (global gitignore)
+
+**Files are excluded automatically**:
+- Gitignored files (like `.claude/settings.local.json`) won't be symlinked
+- Script files (`install.sh`, `README.md`) won't be symlinked
+
+## Conflict Handling
+
+If a file already exists at the target location, the installer will prompt you to:
+- `[s]kip` - Skip this file
+- `[S]kip all` - Skip all future conflicts
+- `[o]verwrite` - Replace the existing file
+- `[O]verwrite all` - Replace all future conflicts
+- `[b]ackup` - Move existing file to `.backup` extension
+- `[B]ackup all` - Backup all future conflicts
 
 # Font
 
 Install [Meslo](https://github.com/andreberg/Meslo-Font)
 
-# Ghostty
-
-```sh
-mkdir -p ~/.config/ghostty
-ln -s ~/dotfiles/.misc/ghostty ~/.config/ghostty/config
-```
-
-Then quit and reopen Ghostty.
-
 # Claude Code
-
-```sh
-ln -s ~/dotfiles/.claude/commands ~/.claude/commands
-```
 
 Commands starting with `private-` are gitignored for sensitive/machine-specific commands.
 
@@ -33,10 +80,6 @@ Install [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
 Install [p10k](https://github.com/romkatv/powerlevel10k#oh-my-zsh)
 
 Install [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md)
-
-# NVM
-
-Install nvm without brew: https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
 
 # other software
 
