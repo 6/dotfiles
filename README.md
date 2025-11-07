@@ -1,28 +1,42 @@
-On macOS:
-- First, install Xcode along with command line tools and run `xcode-select --install`
-- `rake install` to add symlinks to home directory, and `rake uninstall` to remove them.
+# Installation
 
-On Linux:
-- Run `./install_linux.sh`
+First, install Xcode along with command line tools (macOS only):
+```sh
+xcode-select --install
+```
+
+Then run the install script:
+```sh
+./install.sh
+```
+
+This will automatically symlink:
+- All dotfiles (`.zshrc`, `.gitconfig`, etc.) to your home directory
+- Ghostty config to `~/.config/ghostty/config`
+- Claude Code commands to `~/.claude/commands`
+
+The script supports both macOS and Linux. On Linux, it will use the Linux-specific configs from the `linux/` folder.
+
+To remove all symlinks:
+```sh
+./install.sh uninstall
+```
+
+## Conflict Handling
+
+If a file already exists at the target location, the installer will prompt you to:
+- `[s]kip` - Skip this file
+- `[S]kip all` - Skip all future conflicts
+- `[o]verwrite` - Replace the existing file
+- `[O]verwrite all` - Replace all future conflicts
+- `[b]ackup` - Move existing file to `.backup` extension
+- `[B]ackup all` - Backup all future conflicts
 
 # Font
 
 Install [Meslo](https://github.com/andreberg/Meslo-Font)
 
-# Ghostty
-
-```sh
-mkdir -p ~/.config/ghostty
-ln -s ~/dotfiles/.misc/ghostty ~/.config/ghostty/config
-```
-
-Then quit and reopen Ghostty.
-
 # Claude Code
-
-```sh
-ln -s ~/dotfiles/.claude/commands ~/.claude/commands
-```
 
 Commands starting with `private-` are gitignored for sensitive/machine-specific commands.
 
