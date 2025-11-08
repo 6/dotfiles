@@ -25,8 +25,12 @@ fi
 
 # Check if duplicate already exists
 if [ -d "$NEW_APP" ]; then
-    echo -e "${YELLOW}⚠️  $NEW_APP already exists. Removing and recreating...${NC}"
-    rm -rf "$NEW_APP"
+    echo -e "${YELLOW}⚠️  $NEW_APP already exists.${NC}"
+    echo -e "${YELLOW}If you want to recreate it, manually delete it first:${NC}"
+    echo -e "${YELLOW}  rm -rf \"$NEW_APP\"${NC}"
+    echo ""
+    echo "Exiting without changes."
+    exit 0
 fi
 
 echo "📋 Duplicating Ghostty.app..."
@@ -108,45 +112,11 @@ echo "🔏 Re-signing application..."
 codesign --force --deep --sign - "$NEW_APP"
 echo -e "${GREEN}✓ Application re-signed${NC}"
 
-# Nuclear option: Clear ALL icon caches (order matters!)
-echo "💣 Clearing all icon caches..."
-
-# Kill processes first to ensure caches can be cleared
-killall Dock 2>/dev/null || true
-killall Finder 2>/dev/null || true
-killall IconServicesAgent 2>/dev/null || true
-killall iconservicesd 2>/dev/null || true
-
-# Clear all icon service caches
-rm -rf ~/Library/Caches/com.apple.iconservices.store 2>/dev/null || true
-sudo rm -rf /Library/Caches/com.apple.iconservices.store 2>/dev/null || true
-
-# Clear additional icon-related caches
-sudo find /private/var/folders/ -name com.apple.iconservices -exec rm -rf {} \; 2>/dev/null || true
-sudo find /private/var/folders/ -name com.apple.dock.iconcache -exec rm -rf {} \; 2>/dev/null || true
-
-# Rebuild Launch Services database FIRST
-echo "🔄 Rebuilding Launch Services database..."
-/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
-
-# NOW touch the app to update modification date
-echo "📝 Updating app modification date..."
+# Update modification time and register with Launch Services
+echo "🔄 Registering with Launch Services..."
 touch "$NEW_APP"
-touch "$NEW_APP/Contents/Info.plist"
-
-# Give the system a moment to process
-sleep 1
-
-# Restart Dock and Finder to pick up changes
-echo "🔄 Restarting Dock and Finder..."
-killall Dock
-killall Finder
-
-sleep 2
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$NEW_APP"
 
 echo -e "${GREEN}✅ Done! Ghostty Code.app is ready.${NC}"
 echo ""
-echo -e "${YELLOW}If the icon still doesn't update:${NC}"
-echo "  1. Try: sudo rm -rf /Library/Caches/com.apple.iconservices.store && killall Dock"
-echo "  2. Log out and back in"
-echo "  3. Restart your Mac (most reliable)"
+echo -e "${YELLOW}⚠️  RESTART YOUR MAC for the new icon to appear.${NC}"
