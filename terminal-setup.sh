@@ -7,6 +7,7 @@ ORIGINAL_APP="/Applications/Ghostty.app"
 NEW_APP="/Applications/Ghostty Code.app"
 NEW_BUNDLE_ID="com.mitchellh.ghostty.code"
 NEW_APP_NAME="Ghostty Code"
+OUTPUT_ICON="$HOME/Desktop/ghostty_code_icon.png"
 
 # Colors for output
 RED='\033[0;31m'
@@ -47,63 +48,40 @@ echo "🔧 Updating bundle identifier..."
 
 echo -e "${GREEN}✓ Bundle identifier updated${NC}"
 
-# Modify the icon to be orange-tinted
-echo "🎨 Creating orange-tinted icon..."
+# Create an orange-tinted icon PNG for manual application
+echo "🎨 Creating orange-tinted icon PNG..."
 
 # Check if ImageMagick is installed
 if ! command -v magick &> /dev/null && ! command -v convert &> /dev/null; then
-    echo -e "${YELLOW}⚠️  ImageMagick not found. Skipping icon modification.${NC}"
+    echo -e "${YELLOW}⚠️  ImageMagick not found. Cannot create custom icon.${NC}"
     echo -e "${YELLOW}   Install with: brew install imagemagick${NC}"
+    SKIP_ICON=true
 else
-    ICNS_FILE="$NEW_APP/Contents/Resources/Ghostty.icns"
+    ICNS_FILE="$ORIGINAL_APP/Contents/Resources/Ghostty.icns"
 
     if [ -f "$ICNS_FILE" ]; then
-        echo "  Processing: Ghostty.icns"
+        # Convert to PNG first
+        sips -s format png "$ICNS_FILE" --out /tmp/ghostty_temp.png &>/dev/null
 
-        # Create a temporary directory for icon processing
-        TEMP_DIR=$(mktemp -d)
-
-        # Extract all PNG representations from the .icns file
-        iconutil -c iconset "$ICNS_FILE" -o "$TEMP_DIR/original.iconset" 2>/dev/null || {
-            echo -e "${YELLOW}  ⚠️  Could not extract iconset${NC}"
-            rm -rf "$TEMP_DIR"
-            exit 1
-        }
-
-        # Create new iconset directory
-        mkdir -p "$TEMP_DIR/new.iconset"
-
-        # Apply orange tint to each PNG - using hue rotation to maintain clarity
-        for png in "$TEMP_DIR/original.iconset"/*.png; do
-            if [ -f "$png" ]; then
-                filename=$(basename "$png")
-                if command -v magick &> /dev/null; then
-                    # Hue rotation approach - shifts colors to orange while maintaining contrast
-                    # Also boost saturation slightly to make it pop
-                    magick "$png" -modulate 100,130,100 \
-                        -colorspace HSL -channel R -evaluate multiply 1.3 +channel \
-                        -colorspace sRGB \
-                        "$TEMP_DIR/new.iconset/$filename"
-                else
-                    convert "$png" -modulate 100,130,100 \
-                        -colorspace HSL -channel R -evaluate multiply 1.3 +channel \
-                        -colorspace sRGB \
-                        "$TEMP_DIR/new.iconset/$filename"
-                fi
-            fi
-        done
-
-        # Convert iconset back to icns
-        iconutil -c icns "$TEMP_DIR/new.iconset" -o "$ICNS_FILE"
-
-        if [ -f "$ICNS_FILE" ]; then
-            echo -e "${GREEN}✓ Orange-tinted icon created${NC}"
+        # Apply orange tint using ImageMagick
+        if command -v magick &> /dev/null; then
+            magick /tmp/ghostty_temp.png -modulate 100,130,100 \
+                -colorspace HSL -channel R -evaluate multiply 1.3 +channel \
+                -colorspace sRGB \
+                "$OUTPUT_ICON"
+        else
+            convert /tmp/ghostty_temp.png -modulate 100,130,100 \
+                -colorspace HSL -channel R -evaluate multiply 1.3 +channel \
+                -colorspace sRGB \
+                "$OUTPUT_ICON"
         fi
 
-        # Clean up
-        rm -rf "$TEMP_DIR"
+        rm /tmp/ghostty_temp.png
+        echo -e "${GREEN}✓ Orange icon saved to: $OUTPUT_ICON${NC}"
+        SKIP_ICON=false
     else
-        echo -e "${YELLOW}⚠️  Icon file not found${NC}"
+        echo -e "${YELLOW}⚠️  Original icon not found${NC}"
+        SKIP_ICON=true
     fi
 fi
 
@@ -117,6 +95,25 @@ echo "🔄 Registering with Launch Services..."
 touch "$NEW_APP"
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$NEW_APP"
 
+echo ""
 echo -e "${GREEN}✅ Done! Ghostty Code.app is ready.${NC}"
 echo ""
-echo -e "${YELLOW}⚠️  RESTART YOUR MAC for the new icon to appear.${NC}"
+
+if [ "$SKIP_ICON" = false ]; then
+    echo -e "${YELLOW}📝 MANUAL ICON SETUP REQUIRED:${NC}"
+    echo ""
+    echo "1. Open Finder and navigate to /Applications"
+    echo "2. Right-click 'Ghostty Code.app' and select 'Get Info' (or press Cmd+I)"
+    echo "3. In the Get Info window, click on the small icon in the top-left corner"
+    echo "4. Press Cmd+C to copy the current icon (this step is optional but good practice)"
+    echo "5. Open the generated icon on your Desktop: $OUTPUT_ICON"
+    echo "6. Select the image and press Cmd+C to copy it"
+    echo "7. Go back to the Get Info window for Ghostty Code.app"
+    echo "8. Click the icon in the top-left corner again"
+    echo "9. Press Cmd+V to paste the new orange icon"
+    echo "10. Close the Get Info window"
+    echo ""
+    echo "The icon should update immediately without needing to restart!"
+else
+    echo -e "${YELLOW}Icon generation was skipped. The apps will have the same icon.${NC}"
+fi
