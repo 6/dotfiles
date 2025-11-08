@@ -1,6 +1,6 @@
 # Set Oh My Zsh theme conditionally
-if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-  ZSH_THEME=""  # Disable Powerlevel10k for Cursor
+if [[ "$TERM_PROGRAM" == "vscode" ]] || [[ -n "$CCODE" ]]; then
+  ZSH_THEME=""  # Disable Powerlevel10k for Cursor and CCode
 else
   # Set name of the theme to load ( ~/.oh-my-zsh/themes/ )
   ZSH_THEME="powerlevel10k/powerlevel10k"
@@ -11,13 +11,15 @@ else
   if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
   fi
-
-  export ZSH="$HOME/.oh-my-zsh"
-  source $ZSH/oh-my-zsh.sh
-  # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-  # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-  plugins=(bundler git git-extras gitfast zsh-autosuggestions)
 fi
+
+# Load Oh My Zsh (always)
+export ZSH="$HOME/.oh-my-zsh"
+source $ZSH/oh-my-zsh.sh
+
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+plugins=(bundler git git-extras gitfast zsh-autosuggestions)
 
 # Couple of critical exports first:
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
@@ -162,6 +164,10 @@ fi
 # Use a minimal prompt in Cursor to avoid command detection issues
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
   PROMPT='%n@%m:%~%# '
+  RPROMPT=''
+elif [[ -n "$CCODE" ]]; then
+  # Orange/yellow prompt for CCode (Ghostty Code)
+  PROMPT='%F{208}%~%f %F{214}$%f '
   RPROMPT=''
 else
   # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
