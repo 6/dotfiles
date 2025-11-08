@@ -4,9 +4,9 @@ set -e
 
 # Configuration
 ORIGINAL_APP="/Applications/Ghostty.app"
-NEW_APP="/Applications/GCode.app"
-NEW_BUNDLE_ID="com.mitchellh.GCode"
-NEW_APP_NAME="GCode"
+NEW_APP="/Applications/CCode.app"
+NEW_BUNDLE_ID="com.mitchellh.ccode"
+NEW_APP_NAME="CCode"
 CODE_CONFIG="$HOME/.config/ghostty/config-code"
 
 # Colors for output
@@ -56,7 +56,7 @@ if ! command -v magick &> /dev/null && ! command -v convert &> /dev/null; then
     echo -e "${YELLOW}   Install with: brew install imagemagick${NC}"
 else
     ORIGINAL_ICNS="$NEW_APP/Contents/Resources/Ghostty.icns"
-    NEW_ICNS="$NEW_APP/Contents/Resources/GCode.icns"
+    NEW_ICNS="$NEW_APP/Contents/Resources/CCode.icns"
 
     if [ -f "$ORIGINAL_ICNS" ]; then
         echo "  Processing icon file..."
@@ -105,8 +105,8 @@ else
         /usr/libexec/PlistBuddy -c "Delete :CFBundleIconName" "$NEW_APP/Contents/Info.plist" 2>/dev/null || true
 
         # Update Info.plist to reference the new icon name
-        /usr/libexec/PlistBuddy -c "Set :CFBundleIconFile GCode" "$NEW_APP/Contents/Info.plist" 2>/dev/null || \
-            /usr/libexec/PlistBuddy -c "Add :CFBundleIconFile string GCode" "$NEW_APP/Contents/Info.plist"
+        /usr/libexec/PlistBuddy -c "Set :CFBundleIconFile CCode" "$NEW_APP/Contents/Info.plist" 2>/dev/null || \
+            /usr/libexec/PlistBuddy -c "Add :CFBundleIconFile string CCode" "$NEW_APP/Contents/Info.plist"
 
         # Clean up
         rm -rf "$TEMP_DIR"
@@ -128,7 +128,7 @@ if [ -f "$ORIGINAL_BINARY" ] && [ ! -f "$BACKUP_BINARY" ]; then
     mv "$ORIGINAL_BINARY" "$BACKUP_BINARY"
 fi
 
-# Create C wrapper source
+# Create C wrapper source with environment variable
 WRAPPER_SOURCE=$(mktemp).c
 cat > "$WRAPPER_SOURCE" << 'EOF'
 #include <stdio.h>
@@ -146,6 +146,9 @@ int main(int argc, char *argv[]) {
     char config_path[PATH_MAX];
     char config_arg[PATH_MAX + 20];
     char *home = getenv("HOME");
+
+    // Set environment variable to identify CCode terminal
+    setenv("CCODE", "1", 1);
 
     // Get the full path of the current executable
     uint32_t size = sizeof(exe_path);
@@ -219,7 +222,15 @@ rm -rf ~/Library/Caches/com.apple.iconservices.store 2>/dev/null || true
 killall Dock 2>/dev/null || true
 
 echo ""
-echo -e "${GREEN}✅ Done! GCode.app is ready.${NC}"
+echo -e "${GREEN}✅ Done! CCode.app is ready.${NC}"
 echo ""
 echo "The app now has your chosen custom colored icon (hue-1.4-sat-1.2)."
-echo "GCode will use: $CODE_CONFIG (if it exists)"
+echo "CCode sets CCODE=1 environment variable for prompt customization."
+echo "CCode will use: $CODE_CONFIG (if it exists)"
+echo ""
+echo "Add this to your ~/.zshrc to customize the CCode prompt:"
+echo ""
+echo "if [[ -n \"\$CCODE\" ]]; then"
+echo "  # Orange/yellow prompt for CCode"
+echo "  PROMPT='%F{214}%n@%m%f %F{208}%~%f %F{214}\$%f '"
+echo "fi"
