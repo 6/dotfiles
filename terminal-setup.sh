@@ -4,10 +4,9 @@ set -e
 
 # Configuration
 ORIGINAL_APP="/Applications/Ghostty.app"
-NEW_APP="/Applications/Ghostty Code.app"
-NEW_BUNDLE_ID="com.mitchellh.ghostty.code"
-NEW_APP_NAME="Ghostty Code"
-OUTPUT_ICON="$HOME/Desktop/ghostty_code_icon.png"
+NEW_APP="/Applications/GCode.app"
+NEW_BUNDLE_ID="com.mitchellh.GCode"
+NEW_APP_NAME="GCode"
 CODE_CONFIG="$HOME/.config/ghostty/config-code"
 
 # Colors for output
@@ -48,6 +47,64 @@ echo "🔧 Updating bundle identifier..."
 
 echo -e "${GREEN}✓ Bundle identifier updated${NC}"
 
+# Modify the icon and rename it to bypass cache
+echo "🎨 Creating orange-tinted icon..."
+
+# Check if ImageMagick is installed
+if ! command -v magick &> /dev/null && ! command -v convert &> /dev/null; then
+    echo -e "${YELLOW}⚠️  ImageMagick not found. Skipping icon modification.${NC}"
+    echo -e "${YELLOW}   Install with: brew install imagemagick${NC}"
+else
+    ORIGINAL_ICNS="$NEW_APP/Contents/Resources/Ghostty.icns"
+    NEW_ICNS="$NEW_APP/Contents/Resources/GCode.icns"
+
+    if [ -f "$ORIGINAL_ICNS" ]; then
+        echo "  Processing icon file..."
+
+        # Create a temporary directory
+        TEMP_DIR=$(mktemp -d)
+
+        # Extract iconset from the original icns file
+        iconutil -c iconset "$ORIGINAL_ICNS" -o "$TEMP_DIR/original.iconset" 2>/dev/null
+
+        # Create new iconset directory
+        mkdir -p "$TEMP_DIR/new.iconset"
+
+        # Apply orange/yellow tint to each PNG in the iconset
+        # Changed hue from 60 to 40 for more orange/yellow (less green)
+        for png in "$TEMP_DIR/original.iconset"/*.png; do
+            if [ -f "$png" ]; then
+                filename=$(basename "$png")
+                if command -v magick &> /dev/null; then
+                    magick "$png" -modulate 100,130,60 "$TEMP_DIR/new.iconset/$filename"
+                else
+                    convert "$png" -modulate 100,130,60 "$TEMP_DIR/new.iconset/$filename"
+                fi
+            fi
+        done
+
+        # Convert iconset to new icns file with different name
+        iconutil -c icns "$TEMP_DIR/new.iconset" -o "$NEW_ICNS"
+
+        # Remove the original icon file
+        rm "$ORIGINAL_ICNS"
+
+        # CRITICAL: Remove CFBundleIconName so it doesn't use Assets.car
+        /usr/libexec/PlistBuddy -c "Delete :CFBundleIconName" "$NEW_APP/Contents/Info.plist" 2>/dev/null || true
+
+        # Update Info.plist to reference the new icon name
+        /usr/libexec/PlistBuddy -c "Set :CFBundleIconFile GCode" "$NEW_APP/Contents/Info.plist" 2>/dev/null || \
+            /usr/libexec/PlistBuddy -c "Add :CFBundleIconFile string GCode" "$NEW_APP/Contents/Info.plist"
+
+        # Clean up
+        rm -rf "$TEMP_DIR"
+
+        echo -e "${GREEN}✓ Orange/yellow icon created${NC}"
+    else
+        echo -e "${YELLOW}⚠️  Icon file not found${NC}"
+    fi
+fi
+
 # Create a compiled C wrapper
 echo "🔧 Creating compiled wrapper..."
 
@@ -59,7 +116,7 @@ if [ -f "$ORIGINAL_BINARY" ] && [ ! -f "$BACKUP_BINARY" ]; then
     mv "$ORIGINAL_BINARY" "$BACKUP_BINARY"
 fi
 
-# Create C wrapper source - using --config-file=path format
+# Create C wrapper source
 WRAPPER_SOURCE=$(mktemp).c
 cat > "$WRAPPER_SOURCE" << 'EOF'
 #include <stdio.h>
@@ -127,39 +184,6 @@ rm "$WRAPPER_SOURCE"
 
 echo -e "${GREEN}✓ Compiled wrapper created${NC}"
 
-# Create an orange-tinted icon PNG for manual application
-echo "🎨 Creating orange-tinted icon PNG..."
-
-# Check if ImageMagick is installed
-if ! command -v magick &> /dev/null && ! command -v convert &> /dev/null; then
-    echo -e "${YELLOW}⚠️  ImageMagick not found. Cannot create custom icon.${NC}"
-    echo -e "${YELLOW}   Install with: brew install imagemagick${NC}"
-    SKIP_ICON=true
-else
-    ICNS_FILE="$ORIGINAL_APP/Contents/Resources/Ghostty.icns"
-
-    if [ -f "$ICNS_FILE" ]; then
-        # Convert to PNG first
-        sips -s format png "$ICNS_FILE" --out /tmp/ghostty_temp.png &>/dev/null
-
-        # Apply orange tint
-        if command -v magick &> /dev/null; then
-            magick /tmp/ghostty_temp.png -modulate 100,140,60 \
-                "$OUTPUT_ICON"
-        else
-            convert /tmp/ghostty_temp.png -modulate 100,140,60 \
-                "$OUTPUT_ICON"
-        fi
-
-        rm /tmp/ghostty_temp.png
-        echo -e "${GREEN}✓ Orange icon saved to: $OUTPUT_ICON${NC}"
-        SKIP_ICON=false
-    else
-        echo -e "${YELLOW}⚠️  Original icon not found${NC}"
-        SKIP_ICON=true
-    fi
-fi
-
 # Remove the code signature (it's now invalid after our modifications)
 echo "🔏 Re-signing application..."
 codesign --force --deep --sign - "$NEW_APP" 2>&1 | grep -v "replacing existing signature" || true
@@ -169,24 +193,21 @@ echo -e "${GREEN}✓ Application re-signed${NC}"
 echo "🧹 Clearing quarantine attributes..."
 xattr -cr "$NEW_APP" 2>/dev/null || true
 
-# Update modification time and register with Launch Services
-echo "🔄 Registering with Launch Services..."
+# Touch the app to update modification time
 touch "$NEW_APP"
+
+# Clear icon cache and restart Dock
+echo "🔄 Clearing icon cache and restarting Dock..."
+rm -rf ~/Library/Caches/com.apple.iconservices.store 2>/dev/null || true
+
+# Update modification time and register with Launch Services
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$NEW_APP"
 
-echo ""
-echo -e "${GREEN}✅ Done! Ghostty Code.app is ready.${NC}"
-echo ""
+# Restart Dock to refresh icons
+killall Dock 2>/dev/null || true
 
-if [ "$SKIP_ICON" = false ]; then
-    echo -e "${YELLOW}📝 MANUAL ICON SETUP:${NC}"
-    echo ""
-    echo "1. Open Finder and navigate to /Applications"
-    echo "2. Right-click 'Ghostty Code.app' and select 'Get Info' (or press Cmd+I)"
-    echo "3. Click the icon in the top-left corner of the Get Info window"
-    echo "4. Open the generated icon: $OUTPUT_ICON"
-    echo "5. Copy it (Cmd+C), go back to Get Info, click the icon, and paste (Cmd+V)"
-    echo ""
-fi
-
-echo "Ghostty Code will use: $CODE_CONFIG (if it exists)"
+echo ""
+echo -e "${GREEN}✅ Done! GCode.app is ready.${NC}"
+echo ""
+echo "The app now has an orange/yellow tinted icon."
+echo "GCode will use: $CODE_CONFIG (if it exists)"

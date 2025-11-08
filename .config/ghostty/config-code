@@ -4,7 +4,7 @@ font-family = "Meslo LG M DZ"
 font-size = 18
 # https://github.com/ghostty-org/ghostty/discussions/4471
 shell-integration-features = no-cursor
-theme = "Monokai Pro Light"
+theme = "Rose Pine Moon"
 window-inherit-font-size = false
 window-padding-x = 12
 window-padding-y = 8
