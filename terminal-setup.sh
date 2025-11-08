@@ -108,22 +108,45 @@ echo "🔏 Re-signing application..."
 codesign --force --deep --sign - "$NEW_APP"
 echo -e "${GREEN}✓ Application re-signed${NC}"
 
-# Nuclear option: Clear ALL icon caches
+# Nuclear option: Clear ALL icon caches (order matters!)
 echo "💣 Clearing all icon caches..."
-rm -rf ~/Library/Caches/com.apple.iconservices.store 2>/dev/null || true
-sudo rm -rf /Library/Caches/com.apple.iconservices.store 2>/dev/null || true
-touch "$NEW_APP"
+
+# Kill processes first to ensure caches can be cleared
 killall Dock 2>/dev/null || true
 killall Finder 2>/dev/null || true
 killall IconServicesAgent 2>/dev/null || true
 killall iconservicesd 2>/dev/null || true
 
-# Rebuild Launch Services cache
-echo "🔄 Rebuilding Launch Services cache..."
+# Clear all icon service caches
+rm -rf ~/Library/Caches/com.apple.iconservices.store 2>/dev/null || true
+sudo rm -rf /Library/Caches/com.apple.iconservices.store 2>/dev/null || true
+
+# Clear additional icon-related caches
+sudo find /private/var/folders/ -name com.apple.iconservices -exec rm -rf {} \; 2>/dev/null || true
+sudo find /private/var/folders/ -name com.apple.dock.iconcache -exec rm -rf {} \; 2>/dev/null || true
+
+# Rebuild Launch Services database FIRST
+echo "🔄 Rebuilding Launch Services database..."
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
+
+# NOW touch the app to update modification date
+echo "📝 Updating app modification date..."
+touch "$NEW_APP"
+touch "$NEW_APP/Contents/Info.plist"
+
+# Give the system a moment to process
+sleep 1
+
+# Restart Dock and Finder to pick up changes
+echo "🔄 Restarting Dock and Finder..."
+killall Dock
+killall Finder
 
 sleep 2
 
 echo -e "${GREEN}✅ Done! Ghostty Code.app is ready.${NC}"
 echo ""
-echo "You may need to log out and back in for the icon to update."
+echo -e "${YELLOW}If the icon still doesn't update:${NC}"
+echo "  1. Try: sudo rm -rf /Library/Caches/com.apple.iconservices.store && killall Dock"
+echo "  2. Log out and back in"
+echo "  3. Restart your Mac (most reliable)"
