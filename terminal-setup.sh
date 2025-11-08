@@ -48,7 +48,7 @@ echo "🔧 Updating bundle identifier..."
 echo -e "${GREEN}✓ Bundle identifier updated${NC}"
 
 # Modify the icon and rename it to bypass cache
-echo "🎨 Creating orange-tinted icon..."
+echo "🎨 Creating custom colored icon..."
 
 # Check if ImageMagick is installed
 if ! command -v magick &> /dev/null && ! command -v convert &> /dev/null; then
@@ -70,15 +70,27 @@ else
         # Create new iconset directory
         mkdir -p "$TEMP_DIR/new.iconset"
 
-        # Apply orange/yellow tint to each PNG in the iconset
-        # Changed hue from 60 to 40 for more orange/yellow (less green)
+        # Apply color transformation to each PNG in the iconset
+        # Using HSL color space with hue=1.4 and saturation=1.2
         for png in "$TEMP_DIR/original.iconset"/*.png; do
             if [ -f "$png" ]; then
                 filename=$(basename "$png")
                 if command -v magick &> /dev/null; then
-                    magick "$png" -modulate 100,130,60 "$TEMP_DIR/new.iconset/$filename"
+                    magick "$png" \
+                        -colorspace HSL \
+                        -channel R -evaluate multiply 1.4 \
+                        -channel G -evaluate multiply 1.2 \
+                        +channel \
+                        -colorspace sRGB \
+                        "$TEMP_DIR/new.iconset/$filename"
                 else
-                    convert "$png" -modulate 100,130,60 "$TEMP_DIR/new.iconset/$filename"
+                    convert "$png" \
+                        -colorspace HSL \
+                        -channel R -evaluate multiply 1.4 \
+                        -channel G -evaluate multiply 1.2 \
+                        +channel \
+                        -colorspace sRGB \
+                        "$TEMP_DIR/new.iconset/$filename"
                 fi
             fi
         done
@@ -99,7 +111,7 @@ else
         # Clean up
         rm -rf "$TEMP_DIR"
 
-        echo -e "${GREEN}✓ Orange/yellow icon created${NC}"
+        echo -e "${GREEN}✓ Custom colored icon created${NC}"
     else
         echo -e "${YELLOW}⚠️  Icon file not found${NC}"
     fi
@@ -209,5 +221,5 @@ killall Dock 2>/dev/null || true
 echo ""
 echo -e "${GREEN}✅ Done! GCode.app is ready.${NC}"
 echo ""
-echo "The app now has an orange/yellow tinted icon."
+echo "The app now has your chosen custom colored icon (hue-1.4-sat-1.2)."
 echo "GCode will use: $CODE_CONFIG (if it exists)"
