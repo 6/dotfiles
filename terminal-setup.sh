@@ -8,6 +8,7 @@ NEW_APP="/Applications/Ghostty Code.app"
 NEW_BUNDLE_ID="com.mitchellh.ghostty.code"
 NEW_APP_NAME="Ghostty Code"
 OUTPUT_ICON="$HOME/Desktop/ghostty_code_icon.png"
+CODE_CONFIG="$HOME/.config/ghostty/config-code"
 
 # Colors for output
 RED='\033[0;31m'
@@ -27,10 +28,9 @@ fi
 # Check if duplicate already exists
 if [ -d "$NEW_APP" ]; then
     echo -e "${YELLOW}⚠️  $NEW_APP already exists.${NC}"
-    echo -e "${YELLOW}If you want to recreate it, manually delete it first:${NC}"
-    echo -e "${YELLOW}  rm -rf \"$NEW_APP\"${NC}"
+    echo -e "${YELLOW}Please delete it using Finder (drag to Trash or right-click > Move to Trash)${NC}"
+    echo -e "${YELLOW}Then run this script again.${NC}"
     echo ""
-    echo "Exiting without changes."
     exit 0
 fi
 
@@ -48,6 +48,85 @@ echo "🔧 Updating bundle identifier..."
 
 echo -e "${GREEN}✓ Bundle identifier updated${NC}"
 
+# Create a compiled C wrapper
+echo "🔧 Creating compiled wrapper..."
+
+ORIGINAL_BINARY="$NEW_APP/Contents/MacOS/ghostty"
+BACKUP_BINARY="$NEW_APP/Contents/MacOS/ghostty-original"
+
+# Rename the original binary
+if [ -f "$ORIGINAL_BINARY" ] && [ ! -f "$BACKUP_BINARY" ]; then
+    mv "$ORIGINAL_BINARY" "$BACKUP_BINARY"
+fi
+
+# Create C wrapper source - using --config-file=path format
+WRAPPER_SOURCE=$(mktemp).c
+cat > "$WRAPPER_SOURCE" << 'EOF'
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <libgen.h>
+#include <sys/stat.h>
+#include <limits.h>
+
+int main(int argc, char *argv[]) {
+    char exe_path[PATH_MAX];
+    char dir_path[PATH_MAX];
+    char binary_path[PATH_MAX];
+    char config_path[PATH_MAX];
+    char config_arg[PATH_MAX + 20];
+    char *home = getenv("HOME");
+
+    // Get the full path of the current executable
+    uint32_t size = sizeof(exe_path);
+    if (_NSGetExecutablePath(exe_path, &size) != 0) {
+        fprintf(stderr, "Failed to get executable path\n");
+        return 1;
+    }
+
+    // Get directory of the executable
+    strcpy(dir_path, exe_path);
+    char *dir = dirname(dir_path);
+
+    // Build path to original binary
+    snprintf(binary_path, sizeof(binary_path), "%s/ghostty-original", dir);
+
+    // Build path to config file
+    snprintf(config_path, sizeof(config_path), "%s/.config/ghostty/config-code", home);
+
+    // Check if config file exists
+    struct stat st;
+    if (stat(config_path, &st) == 0) {
+        // Config exists, use it with --config-file=path format
+        snprintf(config_arg, sizeof(config_arg), "--config-file=%s", config_path);
+
+        char **new_argv = malloc(sizeof(char*) * (argc + 2));
+        new_argv[0] = binary_path;
+        new_argv[1] = config_arg;
+        for (int i = 1; i < argc; i++) {
+            new_argv[i + 1] = argv[i];
+        }
+        new_argv[argc + 1] = NULL;
+
+        execv(binary_path, new_argv);
+    } else {
+        // Config doesn't exist, run normally
+        argv[0] = binary_path;
+        execv(binary_path, argv);
+    }
+
+    perror("execv failed");
+    return 1;
+}
+EOF
+
+# Compile the wrapper
+clang -o "$ORIGINAL_BINARY" "$WRAPPER_SOURCE"
+rm "$WRAPPER_SOURCE"
+
+echo -e "${GREEN}✓ Compiled wrapper created${NC}"
+
 # Create an orange-tinted icon PNG for manual application
 echo "🎨 Creating orange-tinted icon PNG..."
 
@@ -63,16 +142,12 @@ else
         # Convert to PNG first
         sips -s format png "$ICNS_FILE" --out /tmp/ghostty_temp.png &>/dev/null
 
-        # Apply orange tint using ImageMagick
+        # Apply orange tint
         if command -v magick &> /dev/null; then
-            magick /tmp/ghostty_temp.png -modulate 100,130,100 \
-                -colorspace HSL -channel R -evaluate multiply 1.3 +channel \
-                -colorspace sRGB \
+            magick /tmp/ghostty_temp.png -modulate 100,140,60 \
                 "$OUTPUT_ICON"
         else
-            convert /tmp/ghostty_temp.png -modulate 100,130,100 \
-                -colorspace HSL -channel R -evaluate multiply 1.3 +channel \
-                -colorspace sRGB \
+            convert /tmp/ghostty_temp.png -modulate 100,140,60 \
                 "$OUTPUT_ICON"
         fi
 
@@ -87,8 +162,12 @@ fi
 
 # Remove the code signature (it's now invalid after our modifications)
 echo "🔏 Re-signing application..."
-codesign --force --deep --sign - "$NEW_APP"
+codesign --force --deep --sign - "$NEW_APP" 2>&1 | grep -v "replacing existing signature" || true
 echo -e "${GREEN}✓ Application re-signed${NC}"
+
+# Clear any quarantine attributes
+echo "🧹 Clearing quarantine attributes..."
+xattr -cr "$NEW_APP" 2>/dev/null || true
 
 # Update modification time and register with Launch Services
 echo "🔄 Registering with Launch Services..."
@@ -100,20 +179,14 @@ echo -e "${GREEN}✅ Done! Ghostty Code.app is ready.${NC}"
 echo ""
 
 if [ "$SKIP_ICON" = false ]; then
-    echo -e "${YELLOW}📝 MANUAL ICON SETUP REQUIRED:${NC}"
+    echo -e "${YELLOW}📝 MANUAL ICON SETUP:${NC}"
     echo ""
     echo "1. Open Finder and navigate to /Applications"
     echo "2. Right-click 'Ghostty Code.app' and select 'Get Info' (or press Cmd+I)"
-    echo "3. In the Get Info window, click on the small icon in the top-left corner"
-    echo "4. Press Cmd+C to copy the current icon (this step is optional but good practice)"
-    echo "5. Open the generated icon on your Desktop: $OUTPUT_ICON"
-    echo "6. Select the image and press Cmd+C to copy it"
-    echo "7. Go back to the Get Info window for Ghostty Code.app"
-    echo "8. Click the icon in the top-left corner again"
-    echo "9. Press Cmd+V to paste the new orange icon"
-    echo "10. Close the Get Info window"
+    echo "3. Click the icon in the top-left corner of the Get Info window"
+    echo "4. Open the generated icon: $OUTPUT_ICON"
+    echo "5. Copy it (Cmd+C), go back to Get Info, click the icon, and paste (Cmd+V)"
     echo ""
-    echo "The icon should update immediately without needing to restart!"
-else
-    echo -e "${YELLOW}Icon generation was skipped. The apps will have the same icon.${NC}"
 fi
+
+echo "Ghostty Code will use: $CODE_CONFIG (if it exists)"
