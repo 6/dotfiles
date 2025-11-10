@@ -189,7 +189,7 @@ gh run list --branch <branch-name> --limit 10 --json name,status,conclusion,data
 
 If no runs found, wait 10 seconds and try again once.
 
-If no runs to monitor, display the PR URL and exit successfully.
+If no runs to monitor, skip to Step 6.
 
 If there are in-progress runs to monitor, watch the first one (blocks until complete):
 ```bash
@@ -197,5 +197,29 @@ gh run watch <run-id> --exit-status
 ```
 
 After runs complete, get final status. Then check for failures:
-- If any runs failed: Display "❌ Failed:" with list of failed checks, then PR URL, and exit with error
-- If all passed: Display "✅ Passed:" with list of successful checks, then PR URL
+- If any runs failed: Display "❌ Failed:" with list of failed checks and exit with error
+- If all passed: Display "✅ Passed:" with list of successful checks
+
+## Step 6: Generate Slack-friendly summaries
+
+Generate two non-technical summaries based on the PR changes:
+
+1. **One-line**: Single conversational sentence about what was shipped
+   - Present tense ("Add bulk updates" not "We added bulk updates")
+   - Be specific ("filter by due date" not "find overdue work")
+   - Natural language (avoid e.g. "furthermore", "enhanced", "utilize")
+2. **Detailed**: One-liner + 2-4 plain-language bullets (same guidelines)
+
+Display format:
+```
+---
+📱 Slack Summary (one-line):
+<one-line-summary>
+
+📱 Slack Summary (detailed):
+<one-line-summary>
+• <bullet-1>
+• <bullet-2>
+
+🔗 PR: <pr-url>
+```
