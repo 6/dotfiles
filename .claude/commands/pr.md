@@ -196,6 +196,8 @@ If there are in-progress runs to monitor, watch the first one (blocks until comp
 gh run watch <run-id> --exit-status
 ```
 
+**Note:** `gh run watch` may show "403 Forbidden" warning about annotations with fine-grained PATs. This is safe to ignore - pass/fail status still works.
+
 After runs complete, get final status. Then check for failures:
 - If any runs failed: Display "❌ Failed:" with list of failed checks and exit with error
 - If all passed: Display "✅ Passed:" with list of successful checks
