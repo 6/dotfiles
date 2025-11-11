@@ -113,6 +113,21 @@ function spec() {
   test -e .rspec && bundle exec rspec $1
 }
 
+function mirror() {
+  local url=$1
+  local level=${2:-3}  # Default to level 3 if not specified
+
+  wget --mirror \
+       --level=$level \
+       --convert-links \
+       --adjust-extension \
+       --page-requisites \
+       --no-parent \
+       -e robots=off \
+       --reject gif,mp4,webm,mov \
+       "$url"
+}
+
 function main() {
   # If main branch exists, use it, otherwise fall back to master:
   if git show-ref --quiet refs/heads/main; then
