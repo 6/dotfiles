@@ -159,7 +159,7 @@ alias ap='osascript ~/.misc/airpods.applescript'
 
 # IMPORTANT: Load direnv and mise ONCE here (not again in .zsh_custom!)
 eval "$(direnv hook zsh)"
-eval "$($HOME/.local/bin/mise activate zsh)"
+eval "$(mise activate zsh)"
 
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
 
