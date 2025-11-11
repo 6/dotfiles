@@ -71,6 +71,7 @@
       "WebFetch(domain:docs.mixpanel.com)",
       "WebFetch(domain:docs.npmjs.com)",
       "WebFetch(domain:docs.obsproject.com)",
+      "WebFetch(domain:docs.openwebui.com)",
       "WebFetch(domain:docs.perplexity.ai)",
       "WebFetch(domain:docs.pola.rs)",
       "WebFetch(domain:docs.pydantic.dev)",
