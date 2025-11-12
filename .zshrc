@@ -195,7 +195,14 @@ if [[ "$TERM_PROGRAM" == "vscode" ]]; then
   RPROMPT=''
 elif [[ -n "$CCODE" ]]; then
   # Orange/yellow prompt for CCode (Ghostty Code)
-  PROMPT='%F{208}%~%f %F{214}$%f '
+  # Enable git branch display
+  autoload -Uz vcs_info
+  precmd_vcs_info() { vcs_info }
+  precmd_functions+=( precmd_vcs_info )
+  setopt prompt_subst
+  zstyle ':vcs_info:git:*' formats '%F{green}%b%f '
+  zstyle ':vcs_info:*' enable git
+  PROMPT='%F{208}%~%f ${vcs_info_msg_0_}%F{214}$%f '
   RPROMPT=''
 else
   # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
