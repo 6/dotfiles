@@ -259,6 +259,8 @@
       "Bash(go fmt:*)",
       "Bash(go mod tidy:*)",
       "Bash(go test:*)",
+      "Bash(go version:*)",
+      "Bash(go vet:*)",
       "Bash(grep:*)",
       "Bash(head:*)",
       "Bash(heroku:*)",
