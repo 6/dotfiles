@@ -318,7 +318,11 @@
     "type": "command",
     "command": "input=$(cat); get_cost() { echo \"$1\" | jq -r '.cost.total_cost_usd // \"0.00\"'; }; model_name=$(echo \"$input\" | jq -r '.model.display_name'); cost=$(get_cost \"$input\"); if (( $(echo \"$cost >= 0.01\" | bc -l) )); then formatted_cost=$(printf \"%.2f\" \"$cost\"); else formatted_cost=$(printf \"%.4f\" \"$cost\"); fi; printf \"Model: %s | Cost: $%s\" \"$model_name\" \"$formatted_cost\""
   },
-  "alwaysThinkingEnabled": true,
+  "enabledPlugins": {
+    "agent-sdk-dev@claude-code-plugins": true,
+    "plugin-dev@claude-code-plugins": true
+  },
+  "alwaysThinkingEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 1754093691446
   }

@@ -49,6 +49,7 @@ export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/
 export PATH="$PATH:/Applications/Android Studio.app/Contents/MacOS"
 export PATH="/Applications/Genymotion.app/Contents/MacOS/tools/:$PATH"
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 export PATH="$HOMEBREW_PREFIX/opt/openssl@1.1/bin:$PATH"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
