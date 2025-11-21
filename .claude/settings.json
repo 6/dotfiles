@@ -440,6 +440,7 @@
       "Bash(deno cache:*)",
       "Bash(deno run http*:*)",
       "Bash(deno install:*)",
+      "Bash(go run *.*/*:*)",
       "Bash(npm ci:*)",
       "Bash(npm exec:*)",
       "Bash(npm i:*)",
