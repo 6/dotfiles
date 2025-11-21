@@ -3,6 +3,7 @@
   "permissions": {
     "allow": [
       "WebSearch",
+      "WebFetch(domain:agents.md)",
       "WebFetch(domain:ai.google.dev)",
       "WebFetch(domain:ai.pydantic.dev)",
       "WebFetch(domain:amazon.com)",
@@ -25,6 +26,7 @@
       "WebFetch(domain:clickhouse.com)",
       "WebFetch(domain:cloud.google.com)",
       "WebFetch(domain:code.claude.com)",
+      "WebFetch(domain:codeberg.org)",
       "WebFetch(domain:coinbase.com)",
       "WebFetch(domain:containers.dev)",
       "WebFetch(domain:contentful.com)",
@@ -199,6 +201,7 @@
       "WebFetch(domain:www.electronjs.org)",
       "WebFetch(domain:www.electronforge.io)",
       "WebFetch(domain:www.gradio.app)",
+      "WebFetch(domain:www.langchain.com)",
       "WebFetch(domain:www.npmjs.com)",
       "WebFetch(domain:www.postgresql.org)",
       "WebFetch(domain:www.radix-ui.com)",
@@ -210,6 +213,7 @@
       "WebFetch(domain:www.w3.org)",
       "WebFetch(domain:www.wealthsimple.com)",
       "WebFetch(domain:yarnpkg.com)",
+      "WebFetch(domain:zed.dev)",
       "WebFetch(domain:zod.dev)",
       "Bash(assetutil:*)",
       "Bash(awk:*)",
