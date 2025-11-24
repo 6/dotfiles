@@ -1,11 +1,24 @@
+background = #1f1e1d
 cursor-style = block
 cursor-style-blink = false
 font-family = "Meslo LG M DZ"
 font-size = 18
+minimum-contrast = 1.9
+palette = 0=#999999
+palette = 4=#5588ee
+palette = 8=#bbddaa
 # https://github.com/ghostty-org/ghostty/discussions/4471
 shell-integration-features = no-cursor
-split-divider-color = #444
-theme = "Mathias"
+split-divider-color = #224477
+theme = Apple Classic
+# theme = Cobalt Neon
+# theme = Cobalt2
+# theme = Cyberdyne
+# theme = Django Reborn Again
+# theme = Forest Blue
+# theme = Grey Green
+# theme = Havn Skumring
+# theme = Rose Pine
 window-inherit-font-size = false
 window-padding-x = 12
 window-padding-y = 8
