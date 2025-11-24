@@ -151,12 +151,32 @@ function upgradeoui() {
 }
 
 function linkmodels() {
-  # Clean up broken symlinks:
-  find -L ~/oss/llama.cpp/models/ -type l -exec rm -f {} \;
-  find -L ~/oss/text-generation-webui/models/ -type l -exec rm -f {} \;
+  # Clean up all symlinks (not just broken ones) to start fresh:
+  find ~/oss/llama.cpp/models/ -type l -exec rm -f {} \; 2>/dev/null
+  
+  # Remove empty directories left behind
+  find ~/oss/llama.cpp/models/ -type d -empty -delete 2>/dev/null
 
-  ln -vs ~/models/* ~/oss/llama.cpp/models
-  ln -vs ~/models/* ~/oss/text-generation-webui/models
+  # Ensure target directory exists
+  mkdir -p ~/oss/llama.cpp/models
+
+  # Recursively find and link all .gguf files from ~/models/
+  while IFS= read -r -d '' model_file; do
+    # Get relative path from ~/models to preserve provider directory structure
+    rel_path="${model_file#$HOME/models/}"
+    target_path=~/oss/llama.cpp/models/"$rel_path"
+    target_dir=$(dirname "$target_path")
+    
+    # Create target directory structure if needed
+    mkdir -p "$target_dir"
+    
+    # Link to llama.cpp, preserving directory structure
+    if [[ ! -e "$target_path" ]]; then
+      ln -vs "$model_file" "$target_path"
+    fi
+  done < <(find ~/models -type f -name "*.gguf" -print0)
+  
+  # Note: Ollama cannot directly use .gguf files via symlinks or OLLAMA_MODELS.
 }
 
 alias fixdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
