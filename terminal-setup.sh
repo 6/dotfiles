@@ -199,10 +199,47 @@ rm "$WRAPPER_SOURCE"
 
 echo -e "${GREEN}✓ Compiled wrapper created${NC}"
 
-# Remove the code signature (it's now invalid after our modifications)
-echo "🔏 Re-signing application..."
-codesign --force --deep --sign - "$NEW_APP" 2>&1 | grep -v "replacing existing signature" || true
-echo -e "${GREEN}✓ Application re-signed${NC}"
+# Create entitlements file and re-sign
+echo "🔏 Creating entitlements and re-signing application..."
+
+# Create a temporary entitlements file with Ghostty's permissions
+ENTITLEMENTS_FILE=$(mktemp).plist
+cat > "$ENTITLEMENTS_FILE" << 'ENTITLEMENTS_EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>com.apple.security.automation.apple-events</key>
+    <true/>
+    <key>com.apple.security.device.audio-input</key>
+    <true/>
+    <key>com.apple.security.device.camera</key>
+    <true/>
+    <key>com.apple.security.personal-information.addressbook</key>
+    <true/>
+    <key>com.apple.security.personal-information.calendars</key>
+    <true/>
+    <key>com.apple.security.personal-information.location</key>
+    <true/>
+    <key>com.apple.security.personal-information.photos-library</key>
+    <true/>
+</dict>
+</plist>
+ENTITLEMENTS_EOF
+
+echo -e "${GREEN}✓ Entitlements file created${NC}"
+
+# Sign the wrapper binary first (without entitlements, it's just a launcher)
+codesign --force --sign - "$NEW_APP/Contents/MacOS/ghostty" 2>&1 | grep -v "replacing existing signature" || true
+
+# Sign the original ghostty binary with entitlements
+codesign --force --sign - --entitlements "$ENTITLEMENTS_FILE" "$NEW_APP/Contents/MacOS/ghostty-original" 2>&1 | grep -v "replacing existing signature" || true
+
+# Sign the app bundle itself (without --deep since we already signed the binaries)
+codesign --force --sign - --entitlements "$ENTITLEMENTS_FILE" "$NEW_APP" 2>&1 | grep -v "replacing existing signature" || true
+
+rm "$ENTITLEMENTS_FILE"
+echo -e "${GREEN}✓ Application re-signed with entitlements${NC}"
 
 # Clear any quarantine attributes
 echo "🧹 Clearing quarantine attributes..."
