@@ -658,7 +658,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "afplay /System/Library/Sounds/Purr.aiff"
+            "command": "~/dotfiles/sounds/play.sh mixkit-magic-notification-ring-2344.wav"
           }
         ]
       }
@@ -668,7 +668,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "afplay /System/Library/Sounds/Funk.aiff"
+            "command": "~/dotfiles/sounds/play.sh mixkit-happy-bells-notification-937.wav"
           }
         ]
       }
