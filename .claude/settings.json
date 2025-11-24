@@ -279,10 +279,12 @@
       "WebFetch(domain:styled-components.com)",
       "WebFetch(domain:supabase.com)",
       "WebFetch(domain:superuser.com)",
+      "WebFetch(domain:support.apple.com)",
       "WebFetch(domain:support.atlassian.com)",
-      "WebFetch(domain:support.zendesk.com)",
+      "WebFetch(domain:support.google.com)",
       "WebFetch(domain:support.claude.com)",
       "WebFetch(domain:support.stripe.com)",
+      "WebFetch(domain:support.zendesk.com)",
       "WebFetch(domain:swagger.io)",
       "WebFetch(domain:tailwindcss.com)",
       "WebFetch(domain:tauri.app)",
@@ -658,7 +660,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/dotfiles/sounds/play.sh mixkit-magic-notification-ring-2344.wav"
+            "command": "~/dotfiles/sounds/play.sh mixkit-uplifting-flute-notification-2317.wav"
           }
         ]
       }
@@ -668,7 +670,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/dotfiles/sounds/play.sh mixkit-happy-bells-notification-937.wav"
+            "command": "~/dotfiles/sounds/play.sh mixkit-bike-magical-bell-591.wav"
           }
         ]
       }
@@ -686,5 +688,6 @@
   "alwaysThinkingEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 1754093691446
-  }
+  },
+  "model": "opus"
 }

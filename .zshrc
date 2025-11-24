@@ -250,3 +250,8 @@ if [[ "$TERM_PROGRAM" != "vscode" ]]; then
   ASCII=("totoro" "beach" "stars")
   cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
 fi
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/peter/.cache/lm-studio/bin"
+# End of LM Studio CLI section
+
