@@ -1,12 +1,31 @@
 #!/usr/bin/env bash
 # Cross-platform audio player for Claude Code notifications
-# Usage: play.sh <audio-file>
+# Usage: play.sh <audio-file> [audio-file2] [audio-file3] ...
 
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+if [[ $# -eq 0 ]]; then
+  echo "Error: No sound file provided" >&2
+  echo "Usage: play.sh <audio-file> [audio-file2] [audio-file3] ..." >&2
+  exit 1
+fi
+
+# If multiple files provided, randomly select one
+if [[ $# -gt 1 ]]; then
+  # Create array of all arguments
+  SOUND_FILES=("$@")
+  # Use a better random source by combining RANDOM with nanoseconds
+  # This helps avoid getting the same selection when called rapidly
+  SEED=$(($(date +%s%N 2>/dev/null || date +%s) + RANDOM))
+  RANDOM_INDEX=$((SEED % $#))
+  SELECTED_FILE="${SOUND_FILES[$RANDOM_INDEX]}"
+else
+  SELECTED_FILE="$1"
+fi
+
 # If just a filename is provided, look for it in the script's directory
-SOUND_FILE="$1"
+SOUND_FILE="$SELECTED_FILE"
 if [[ "$SOUND_FILE" != /* ]] && [[ "$SOUND_FILE" != ~* ]]; then
   # Relative path or just filename - prepend script directory
   SOUND_FILE="$SCRIPT_DIR/$SOUND_FILE"

@@ -660,7 +660,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/dotfiles/sounds/play.sh mixkit-uplifting-flute-notification-2317.wav"
+            "command": "~/dotfiles/sounds/play.sh mixkit-uplifting-flute-notification-2317.wav mixkit-flute-mobile-phone-notification-alert-2316.wav mixkit-flute-cell-phone-alert-2315.wav"
           }
         ]
       }
@@ -670,7 +670,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/dotfiles/sounds/play.sh mixkit-bike-magical-bell-591.wav"
+            "command": "~/dotfiles/sounds/play.sh mixkit-bike-magical-bell-591.wav mixkit-happy-bell-alert-601.wav"
           }
         ]
       }
@@ -685,7 +685,7 @@
     "agent-sdk-dev@claude-code-plugins": true,
     "plugin-dev@claude-code-plugins": true
   },
-  "alwaysThinkingEnabled": false,
+  "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754093691446
   },
