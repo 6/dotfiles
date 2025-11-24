@@ -601,6 +601,7 @@
       "Bash(xargs:*)",
       "Bash(yarn:*)"
     ],
+    "deny": [],
     "ask": [
       "Bash(deno cache:*)",
       "Bash(deno install:*)",
@@ -649,8 +650,29 @@
       "Bash(yarn remove:*)",
       "Bash(yarn up:*)",
       "Bash(yarn upgrade:*)"
+    ]
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Purr.aiff"
+          }
+        ]
+      }
     ],
-    "deny": []
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Funk.aiff"
+          }
+        ]
+      }
+    ]
   },
   "statusLine": {
     "type": "command",
