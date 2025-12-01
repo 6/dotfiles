@@ -74,6 +74,8 @@ git commit --no-verify -m "<generated-commit-message>"
 
 If the user did not provide "commit" argument, skip Step 1 entirely.
 
+**IMPORTANT: Never use `--amend` or force push after pushing. If CI fails, make new commits to fix.**
+
 ## Step 2: Get branch info and push
 
 Get the current branch name:
