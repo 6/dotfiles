@@ -190,7 +190,7 @@ alias gt='git'
 alias mainp='main && git pull --prune'
 
 function mainpd() {
-  local prev_branch=$(git rev-parse --abbrev-ref @{-1})
+  local prev_branch=$(git rev-parse --abbrev-ref HEAD)
   mainp
 
   # Check if branch is merged locally
