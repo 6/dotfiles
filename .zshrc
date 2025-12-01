@@ -153,7 +153,7 @@ function upgradeoui() {
 function linkmodels() {
   # Clean up all symlinks (not just broken ones) to start fresh:
   find ~/oss/llama.cpp/models/ -type l -exec rm -f {} \; 2>/dev/null
-  
+
   # Remove empty directories left behind
   find ~/oss/llama.cpp/models/ -type d -empty -delete 2>/dev/null
 
@@ -166,16 +166,16 @@ function linkmodels() {
     rel_path="${model_file#$HOME/models/}"
     target_path=~/oss/llama.cpp/models/"$rel_path"
     target_dir=$(dirname "$target_path")
-    
+
     # Create target directory structure if needed
     mkdir -p "$target_dir"
-    
+
     # Link to llama.cpp, preserving directory structure
     if [[ ! -e "$target_path" ]]; then
       ln -vs "$model_file" "$target_path"
     fi
   done < <(find ~/models -type f -name "*.gguf" -print0)
-  
+
   # Note: Ollama cannot directly use .gguf files via symlinks or OLLAMA_MODELS.
 }
 
@@ -187,8 +187,25 @@ alias most="du -hs * | gsort -rh | head -10"
 alias gti='git'
 alias igt='git'
 alias gt='git'
-alias mainp='main && git pull'
-alias mainpd='mainp && git b -d @{-1}'
+alias mainp='main && git pull --prune'
+
+function mainpd() {
+  local prev_branch=$(git rev-parse --abbrev-ref @{-1})
+  mainp
+
+  # Check if branch is merged locally
+  if git branch --merged | grep -q "^\s*${prev_branch}$"; then
+    git branch -d "$prev_branch"
+  # Check if remote branch has been deleted (PR was merged)
+  elif ! git branch -r | grep -q "origin/${prev_branch}$"; then
+    echo "Remote branch deleted (PR merged), force-deleting local branch..."
+    git branch -D "$prev_branch"
+  else
+    echo "⚠️  Branch '${prev_branch}' is not merged and still exists on remote"
+    echo "If you're sure the PR is merged, run: git branch -D ${prev_branch}"
+  fi
+}
+
 alias canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --remote-debugging-port=9222"
 alias canaryh="echo 'Starting canary in headless mode.\nPress Ctrl+C to exit.' && canary --disable-gpu --headless"
 alias ap='osascript ~/.misc/airpods.applescript'
@@ -254,4 +271,3 @@ fi
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/peter/.cache/lm-studio/bin"
 # End of LM Studio CLI section
-
