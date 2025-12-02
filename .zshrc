@@ -193,13 +193,6 @@ function mainpd() {
   local prev_branch=$(git rev-parse --abbrev-ref HEAD)
   mainp
 
-  # Check if branch was ever pushed (has upstream tracking)
-  if ! git rev-parse --abbrev-ref "${prev_branch}@{upstream}" &>/dev/null; then
-    echo "⚠️  Branch '${prev_branch}' was never pushed to remote"
-    echo "If you want to delete it anyway, run: git branch -D ${prev_branch}"
-    return 1
-  fi
-
   # Check if branch is merged locally
   if git branch --merged | grep -q "^\s*${prev_branch}$"; then
     git branch -d "$prev_branch"
