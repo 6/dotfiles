@@ -187,6 +187,9 @@ alias most="du -hs * | gsort -rh | head -10"
 alias gti='git'
 alias igt='git'
 alias gt='git'
+alias ap='osascript ~/.misc/airpods.applescript'
+alias cc='claude --model opus'
+alias ccs='claude --model sonnet'
 alias mainp='main && git pull --prune'
 
 function mainpd() {
@@ -205,11 +208,6 @@ function mainpd() {
     echo "If you're sure the PR is merged, run: git branch -D ${prev_branch}"
   fi
 }
-
-alias canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --remote-debugging-port=9222"
-alias canaryh="echo 'Starting canary in headless mode.\nPress Ctrl+C to exit.' && canary --disable-gpu --headless"
-alias ap='osascript ~/.misc/airpods.applescript'
-alias c='claude'
 
 # IMPORTANT: Load direnv and mise ONCE here (not again in .zsh_custom!)
 eval "$(direnv hook zsh)"

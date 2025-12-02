@@ -654,6 +654,7 @@
       "Bash(yarn upgrade:*)"
     ]
   },
+  "model": "opus",
   "hooks": {
     "Notification": [
       {
@@ -688,6 +689,5 @@
   "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754093691446
-  },
-  "model": "opus"
+  }
 }
