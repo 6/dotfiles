@@ -190,7 +190,7 @@ alias gt='git'
 alias ap='osascript ~/.misc/airpods.applescript'
 alias cc='claude --model opus'
 alias ccs='claude --model sonnet'
-alias mainp='main && git pull --prune'
+alias mainp='main && git pull'
 
 function mainpd() {
   local prev_branch=$(git rev-parse --abbrev-ref HEAD)
