@@ -684,9 +684,10 @@
   },
   "enabledPlugins": {
     "agent-sdk-dev@claude-code-plugins": true,
-    "plugin-dev@claude-code-plugins": true
+    "plugin-dev@claude-code-plugins": true,
+    "edge-skills@ws-claude-marketplace": true
   },
-  "alwaysThinkingEnabled": true,
+  "alwaysThinkingEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 1754093691446
   }
