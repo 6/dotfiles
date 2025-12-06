@@ -186,7 +186,8 @@ Then connect with `ssh INSERT_SERVER_NAME`.
 Then `exit` and fix terminal compatibility:
 
 ```bash
-infocmp -x | ssh INSERT_SERVER_NAME tic -x -
+infocmp -x | ssh INSERT_SERVER_NAME "cat > /tmp/ghostty.terminfo"
+ssh -t INSERT_SERVER_NAME "sudo tic -x /tmp/ghostty.terminfo && rm /tmp/ghostty.terminfo"
 ```
 
 If you are confident key-based SSH works, disabling password auth is a good
