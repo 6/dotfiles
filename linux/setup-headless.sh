@@ -31,6 +31,11 @@ apt install -y \
   nvme-cli \
   curl \
   git \
+  lm-sensors \
+  smartmontools \
+  alsa-utils \
+  ffmpeg \
+  imagemagick \
   htop
 
 echo "==> Enabling SSH service on boot..."
