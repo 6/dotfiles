@@ -118,16 +118,18 @@ You'll be prompted for your sign-in address, email, Secret Key, and password.
 Retrieve SSH keys from 1Password and save them to `~/.ssh`:
 
 ```bash
-# Get private key
-op item get "SSH Key Name" --vault "Private" --fields "private key" > ~/.ssh/id_ed25519
+# Get private key (extract from JSON)
+op item get "SSH Key" --vault "Private" --format json | jq -r '.fields[] | select(.label=="private key") | .value' > ~/.ssh/id_ed25519
 
-# Get public key (if stored separately)
-op item get "SSH Key Name" --vault "Private" --fields "public key" > ~/.ssh/id_ed25519.pub
+# Get public key
+op item get "SSH Key" --vault "Private" --format json | jq -r '.fields[] | select(.label=="public key") | .value' > ~/.ssh/id_ed25519.pub
 
 # Set correct permissions
 chmod 600 ~/.ssh/id_ed25519
 chmod 644 ~/.ssh/id_ed25519.pub
 ```
+
+After doing this, run `ssh -T git@github.com` and it should authenticate.
 
 ---
 
