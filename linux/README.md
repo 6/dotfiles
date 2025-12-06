@@ -85,7 +85,7 @@ sudo reboot
 Then install packages:
 
 ```bash
-brew install git ffmpeg imagemagick direnv
+brew install git ffmpeg imagemagick direnv 1password-cli jq
 ```
 
 Install development tools
@@ -98,13 +98,8 @@ Install development tools
 
 ### 1Password CLI
 
-**1. Install `op` CLI:**
 
-```bash
-brew install 1password-cli
-```
-
-**2. Sign in to your 1Password account:**
+**1. Sign in to your 1Password account:**
 
 ```bash
 op account add
@@ -113,7 +108,7 @@ op signin
 
 You'll be prompted for your sign-in address, email, Secret Key, and password.
 
-**3. Save SSH keys to `~/.ssh`:**
+**2. Save SSH keys to `~/.ssh`:**
 
 Retrieve SSH keys from 1Password and save them to `~/.ssh`:
 
