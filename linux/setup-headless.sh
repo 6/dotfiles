@@ -47,6 +47,7 @@ ufw --force enable
 
 echo "==> Enabling GPM (mouse support in console)..."
 systemctl enable gpm
+systemctl start gpm
 
 echo "==> Setting default boot target to multi-user (no GUI)..."
 systemctl set-default multi-user.target
