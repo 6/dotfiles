@@ -112,24 +112,7 @@ PRIMARY_IP="${PRIMARY_IP:-<YOUR_SERVER_IP>}"
 echo
 echo "=== Headless base setup done. ==="
 echo
-echo "Suggested ~/.ssh/config entry for your other machine:"
-cat <<EOF
-Host insertservername
-  Hostname ${PRIMARY_IP}
-  User ${USERNAME}
-  IdentitiesOnly yes
-  IdentityFile ~/.ssh/id_ed25519
-EOF
+echo "Server IP: ${PRIMARY_IP}"
+echo "Username:  ${USERNAME}"
 echo
-echo "Next steps:"
-echo "  1. Symlink dotfiles: cd ~/dotfiles && ./install.sh"
-echo "  2. Reboot: sudo reboot"
-echo "  3. Install Homebrew: /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
-echo "  4. Install brew packages: brew install git ffmpeg imagemagick direnv"
-echo "  5. (Optional) Install mise: https://mise.jdx.dev"
-echo
-echo "Other tasks:"
-echo "  * Run memtest from GRUB if you want a RAM sanity pass."
-echo "  * Ensure both Ethernet connections autoconnect using nmcli."
-echo "  * Install NVIDIA drivers: sudo ubuntu-drivers autoinstall && sudo reboot"
-echo "  * Verify config: ./doctor-headless.sh"
+echo "See linux/README.md for next steps."

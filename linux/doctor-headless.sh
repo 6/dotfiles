@@ -306,23 +306,11 @@ else
   echo "       sudo systemctl enable --now fail2ban"
 fi
 
-# 16. IP addresses + SSH config helper
+# 16. IP addresses
 echo
 echo "IP addresses:"
 ip -brief address show | awk '$1 != "lo" {print}'
 
-PRIMARY_IP="$(ip -4 route get 1.1.1.1 2>/dev/null | awk '/src/ {for(i=1;i<=NF;i++) if ($i=="src") {print $(i+1); exit}}')"
-PRIMARY_IP="${PRIMARY_IP:-<YOUR_SERVER_IP>}"
-
-echo
-echo "Suggested ~/.ssh/config entry for your other machine:"
-cat <<EOF
-Host insertservername
-  Hostname ${PRIMARY_IP}
-  User ${USERNAME}
-  IdentitiesOnly yes
-  IdentityFile ~/.ssh/id_ed25519
-EOF
-
 echo
 echo "Headless doctor completed. Review any [!!] lines above."
+echo "See linux/README.md for additional guidance."

@@ -115,7 +115,21 @@ sudo ./doctor-headless.sh
 
 ### SSH convenience
 
-Follow instructions to modify ~/.ssh/config on other computer so you can login with `ssh insertservername`.
+Add this to `~/.ssh/config` on your other machine:
+
+```
+Host myserver
+  Hostname <SERVER_IP>
+  User <USERNAME>
+  IdentitiesOnly yes
+  IdentityFile ~/.ssh/id_ed25519
+```
+
+Replace `myserver` with your preferred alias and `<USERNAME>` with your user.
+
+To get the server IP with `hostname -I`
+
+Then connect with `ssh myserver`.
 
 If you are confident key-based SSH works, disabling password auth is a good
 hardening step.
