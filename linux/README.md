@@ -53,8 +53,9 @@ sudo ./setup-headless.sh
 
 What this does:
 
-- Installs system packages (openssh-server, zsh, ufw, etc.)
+- Installs system packages (openssh-server, zsh, ufw, gpm, etc.)
 - Enables SSH and configures UFW firewall
+- Enables GPM (mouse copy/paste in console)
 - Sets default boot target to text mode (no GUI)
 - Disables sleep/suspend/hibernate
 - Switches your default shell to zsh

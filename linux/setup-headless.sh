@@ -34,7 +34,8 @@ apt install -y \
   lm-sensors \
   smartmontools \
   alsa-utils \
-  build-essential
+  build-essential \
+  gpm
 
 echo "==> Enabling SSH service on boot..."
 systemctl enable ssh
@@ -43,6 +44,10 @@ systemctl restart ssh
 echo "==> Configuring UFW firewall (allowing SSH)..."
 ufw allow OpenSSH >/dev/null 2>&1 || ufw allow 22/tcp
 ufw --force enable
+
+echo "==> Enabling GPM (mouse copy/paste in console)..."
+systemctl enable gpm
+systemctl start gpm
 
 echo "==> Setting default boot target to multi-user (no GUI)..."
 systemctl set-default multi-user.target
