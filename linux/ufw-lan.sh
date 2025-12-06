@@ -7,9 +7,8 @@ set -euo pipefail
 # Commands:
 #   apply [PORT]     - reset UFW and apply a safe baseline + allow LAN subnet to PORT
 #   add [PORT]       - add LAN allow rule without resetting other rules
-#   teardown [PORT]  - remove the LAN allow rule for PORT
+#   remove [PORT]    - remove the LAN allow rule for PORT
 #   status           - show ufw status
-#   disable          - disable ufw
 #
 # Defaults:
 #   PORT=8000
@@ -18,9 +17,8 @@ set -euo pipefail
 #   ./ufw-lan.sh apply
 #   ./ufw-lan.sh apply 4000
 #   ./ufw-lan.sh add 8000
-#   ./ufw-lan.sh teardown 8000
+#   ./ufw-lan.sh remove 8000
 #   ./ufw-lan.sh status
-#   ./ufw-lan.sh disable
 
 DEFAULT_PORT="8000"
 
@@ -31,6 +29,25 @@ die() {
 
 need_cmd() {
   command -v "$1" >/dev/null 2>&1 || die "Missing required command: $1"
+}
+
+validate_port() {
+  local port="$1"
+  # Check if port is a number
+  if ! [[ "$port" =~ ^[0-9]+$ ]]; then
+    die "Port must be a number, got: $port"
+  fi
+  # Check if port is in valid range
+  if [[ "$port" -lt 1 || "$port" -gt 65535 ]]; then
+    die "Port must be between 1 and 65535, got: $port"
+  fi
+}
+
+check_ufw_enabled() {
+  if ! sudo ufw status | grep -q "Status: active"; then
+    echo "Warning: UFW is not enabled. Rule added but inactive." >&2
+    echo "         Enable UFW with: sudo ufw enable" >&2
+  fi
 }
 
 get_default_iface() {
@@ -85,11 +102,12 @@ ufw_apply_baseline_and_allow() {
 ufw_add_allow_only() {
   local port="$1"
 
+  check_ufw_enabled
   echo "Adding LAN allow rule for port ${port} (no reset)..."
   sudo ufw allow from "$LAN_CIDR" to any port "$port"
 }
 
-ufw_teardown_allow() {
+ufw_remove_allow() {
   local port="$1"
 
   echo "Removing LAN allow rule for port ${port}..."
@@ -112,9 +130,8 @@ usage() {
 Usage:
   $0 apply [PORT]
   $0 add [PORT]
-  $0 teardown [PORT]
+  $0 remove [PORT]
   $0 status
-  $0 disable
 
 Defaults:
   PORT=${DEFAULT_PORT}
@@ -132,7 +149,9 @@ main() {
   local port="${2:-$DEFAULT_PORT}"
 
   case "$cmd" in
-    apply|add|teardown)
+    apply|add|remove)
+      # Validate port number
+      validate_port "$port"
       # Detect LAN CIDR only when needed
       local info
       info="$(detect_lan_cidr)"
@@ -161,19 +180,14 @@ main() {
       echo
       sudo ufw status verbose
       ;;
-    teardown)
+    remove)
       need_cmd ufw
-      ufw_teardown_allow "$port"
+      ufw_remove_allow "$port"
       echo
       sudo ufw status verbose
       ;;
     status)
       need_cmd ufw
-      sudo ufw status verbose
-      ;;
-    disable)
-      need_cmd ufw
-      sudo ufw --force disable
       sudo ufw status verbose
       ;;
     ""|-h|--help|help)

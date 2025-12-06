@@ -220,6 +220,55 @@ Reload SSH:
 sudo systemctl reload ssh
 ```
 
+### Firewall management (UFW)
+
+The setup script enables UFW and allows SSH. To expose additional ports to your LAN only (not the internet), use `linux/ufw-lan.sh`.
+
+This script automatically detects your LAN subnet from your default network interface and manages UFW rules accordingly.
+
+**Available commands:**
+
+```bash
+# Reset UFW and apply safe baseline + allow LAN access to port (default: 8000)
+./ufw-lan.sh apply
+./ufw-lan.sh apply 4000
+
+# Add LAN allow rule without resetting existing rules
+./ufw-lan.sh add 8000
+
+# Remove LAN allow rule for a port
+./ufw-lan.sh remove 8000
+
+# Show current UFW status
+./ufw-lan.sh status
+```
+
+**How it works:**
+
+- Auto-detects your primary network interface and LAN subnet (e.g., `192.168.1.0/24`)
+- The `apply` command resets UFW to a safe baseline:
+  - Denies all incoming connections by default
+  - Allows all outgoing connections
+  - Allows SSH (port 22)
+  - Allows LAN subnet access to your specified port
+- The `add` command adds a rule without resetting existing rules
+- The `remove` command removes the LAN allow rule for a specific port
+
+**Example workflow:**
+
+```bash
+# Start a service on port 8000 and allow LAN access
+./ufw-lan.sh apply 8000
+
+# Later, add another port without resetting
+./ufw-lan.sh add 9000
+
+# Remove access to port 8000
+./ufw-lan.sh remove 8000
+```
+
+**Note:** The script only manages IPv4 rules. IPv6 is not configured.
+
 ### Memory testing (memtest)
 
 memtest86+ is installed by the setup script.
