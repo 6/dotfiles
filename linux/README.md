@@ -61,25 +61,7 @@ What this does:
 - Switches your default shell to zsh
 - Installs Oh My Zsh, Powerlevel10k, and zsh-autosuggestions
 
-### 3) Install Homebrew (as your normal user, not root)
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-Follow the instructions to add brew to your PATH, then:
-
-```bash
-brew install git ffmpeg imagemagick direnv htop
-```
-
-### 4) Reboot
-
-```bash
-sudo reboot
-```
-
-### 5) Symlink dotfiles
+### 3) Symlink dotfiles
 
 ```bash
 cd ~/dotfiles
@@ -87,6 +69,24 @@ cd ~/dotfiles
 ```
 
 This will use `linux/.p10k.zsh` automatically (no need to run `p10k configure`).
+
+### 4) Reboot
+
+```bash
+sudo reboot
+```
+
+### 5) Install Homebrew (as your normal user, not root)
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Then install packages:
+
+```bash
+brew install git ffmpeg imagemagick direnv htop
+```
 
 ### 6) (Optional) Install mise
 
