@@ -53,21 +53,33 @@ sudo ./setup-headless.sh
 
 What this does:
 
-- Installs system packages (openssh-server, zsh, ufw, etc.)
+- Installs system packages (openssh-server, zsh, ufw, gpm, etc.)
 - Enables SSH and configures UFW firewall
+- Enables GPM (mouse support in console)
 - Sets default boot target to text mode (no GUI)
 - Disables sleep/suspend/hibernate
 - Switches your default shell to zsh
-- Installs Homebrew + CLI tools (git, ffmpeg, imagemagick, direnv, htop)
 - Installs Oh My Zsh, Powerlevel10k, and zsh-autosuggestions
 
-### 3) Reboot
+### 3) Install Homebrew (as your normal user, not root)
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Follow the instructions to add brew to your PATH, then:
+
+```bash
+brew install git ffmpeg imagemagick direnv htop
+```
+
+### 4) Reboot
 
 ```bash
 sudo reboot
 ```
 
-### 4) Symlink dotfiles
+### 5) Symlink dotfiles
 
 ```bash
 cd ~/dotfiles
@@ -76,7 +88,7 @@ cd ~/dotfiles
 
 This will use `linux/.p10k.zsh` automatically (no need to run `p10k configure`).
 
-### 5) (Optional) Install mise
+### 6) (Optional) Install mise
 
 See https://mise.jdx.dev for latest install instructions.
 

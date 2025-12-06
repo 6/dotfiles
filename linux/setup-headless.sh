@@ -34,7 +34,8 @@ apt install -y \
   lm-sensors \
   smartmontools \
   alsa-utils \
-  build-essential
+  build-essential \
+  gpm
 
 echo "==> Enabling SSH service on boot..."
 systemctl enable ssh
@@ -43,6 +44,9 @@ systemctl restart ssh
 echo "==> Configuring UFW firewall (allowing SSH)..."
 ufw allow OpenSSH >/dev/null 2>&1 || ufw allow 22/tcp
 ufw --force enable
+
+echo "==> Enabling GPM (mouse support in console)..."
+systemctl enable gpm
 
 echo "==> Setting default boot target to multi-user (no GUI)..."
 systemctl set-default multi-user.target
@@ -71,40 +75,7 @@ else
   echo "Warning: user $USERNAME not found, skipping shell change" >&2
 fi
 
-echo
-echo "==> Current IP addresses:"
-ip -brief address show | awk '$1 != "lo" {print}'
-
-# Try to pick a reasonable primary IP for the SSH snippet
-PRIMARY_IP="$(ip -4 route get 1.1.1.1 2>/dev/null | awk '/src/ {for(i=1;i<=NF;i++) if ($i=="src") {print $(i+1); exit}}')"
-PRIMARY_IP="${PRIMARY_IP:-<YOUR_SERVER_IP>}"
-
-echo
-echo "==> Suggested ~/.ssh/config entry for your other machine:"
-cat <<EOF
-Host insertservername
-  Hostname ${PRIMARY_IP}
-  User ${USERNAME}
-  IdentitiesOnly yes
-  IdentityFile ~/.ssh/id_ed25519
-EOF
-
 USER_HOME=$(eval echo ~$USERNAME)
-
-echo
-echo "==> Installing Homebrew as $USERNAME..."
-sudo -u "$USERNAME" bash -c 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"' || {
-  echo "Warning: Homebrew installation failed" >&2
-}
-
-# Add brew to path for subsequent commands
-BREW_PATH="/home/linuxbrew/.linuxbrew/bin"
-if [[ -d "$BREW_PATH" ]]; then
-  echo "==> Installing CLI tools via Homebrew..."
-  sudo -u "$USERNAME" bash -c "eval \"\$($BREW_PATH/brew shellenv)\" && brew install git ffmpeg imagemagick direnv htop" || {
-    echo "Warning: brew install failed" >&2
-  }
-fi
 
 echo
 echo "==> Installing Oh My Zsh as $USERNAME..."
@@ -125,11 +96,31 @@ if [[ -d "$USER_HOME/.oh-my-zsh" ]]; then
 fi
 
 echo
+echo "==> Current IP addresses:"
+ip -brief address show | awk '$1 != "lo" {print}'
+
+# Try to pick a reasonable primary IP for the SSH snippet
+PRIMARY_IP="$(ip -4 route get 1.1.1.1 2>/dev/null | awk '/src/ {for(i=1;i<=NF;i++) if ($i=="src") {print $(i+1); exit}}')"
+PRIMARY_IP="${PRIMARY_IP:-<YOUR_SERVER_IP>}"
+
+echo
 echo "=== Headless base setup done. ==="
+echo
+echo "Suggested ~/.ssh/config entry for your other machine:"
+cat <<EOF
+Host insertservername
+  Hostname ${PRIMARY_IP}
+  User ${USERNAME}
+  IdentitiesOnly yes
+  IdentityFile ~/.ssh/id_ed25519
+EOF
+echo
 echo "Next steps:"
 echo "  1. Reboot: sudo reboot"
-echo "  2. Symlink dotfiles: cd ~/dotfiles && ./install.sh"
-echo "  3. (Optional) Install mise: https://mise.jdx.dev"
+echo "  2. Install Homebrew: /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+echo "  3. Install brew packages: brew install git ffmpeg imagemagick direnv htop"
+echo "  4. Symlink dotfiles: cd ~/dotfiles && ./install.sh"
+echo "  5. (Optional) Install mise: https://mise.jdx.dev"
 echo
 echo "Other tasks:"
 echo "  * Run memtest from GRUB if you want a RAM sanity pass."
