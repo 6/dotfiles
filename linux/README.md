@@ -96,23 +96,38 @@ Install development tools
 
 ---
 
-### 1Password CLI (headless)
+### 1Password CLI
 
-The 1Password CLI (`op`) can be used on headless servers using service account tokens for authentication.
+**1. Install `op` CLI:**
 
-**Installation options:**
+```bash
+brew install 1password-cli
+```
 
-- **Linuxbrew** (recommended if you have it installed):
-  ```bash
-  brew install 1password-cli
-  ```
+**2. Sign in to your 1Password account:**
 
-- **Direct download**: See [1Password CLI installation guide](https://developer.1password.com/docs/cli/get-started) for curl/wget instructions
+```bash
+op account add
+op signin
+```
 
-**Setup:**
+You'll be prompted for your sign-in address, email, Secret Key, and password.
 
-- **Service account authentication (headless)**: See [Service accounts guide](https://developer.1password.com/docs/service-accounts/get-started)
-- **SSH agent setup**: See [1Password SSH agent documentation](https://developer.1password.com/docs/ssh)
+**3. Save SSH keys to `~/.ssh`:**
+
+Retrieve SSH keys from 1Password and save them to `~/.ssh`:
+
+```bash
+# Get private key
+op item get "SSH Key Name" --vault "Private" --fields "private key" > ~/.ssh/id_ed25519
+
+# Get public key (if stored separately)
+op item get "SSH Key Name" --vault "Private" --fields "public key" > ~/.ssh/id_ed25519.pub
+
+# Set correct permissions
+chmod 600 ~/.ssh/id_ed25519
+chmod 644 ~/.ssh/id_ed25519.pub
+```
 
 ---
 
