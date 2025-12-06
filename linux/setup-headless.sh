@@ -38,6 +38,7 @@ apt install -y \
   smartmontools \
   alsa-utils \
   build-essential \
+  ca-certificates \
   gpm \
   htop \
   iotop \

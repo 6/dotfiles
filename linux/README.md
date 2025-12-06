@@ -349,7 +349,7 @@ Verify:
 
 ```bash
 nvidia-smi
-nvidia-smi --query-gpu=name,pcie.link.gen.current,pcie.link.width.current --format=csv
+nvidia-smi --query-gpu=index,name,pcie.link.gen.current,pcie.link.gen.max,pcie.link.width.current --format=csv
 ```
 
 This is useful for confirming your single-GPU x16 + Gen5 baseline before adding a
