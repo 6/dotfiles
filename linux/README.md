@@ -85,7 +85,7 @@ sudo reboot
 Then install packages:
 
 ```bash
-brew install git ffmpeg imagemagick direnv htop
+brew install git ffmpeg imagemagick direnv
 ```
 
 Install mise
@@ -190,3 +190,105 @@ nvidia-smi --query-gpu=name,pcie.link.gen.current,pcie.link.width.current --form
 
 This is useful for confirming your single-GPU x16 + Gen5 baseline before adding a
 second GPU.
+
+---
+
+## Monitoring Tools
+
+The setup script installs several monitoring tools. Here's when to use each:
+
+### htop — Process monitor
+
+Interactive process viewer. Use for CPU/memory usage by process.
+
+```bash
+htop
+```
+
+Press `F6` to sort by CPU/MEM, `F9` to kill a process, `q` to quit.
+
+### lm-sensors — Temperature monitoring
+
+Check CPU and motherboard temps.
+
+```bash
+# First-time setup (detects available sensors)
+sudo sensors-detect   # answer YES to all prompts
+
+# View temperatures
+sensors
+```
+
+Run `sensors` when diagnosing thermal issues or after changing cooling. Watch for temps above 80°C under load.
+
+### smartmontools — Disk health
+
+Check SSD/HDD health via SMART data. Critical for catching failing drives early.
+
+```bash
+# List drives
+lsblk
+
+# Quick health check
+sudo smartctl -H /dev/nvme0n1    # NVMe
+sudo smartctl -H /dev/sda        # SATA
+
+# Full SMART data (wear level, hours, errors)
+sudo smartctl -a /dev/nvme0n1
+```
+
+Key values to watch:
+- **Percentage Used** (NVMe) — SSD wear level
+- **Power On Hours** — total runtime
+- **Reallocated Sector Count** (SATA) — bad sectors (should be 0)
+
+### iotop — Disk I/O by process
+
+Find what's hammering your disk.
+
+```bash
+sudo iotop
+```
+
+Press `o` to show only processes doing I/O, `a` for accumulated stats.
+
+### iftop — Network bandwidth
+
+See network usage by connection in real-time.
+
+```bash
+sudo iftop
+```
+
+Press `t` to cycle display modes, `n` to toggle DNS resolution, `q` to quit.
+
+### ncdu — Disk usage analyzer
+
+Interactive disk space finder. Much faster than `du` for large filesystems.
+
+```bash
+ncdu /           # scan entire system
+ncdu /home       # scan specific directory
+```
+
+Use arrow keys to navigate, `d` to delete, `q` to quit.
+
+### sysstat (sar/iostat) — Historical stats
+
+Collects system performance data over time.
+
+```bash
+# CPU stats from today
+sar -u
+
+# Memory stats
+sar -r
+
+# Disk I/O stats (real-time)
+iostat -x 1
+
+# Per-CPU stats
+mpstat -P ALL 1
+```
+
+Useful for diagnosing issues that happened in the past (check logs in `/var/log/sysstat/`).

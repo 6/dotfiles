@@ -36,7 +36,11 @@ apt install -y \
   alsa-utils \
   build-essential \
   gpm \
-  htop
+  htop \
+  iotop \
+  iftop \
+  ncdu \
+  sysstat
 
 echo "==> Enabling SSH service on boot..."
 systemctl enable ssh
