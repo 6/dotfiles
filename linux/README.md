@@ -168,25 +168,33 @@ sudo ./doctor-headless.sh
 Add this to `~/.ssh/config` on your other machine:
 
 ```
-Host myserver
+# Use 1Password as SSH agent if not already:
+Host *
+  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+Host INSERT_SERVER_NAME
   Hostname <SERVER_IP>
   User <USERNAME>
-  IdentitiesOnly yes
-  IdentityFile ~/.ssh/id_ed25519
 ```
 
-Replace `myserver` with your preferred alias and `<USERNAME>` with your user.
+Replace `INSERT_SERVER_NAME` with your preferred alias and `<USERNAME>` with your user.
 
 To get the server IP with `hostname -I`
 
-Then connect with `ssh myserver`.
+Then connect with `ssh INSERT_SERVER_NAME`.
+
+Then `exit` and fix terminal compatibility:
+
+```bash
+infocmp -x | ssh INSERT_SERVER_NAME tic -x -
+```
 
 If you are confident key-based SSH works, disabling password auth is a good
 hardening step.
 
 First, confirm you can log in with your key from your other machine.
 
-Edit SSH config:
+Then `ssh` back in and edit SSH config:
 
 ```bash
 sudo nano /etc/ssh/sshd_config
