@@ -36,7 +36,8 @@ apt install -y \
   alsa-utils \
   ffmpeg \
   imagemagick \
-  htop
+  htop \
+  direnv
 
 echo "==> Enabling SSH service on boot..."
 systemctl enable ssh
@@ -101,3 +102,11 @@ echo "  * Install NVIDIA drivers manually when ready:"
 echo "      sudo ubuntu-drivers autoinstall"
 echo "      sudo reboot"
 echo "  * Run './doctor-headless.sh' to verify configuration."
+echo
+echo "=== Zsh ecosystem setup (run as regular user, not root): ==="
+echo "  * Oh My Zsh:          sh -c \"\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\""
+echo "  * Powerlevel10k:      git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k"
+echo "  * zsh-autosuggestions: git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+echo "  * mise:               https://mise.jdx.dev"
+echo "  * Run 'p10k configure' to set up your prompt style"
+echo "  * Symlink dotfiles:   ln -s ~/dotfiles/.zshrc ~/.zshrc"
