@@ -62,7 +62,8 @@ done
 
 # 5. Wait-online service masked (faster boot)
 svc="systemd-networkd-wait-online.service"
-enabled_state="$(systemctl is-enabled "$svc" 2>/dev/null || echo "not-present")"
+enabled_state="$(systemctl is-enabled "$svc" 2>/dev/null)"
+[[ -z "$enabled_state" ]] && enabled_state="not-present"
 if [[ "$enabled_state" == "masked" ]]; then
   pass "$svc is masked (good)."
 elif [[ "$enabled_state" == "disabled" || "$enabled_state" == "not-present" ]]; then
