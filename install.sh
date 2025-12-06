@@ -43,7 +43,8 @@ BACKUP_ALL=false
 should_exclude() {
     local file="$1"
     for exclude in "${EXCLUDE_PATTERNS[@]}"; do
-        if [[ "$file" == *"$exclude"* ]]; then
+        # Use exact match to avoid false positives (e.g., .gitconfig matching .git)
+        if [[ "$file" == "$exclude" ]]; then
             return 0
         fi
     done
