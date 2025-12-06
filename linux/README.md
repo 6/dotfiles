@@ -16,6 +16,24 @@ existing SSH public key from GitHub when the installer offered it.
 
 ## Quick start
 
+### 0) Fixing tiny console text (local monitor)
+
+On Ubuntu Server, this is usually the TTY console font.
+
+Run this:
+
+```bash
+sudo dpkg-reconfigure console-setup
+```
+
+1. Choose `UTF-8`
+2. Guess optimal character set
+3. Terminus
+4. Choose largest size: 16x32
+
+```bash
+sudo reboot
+```
 
 ### 1) Clone the dotfiles repo
 
