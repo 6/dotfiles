@@ -26,17 +26,21 @@ source $ZSH/oh-my-zsh.sh
 
 plugins=(bundler git zsh-autosuggestions)
 
-# ── Early macOS block (optimization) ──
+# ── Homebrew (macOS + Linux) ──
 if [[ "$OSTYPE" == darwin* ]]; then
   export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
   export PATH="$PATH:/opt/homebrew/bin"
+elif [[ -d /home/linuxbrew/.linuxbrew ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 
-  # OPTIMIZATION: Cache brew shellenv output (saves ~50ms)
+# OPTIMIZATION: Cache brew shellenv output (saves ~50ms)
+if command -v brew &>/dev/null; then
   if [[ -f ~/.brew_shellenv_cache ]]; then
     source ~/.brew_shellenv_cache
   else
-    eval "$(brew shellenv)"
     brew shellenv > ~/.brew_shellenv_cache
+    source ~/.brew_shellenv_cache
   fi
 fi
 

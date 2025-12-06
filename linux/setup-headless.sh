@@ -34,10 +34,7 @@ apt install -y \
   lm-sensors \
   smartmontools \
   alsa-utils \
-  ffmpeg \
-  imagemagick \
-  htop \
-  direnv
+  build-essential
 
 echo "==> Enabling SSH service on boot..."
 systemctl enable ssh
@@ -103,7 +100,11 @@ echo "      sudo ubuntu-drivers autoinstall"
 echo "      sudo reboot"
 echo "  * Run './doctor-headless.sh' to verify configuration."
 echo
-echo "=== Zsh ecosystem setup (run as regular user, not root): ==="
+echo "=== Homebrew + CLI tools (run as regular user, not root): ==="
+echo "  * Install Homebrew:   /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+echo "  * Install CLI tools:  brew install git ffmpeg imagemagick direnv htop"
+echo
+echo "=== Zsh ecosystem (run as regular user): ==="
 echo "  * Oh My Zsh:          sh -c \"\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\""
 echo "  * Powerlevel10k:      git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k"
 echo "  * zsh-autosuggestions: git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
