@@ -18,6 +18,9 @@ echo
 echo "==> Updating package lists..."
 apt update
 
+echo "==> Upgrading all existing packages..."
+apt upgrade -y
+
 echo "==> Installing base packages..."
 apt install -y \
   openssh-server \
