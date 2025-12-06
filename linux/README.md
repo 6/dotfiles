@@ -228,11 +228,13 @@ To run, reboot:
 sudo reboot
 ```
 
-Repeatedly tap Esc to get to GRUB. In GRUB, look for:
+GRUB menu will appear briefly. Press the down arrow to keep it visible and navigate.
+
+Look for the memtest86+ entry (choose the standard one, not the "serial console" version):
 
 memtest86+
 
-Run at least 1 pass for a sanity check.
+Run at least 1 pass for a sanity check. One pass typically takes 1-3 hours depending on RAM amount.
 
 On some UEFI systems the memtest GRUB entry may not appear reliably.
 If you don’t see it, consider a dedicated MemTest USB if you need a full
