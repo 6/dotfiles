@@ -66,6 +66,7 @@ echo "==> Configuring netplan for ethernet interfaces..."
     echo "      dhcp4: true"
   done
 } > /etc/netplan/01-netcfg.yaml
+chmod 600 /etc/netplan/01-netcfg.yaml
 netplan apply
 
 echo "==> Setting default boot target to multi-user (no GUI)..."
