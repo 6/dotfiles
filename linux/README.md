@@ -88,7 +88,7 @@ Then install packages:
 brew install git ffmpeg imagemagick direnv htop
 ```
 
-### 6) (Optional) Install mise
+Install mise
 
 See https://mise.jdx.dev for latest install instructions.
 
