@@ -77,9 +77,8 @@ for t in sleep.target suspend.target hibernate.target hybrid-sleep.target; do
   systemctl mask "$t" || true
 done
 
-echo "==> Disabling *-wait-online services (faster boot)..."
-systemctl disable systemd-networkd-wait-online.service 2>/dev/null || true
-systemctl disable NetworkManager-wait-online.service 2>/dev/null || true
+echo "==> Masking systemd-networkd-wait-online (faster boot)..."
+systemctl mask systemd-networkd-wait-online.service 2>/dev/null || true
 
 echo "==> Enabling unattended upgrades..."
 tee /etc/apt/apt.conf.d/20auto-upgrades >/dev/null <<'EOF'

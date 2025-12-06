@@ -60,15 +60,17 @@ for t in sleep.target suspend.target hibernate.target hybrid-sleep.target; do
   fi
 done
 
-# 5. Wait-online services disabled
-for svc in systemd-networkd-wait-online.service NetworkManager-wait-online.service; do
-  enabled_state="$(systemctl is-enabled "$svc" 2>/dev/null || echo "not-present")"
-  if [[ "$enabled_state" == "disabled" || "$enabled_state" == "not-present" || "$enabled_state" == "masked" ]]; then
-    pass "$svc is not enabled ($enabled_state)."
-  else
-    fail "$svc is $enabled_state (expected disabled/not-present)."
-  fi
-done
+# 5. Wait-online service masked (faster boot)
+svc="systemd-networkd-wait-online.service"
+enabled_state="$(systemctl is-enabled "$svc" 2>/dev/null || echo "not-present")"
+if [[ "$enabled_state" == "masked" ]]; then
+  pass "$svc is masked (good)."
+elif [[ "$enabled_state" == "disabled" || "$enabled_state" == "not-present" ]]; then
+  pass "$svc is $enabled_state."
+else
+  fail "$svc is $enabled_state (expected masked)."
+  echo "     Fix with: sudo systemctl mask $svc"
+fi
 
 # 6. Unattended upgrades
 if dpkg -s unattended-upgrades &>/dev/null; then
