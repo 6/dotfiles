@@ -35,7 +35,8 @@ apt install -y \
   smartmontools \
   alsa-utils \
   build-essential \
-  gpm
+  gpm \
+  htop
 
 echo "==> Enabling SSH service on boot..."
 systemctl enable ssh
@@ -120,7 +121,7 @@ echo "Next steps:"
 echo "  1. Symlink dotfiles: cd ~/dotfiles && ./install.sh"
 echo "  2. Reboot: sudo reboot"
 echo "  3. Install Homebrew: /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
-echo "  4. Install brew packages: brew install git ffmpeg imagemagick direnv htop"
+echo "  4. Install brew packages: brew install git ffmpeg imagemagick direnv"
 echo "  5. (Optional) Install mise: https://mise.jdx.dev"
 echo
 echo "Other tasks:"
