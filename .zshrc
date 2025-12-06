@@ -30,18 +30,18 @@ plugins=(bundler git zsh-autosuggestions)
 if [[ "$OSTYPE" == darwin* ]]; then
   export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
   export PATH="$PATH:/opt/homebrew/bin"
-elif [[ -d /home/linuxbrew/.linuxbrew ]]; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi
-
-# OPTIMIZATION: Cache brew shellenv output (saves ~50ms)
-if command -v brew &>/dev/null; then
-  if [[ -f ~/.brew_shellenv_cache ]]; then
-    source ~/.brew_shellenv_cache
-  else
-    brew shellenv > ~/.brew_shellenv_cache
-    source ~/.brew_shellenv_cache
+  # OPTIMIZATION: Cache brew shellenv output (saves ~50ms)
+  if command -v brew &>/dev/null; then
+    if [[ -f ~/.brew_shellenv_cache ]]; then
+      source ~/.brew_shellenv_cache
+    else
+      brew shellenv > ~/.brew_shellenv_cache
+      source ~/.brew_shellenv_cache
+    fi
   fi
+elif [[ -d /home/linuxbrew/.linuxbrew ]]; then
+  # Always use fresh brew shellenv on Linux to ensure PATH priority
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
 # ── Common exports ──
