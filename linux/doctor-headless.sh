@@ -14,8 +14,15 @@ fi
 echo "Headless doctor running for USERNAME=$USERNAME"
 echo
 
-pass() { echo -e "[OK]  $*"; }
-fail() { echo -e "[!!] $*"; }
+# Color codes
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+pass() { echo -e "${GREEN}✓${NC} $*"; }
+fail() { echo -e "${RED}✗${NC} $*"; }
+warn() { echo -e "${YELLOW}⚠${NC} $*"; }
 
 # 1. Default boot target
 target="$(systemctl get-default || true)"
@@ -110,7 +117,7 @@ if [[ -f /var/log/unattended-upgrades/unattended-upgrades.log ]]; then
     fail "unattended-upgrades log exists but no obvious recent activity lines found."
   fi
 else
-  fail "unattended-upgrades log not found yet (may be normal on a fresh install)."
+  warn "unattended-upgrades log not found yet (may be normal on a fresh install)."
 fi
 
 # 7. Time synchronization
@@ -127,7 +134,7 @@ if command -v timedatectl &>/dev/null; then
   if [[ "$ntp_sync" == "yes" ]]; then
     pass "Time is synchronized."
   else
-    fail "Time not synchronized yet (NTPSynchronized=$ntp_sync). This can be normal right after install."
+    warn "Time not synchronized yet (NTPSynchronized=$ntp_sync). This can be normal right after install."
   fi
 else
   fail "timedatectl not available."
@@ -298,7 +305,7 @@ echo
 if dpkg -s lm-sensors &>/dev/null; then
   pass "lm-sensors installed."
   echo "Sensor summary (best-effort):"
-  sensors 2>/dev/null || echo "[!!] sensors command failed (may need: sudo sensors-detect)"
+  sensors 2>/dev/null || warn "sensors command failed (may need: sudo sensors-detect)"
 else
   fail "lm-sensors not installed."
   echo "     Recommendation:"
@@ -310,7 +317,7 @@ echo
 if dpkg -s smartmontools &>/dev/null; then
   pass "smartmontools installed (useful for SATA/S.M.A.R.T. health)."
 else
-  fail "smartmontools not installed (optional)."
+  warn "smartmontools not installed (optional)."
   echo "     Recommendation:"
   echo "       sudo apt install -y smartmontools"
 fi
@@ -341,7 +348,7 @@ if dpkg -s fail2ban &>/dev/null; then
     echo "       sudo systemctl enable --now fail2ban"
   fi
 else
-  fail "fail2ban not installed (optional)."
+  warn "fail2ban not installed (optional)."
   echo "     Recommendation (optional hardening):"
   echo "       sudo apt install -y fail2ban"
   echo "       sudo systemctl enable --now fail2ban"
