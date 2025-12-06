@@ -88,9 +88,11 @@ Then install packages:
 brew install git ffmpeg imagemagick direnv
 ```
 
-Install mise
+Install development tools
 
-See https://mise.jdx.dev for latest install instructions.
+- mise: See https://mise.jdx.dev for latest install instructions.
+- UV: See https://docs.astral.sh/uv/getting-started/installation/ for installation options.
+- Rust: See https://www.rust-lang.org/tools/install for installation via rustup.
 
 ---
 
@@ -273,6 +275,12 @@ sudo nvidia-smi -pm 1
 ```
 
 This means faster first use after boot or after long idle. Downside: Slightly higher idle power.
+
+For CUDA development, also install the CUDA toolkit:
+
+```bash
+sudo apt install -y nvidia-cuda-toolkit
+```
 
 ---
 
