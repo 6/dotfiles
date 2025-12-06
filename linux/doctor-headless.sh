@@ -277,6 +277,19 @@ else
     else
       pass "Multiple GPUs detected ($GPU_COUNT). Review PCIe widths above."
     fi
+
+    # Check persistence mode for each GPU
+    echo
+    echo "Checking NVIDIA persistence mode:"
+    for idx in "${indexes[@]}"; do
+      persistence_mode="$(nvidia-smi -q -i "$idx" 2>/dev/null | grep -i "Persistence Mode" | head -n 1 || true)"
+      if echo "$persistence_mode" | grep -qi "Enabled"; then
+        pass "GPU $idx: Persistence Mode is Enabled"
+      else
+        fail "GPU $idx: Persistence Mode is not Enabled"
+        echo "     Fix with: sudo nvidia-smi -pm 1 -i $idx"
+      fi
+    done
   fi
 fi
 
