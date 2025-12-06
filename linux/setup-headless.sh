@@ -40,7 +40,8 @@ apt install -y \
   iotop \
   iftop \
   ncdu \
-  sysstat
+  sysstat \
+  network-manager
 
 echo "==> Enabling SSH service on boot..."
 systemctl enable ssh

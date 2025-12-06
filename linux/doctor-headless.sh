@@ -150,11 +150,26 @@ fi
 # 10. NetworkManager connections overview
 echo
 if command -v nmcli &>/dev/null; then
-  echo "NetworkManager connections (NAME:TYPE:AUTOCONNECT:IP4.METHOD):"
-  nmcli -t -f NAME,TYPE,AUTOCONNECT,IP4.METHOD connection show || true
-  echo "(Check that your wired connections have AUTOCONNECT=yes and IP4.METHOD=auto.)"
+  echo "NetworkManager connections:"
+
+  # Check each ethernet connection for autoconnect
+  has_issues=0
+  while IFS=: read -r name type autoconnect method; do
+    if [[ "$type" == "802-3-ethernet" ]]; then
+      if [[ "$autoconnect" == "yes" && "$method" == "auto" ]]; then
+        pass "$name: autoconnect=yes, ipv4=auto"
+      else
+        fail "$name: autoconnect=$autoconnect, ipv4=$method (expected yes/auto)"
+        has_issues=1
+      fi
+    fi
+  done < <(nmcli -t -f NAME,TYPE,AUTOCONNECT,IP4.METHOD connection show 2>/dev/null)
+
+  if [[ "$has_issues" -eq 1 ]]; then
+    echo "     Fix with: nmcli connection modify \"<NAME>\" connection.autoconnect yes ipv4.method auto"
+  fi
 else
-  echo "[!!] nmcli not found; NetworkManager may not be installed or in use."
+  fail "nmcli not found; NetworkManager may not be installed."
 fi
 
 # 11. Memtest package presence
