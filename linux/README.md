@@ -234,7 +234,7 @@ Look for the memtest86+ entry (choose the standard one, not the "serial console"
 
 memtest86+
 
-Run at least 1 pass for a sanity check. One pass typically takes 1-3 hours depending on RAM amount.
+Run at least 1 pass for a sanity check. One pass typically takes 1-3 hours depending on RAM amount. Watch for any red error messages—if you see errors, your RAM has issues. A clean pass shows no errors. Status display: "Pass: 0" is the first pass (0-indexed), "Pass: X%" shows progress through that pass—wait until it reaches 100% to complete one pass. For 2 passes, wait until "Pass: 1" reaches 100%. "Test #N" is the current test number, and "Errors: 0" is what you want.
 
 On some UEFI systems the memtest GRUB entry may not appear reliably.
 If you don’t see it, consider a dedicated MemTest USB if you need a full
