@@ -267,6 +267,12 @@ This script automatically detects your LAN subnet from your default network inte
 ./ufw-lan.sh remove 8000
 ```
 
+**Common ports:**
+
+- **vLLM**: 8000
+- **OpenWebUI**: 8080
+- **LiteLLM Proxy**: 4000
+
 **Note:** The script only manages IPv4 rules. IPv6 is not configured.
 
 ### Memory testing (memtest)
