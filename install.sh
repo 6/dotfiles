@@ -151,13 +151,9 @@ create_symlink() {
     echo -e "${GREEN}Linked:${NC} $target -> $source"
 }
 
-# Function to get source directory based on platform
+# Function to get source directory (same for all platforms now that configs are consolidated)
 get_source_dir() {
-    if [[ "$PLATFORM" == "linux" ]] && [[ -d "$DOTFILES_DIR/linux" ]]; then
-        echo "$DOTFILES_DIR/linux"
-    else
-        echo "$DOTFILES_DIR"
-    fi
+    echo "$DOTFILES_DIR"
 }
 
 # Main installation function
@@ -183,8 +179,15 @@ install_dotfiles() {
             continue
         fi
 
+        # Check for platform-specific override in linux/ directory
+        local source_file="$file"
+        if [[ "$PLATFORM" == "linux" ]] && [[ -f "$DOTFILES_DIR/linux/$filename" ]]; then
+            source_file="$DOTFILES_DIR/linux/$filename"
+            echo -e "${BLUE}Using Linux override:${NC} $filename"
+        fi
+
         local target="$HOME/$filename"
-        create_symlink "$file" "$target"
+        create_symlink "$source_file" "$target"
     done
 
     # 2. Symlink .misc directory as a whole (legacy behavior)

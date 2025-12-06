@@ -53,22 +53,34 @@ sudo ./setup-headless.sh
 
 What this does:
 
-- installs: openssh-server, zsh, unattended-upgrades, avahi-daemon, ufw
-- enables SSH
-- configures UFW and allows SSH
-- sets default boot target to text mode
-- disables sleep/suspend/hibernate
-- disables wait-online services for faster boot
-- enables unattended upgrades
-- switches your main user’s default shell to zsh
+- Installs system packages (openssh-server, zsh, ufw, etc.)
+- Enables SSH and configures UFW firewall
+- Sets default boot target to text mode (no GUI)
+- Disables sleep/suspend/hibernate
+- Switches your default shell to zsh
+- Installs Homebrew + CLI tools (git, ffmpeg, imagemagick, direnv, htop)
+- Installs Oh My Zsh, Powerlevel10k, and zsh-autosuggestions
 
-### 3) Reboot once
+### 3) Reboot
 
 ```bash
 sudo reboot
 ```
 
-This ensures login shell change to zsh is fully applied.
+### 4) Symlink dotfiles
+
+```bash
+cd ~/dotfiles
+./install.sh
+```
+
+This will use `linux/.p10k.zsh` automatically (no need to run `p10k configure`).
+
+### 5) (Optional) Install mise
+
+See https://mise.jdx.dev for latest install instructions.
+
+---
 
 ### Network autoconnect
 

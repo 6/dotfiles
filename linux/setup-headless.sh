@@ -89,25 +89,50 @@ Host insertservername
   IdentityFile ~/.ssh/id_ed25519
 EOF
 
+USER_HOME=$(eval echo ~$USERNAME)
+
+echo
+echo "==> Installing Homebrew as $USERNAME..."
+sudo -u "$USERNAME" bash -c 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"' || {
+  echo "Warning: Homebrew installation failed" >&2
+}
+
+# Add brew to path for subsequent commands
+BREW_PATH="/home/linuxbrew/.linuxbrew/bin"
+if [[ -d "$BREW_PATH" ]]; then
+  echo "==> Installing CLI tools via Homebrew..."
+  sudo -u "$USERNAME" bash -c "eval \"\$($BREW_PATH/brew shellenv)\" && brew install git ffmpeg imagemagick direnv htop" || {
+    echo "Warning: brew install failed" >&2
+  }
+fi
+
+echo
+echo "==> Installing Oh My Zsh as $USERNAME..."
+sudo -u "$USERNAME" bash -c 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended' || {
+  echo "Warning: Oh My Zsh installation failed" >&2
+}
+
+if [[ -d "$USER_HOME/.oh-my-zsh" ]]; then
+  echo "==> Installing Powerlevel10k theme..."
+  sudo -u "$USERNAME" git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$USER_HOME/.oh-my-zsh/custom/themes/powerlevel10k" 2>/dev/null || {
+    echo "Powerlevel10k already installed or failed"
+  }
+
+  echo "==> Installing zsh-autosuggestions plugin..."
+  sudo -u "$USERNAME" git clone https://github.com/zsh-users/zsh-autosuggestions "$USER_HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" 2>/dev/null || {
+    echo "zsh-autosuggestions already installed or failed"
+  }
+fi
+
 echo
 echo "=== Headless base setup done. ==="
-echo "Next steps (manual):"
-echo "  * Reboot once for shell default to fully apply."
+echo "Next steps:"
+echo "  1. Reboot: sudo reboot"
+echo "  2. Symlink dotfiles: cd ~/dotfiles && ./install.sh"
+echo "  3. (Optional) Install mise: https://mise.jdx.dev"
+echo
+echo "Other tasks:"
 echo "  * Run memtest from GRUB if you want a RAM sanity pass."
 echo "  * Ensure both Ethernet connections autoconnect using nmcli."
-echo "  * Install NVIDIA drivers manually when ready:"
-echo "      sudo ubuntu-drivers autoinstall"
-echo "      sudo reboot"
-echo "  * Run './doctor-headless.sh' to verify configuration."
-echo
-echo "=== Homebrew + CLI tools (run as regular user, not root): ==="
-echo "  * Install Homebrew:   /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
-echo "  * Install CLI tools:  brew install git ffmpeg imagemagick direnv htop"
-echo
-echo "=== Zsh ecosystem (run as regular user): ==="
-echo "  * Oh My Zsh:          sh -c \"\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\""
-echo "  * Powerlevel10k:      git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k"
-echo "  * zsh-autosuggestions: git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
-echo "  * mise:               https://mise.jdx.dev"
-echo "  * Run 'p10k configure' to set up your prompt style"
-echo "  * Symlink dotfiles:   ln -s ~/dotfiles/.zshrc ~/.zshrc"
+echo "  * Install NVIDIA drivers: sudo ubuntu-drivers autoinstall && sudo reboot"
+echo "  * Verify config: ./doctor-headless.sh"

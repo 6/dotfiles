@@ -1,3 +1,5 @@
+For linux, see [linux/README.md](linux/README.md) instead for the full headless server setup flow.
+
 First, install Xcode along with command line tools:
 ```sh
 xcode-select --install
