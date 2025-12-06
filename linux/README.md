@@ -94,17 +94,67 @@ See https://mise.jdx.dev for latest install instructions.
 
 ---
 
-### Network autoconnect
+### Network configuration (netplan)
 
-Ensure both Ethernet connections autoconnect:
+Ubuntu Server uses netplan for network configuration. **The setup script configures this automatically** — all detected ethernet interfaces get DHCP enabled.
+
+The following is for reference if you need to make manual changes.
+
+**Find your interface names:**
 
 ```bash
-nmcli device status
-nmcli connection show
+ip link show
+```
 
-# adjust connection names as needed
-nmcli connection modify "Wired connection 1" connection.autoconnect yes ipv4.method auto
-nmcli connection modify "Wired connection 2" connection.autoconnect yes ipv4.method auto
+Names like `enp10s0` are predictable names based on hardware location:
+- `en` = ethernet
+- `p10` = PCI bus 10
+- `s0` = slot 0
+
+Your interface names will differ based on your motherboard. Use whatever `ip link show` reports.
+
+**View current config:**
+
+```bash
+cat /etc/netplan/*.yaml
+```
+
+**Example config** (`/etc/netplan/01-netcfg.yaml`):
+
+```yaml
+network:
+  version: 2
+  ethernets:
+    enp10s0:
+      dhcp4: true      # get IP automatically from router
+    enp11s0:
+      dhcp4: true
+```
+
+- `dhcp4: true` — interface gets IP from your router (most common for home/office)
+- For a static IP instead:
+  ```yaml
+  enp10s0:
+    dhcp4: false
+    addresses:
+      - 192.168.1.100/24
+    routes:
+      - to: default
+        via: 192.168.1.1
+    nameservers:
+      addresses: [8.8.8.8, 8.8.4.4]
+  ```
+
+**Apply changes:**
+
+```bash
+sudo netplan apply
+```
+
+If something goes wrong, netplan will timeout and revert after 120 seconds. To test first:
+
+```bash
+sudo netplan try
 ```
 
 ### Verify system

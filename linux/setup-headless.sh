@@ -40,8 +40,7 @@ apt install -y \
   iotop \
   iftop \
   ncdu \
-  sysstat \
-  network-manager
+  sysstat
 
 echo "==> Enabling SSH service on boot..."
 systemctl enable ssh
@@ -54,6 +53,20 @@ ufw --force enable
 echo "==> Enabling GPM (mouse copy/paste in console)..."
 systemctl enable gpm
 systemctl start gpm
+
+echo "==> Configuring netplan for ethernet interfaces..."
+{
+  echo "network:"
+  echo "  version: 2"
+  echo "  ethernets:"
+  for iface in /sys/class/net/en*; do
+    [[ -e "$iface" ]] || continue
+    name="$(basename "$iface")"
+    echo "    $name:"
+    echo "      dhcp4: true"
+  done
+} > /etc/netplan/01-netcfg.yaml
+netplan apply
 
 echo "==> Setting default boot target to multi-user (no GUI)..."
 systemctl set-default multi-user.target

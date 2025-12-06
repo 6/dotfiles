@@ -147,29 +147,39 @@ else
   fail "avahi-daemon status: enabled=$avahi_enabled active=$avahi_active."
 fi
 
-# 10. NetworkManager connections overview
+# 10. Netplan / network interfaces
 echo
-if command -v nmcli &>/dev/null; then
-  echo "NetworkManager connections:"
+echo "Network interfaces:"
+netplan_cfg="/etc/netplan/01-netcfg.yaml"
 
-  # Check each ethernet connection for autoconnect
-  has_issues=0
-  while IFS=: read -r name type autoconnect method; do
-    if [[ "$type" == "802-3-ethernet" ]]; then
-      if [[ "$autoconnect" == "yes" && "$method" == "auto" ]]; then
-        pass "$name: autoconnect=yes, ipv4=auto"
-      else
-        fail "$name: autoconnect=$autoconnect, ipv4=$method (expected yes/auto)"
-        has_issues=1
-      fi
-    fi
-  done < <(nmcli -t -f NAME,TYPE,AUTOCONNECT,IP4.METHOD connection show 2>/dev/null)
+for iface in /sys/class/net/en*; do
+  [[ -e "$iface" ]] || continue
+  name="$(basename "$iface")"
+  state="$(cat "$iface/operstate" 2>/dev/null || echo "unknown")"
 
-  if [[ "$has_issues" -eq 1 ]]; then
-    echo "     Fix with: nmcli connection modify \"<NAME>\" connection.autoconnect yes ipv4.method auto"
+  # Check if interface is up
+  if [[ "$state" == "up" ]]; then
+    pass "$name is up"
+  else
+    fail "$name is $state"
   fi
-else
-  fail "nmcli not found; NetworkManager may not be installed."
+
+  # Check if interface has netplan config with dhcp4: true
+  if [[ -f "$netplan_cfg" ]]; then
+    if grep -A1 "^    $name:" "$netplan_cfg" 2>/dev/null | grep -q "dhcp4: true"; then
+      pass "$name has dhcp4: true in netplan"
+    elif grep -q "^    $name:" "$netplan_cfg" 2>/dev/null; then
+      fail "$name in netplan but dhcp4 not enabled"
+    else
+      fail "$name not configured in $netplan_cfg"
+      echo "     Run setup-headless.sh or add manually"
+    fi
+  fi
+done
+
+if [[ ! -f "$netplan_cfg" ]]; then
+  fail "Netplan config not found: $netplan_cfg"
+  echo "     Run setup-headless.sh to generate"
 fi
 
 # 11. Memtest package presence
