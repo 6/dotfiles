@@ -1,3 +1,10 @@
+# Detect OS
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  IS_MACOS=true
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  IS_LINUX=true
+fi
+
 # Set Oh My Zsh theme conditionally
 if [[ "$TERM_PROGRAM" == "vscode" ]] || [[ -n "$CCODE" ]]; then
   ZSH_THEME=""  # Disable Powerlevel10k for Cursor and CCode
@@ -33,43 +40,59 @@ plugins=(bundler git zsh-autosuggestions)
 
 # Couple of critical exports first:
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-export PATH="$PATH:/opt/homebrew/bin"
-
-# OPTIMIZATION: Cache brew shellenv output (saves ~50ms)
-# Regenerate cache with: brew shellenv > ~/.brew_shellenv_cache
-if [[ -f ~/.brew_shellenv_cache ]]; then
-  source ~/.brew_shellenv_cache
-else
-  eval "$(brew shellenv)"
-  brew shellenv > ~/.brew_shellenv_cache
-fi
-
 export UPDATE_ZSH_DAYS=30
-export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/tools:$PATH"
-export PATH="$PATH:/Applications/Android Studio.app/Contents/MacOS"
-export PATH="/Applications/Genymotion.app/Contents/MacOS/tools/:$PATH"
-export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
-export PATH="$HOMEBREW_PREFIX/opt/openssl@1.1/bin:$PATH"
 export EDITOR='vim'
 export GOPATH="$HOME/go"
-export PATH="$HOME/flutter/bin:$PATH"
-export PATH="$PATH:$HOME/.foundry/bin"
 export PATH="$PATH:$HOME/.cargo/bin"
 export PATH="$PATH:$HOME/.local/bin"
-export PATH="$PATH:/nix/var/nix/profiles/default/bin"
-export PATH="$PATH:/usr/local/share/dotnet/"
 export PATH=$PATH:/usr/local/go/bin
 
-export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
-export ANDROID_HOME="$HOME/Library/Android/sdk"
-export ANDROID_AVD_HOME="$HOME/.android/avd"
-export JAVA_HOME="/Applications/Android\ Studio.app/Contents/jbr/Contents/Home"
+# For ruby/fastlane:
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
+# macOS-specific configurations
+if [[ -n "$IS_MACOS" ]]; then
+  export PATH="$PATH:/opt/homebrew/bin"
+
+  # OPTIMIZATION: Cache brew shellenv output (saves ~50ms)
+  # Regenerate cache with: brew shellenv > ~/.brew_shellenv_cache
+  if [[ -f ~/.brew_shellenv_cache ]]; then
+    source ~/.brew_shellenv_cache
+  else
+    eval "$(brew shellenv)"
+    brew shellenv > ~/.brew_shellenv_cache
+  fi
+
+  export PATH="$HOME/Library/Android/sdk/platform-tools:$HOME/Library/Android/sdk/tools:$PATH"
+  export PATH="$PATH:/Applications/Android Studio.app/Contents/MacOS"
+  export PATH="/Applications/Genymotion.app/Contents/MacOS/tools/:$PATH"
+  export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+  export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+  export PATH="$HOMEBREW_PREFIX/opt/openssl@1.1/bin:$PATH"
+  export PATH="$HOME/flutter/bin:$PATH"
+  export PATH="$PATH:$HOME/.foundry/bin"
+  export PATH="$PATH:/nix/var/nix/profiles/default/bin"
+  export PATH="$PATH:/usr/local/share/dotnet/"
+
+  export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
+  export ANDROID_HOME="$HOME/Library/Android/sdk"
+  export ANDROID_AVD_HOME="$HOME/.android/avd"
+  export JAVA_HOME="/Applications/Android\ Studio.app/Contents/jbr/Contents/Home"
+
+  export PATH=$PATH:$ANDROID_HOME/emulator
+  export PATH=$PATH:$ANDROID_HOME/tools
+  export PATH=$PATH:$ANDROID_HOME/tools/bin
+  export PATH=$PATH:$ANDROID_HOME/platform-tools
+fi
+
+# Linux-specific configurations
+if [[ -n "$IS_LINUX" ]]; then
+  # Load rye if available
+  if [ -f "$HOME/.rye/env" ]; then
+    source "$HOME/.rye/env"
+  fi
+fi
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:$HOME/.cache/lm-studio/bin"
@@ -77,37 +100,36 @@ export PATH="$PATH:$HOME/.cache/lm-studio/bin"
 export OLLAMA_HOST=0.0.0.0
 export OLLAMA_ORIGINS=*
 
-# For ruby/fastlane:
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
-
 # Disable autosuggest for large buffers
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 ZSH_AUTOSUGGEST_USE_ASYNC=true
 
-function screenshot() {
-  local seconds=0
-  if [[ $1 ]]; then seconds=$1; fi
-  screencapture -x -T $seconds -t png ~/Desktop/screenshot-$(date +"%Y-%m-%d-%H-%M-%S").png
-}
+# macOS-specific functions
+if [[ -n "$IS_MACOS" ]]; then
+  function screenshot() {
+    local seconds=0
+    if [[ $1 ]]; then seconds=$1; fi
+    screencapture -x -T $seconds -t png ~/Desktop/screenshot-$(date +"%Y-%m-%d-%H-%M-%S").png
+  }
 
-# Useful if you have to force-shutdown and leave Postgres in a weird state.
-function fixpg() {
-  rm -f /usr/local/var/postgres/postmaster.pid
-  brew services restart postgresql
-  echo 'If still not working, try running `pg_ctl -D /usr/local/var/postgres start` to see full output.'
-  echo 'or on M1: `pg_ctl -D /opt/homebrew/var/postgres start`'
-}
+  # Useful if you have to force-shutdown and leave Postgres in a weird state.
+  function fixpg() {
+    rm -f /usr/local/var/postgres/postmaster.pid
+    brew services restart postgresql
+    echo 'If still not working, try running `pg_ctl -D /usr/local/var/postgres start` to see full output.'
+    echo 'or on M1: `pg_ctl -D /opt/homebrew/var/postgres start`'
+  }
 
-# When OS X camera stops working occasionally.
-function fixcamera {
-  sudo killall VDCAssistant
-}
+  # When OS X camera stops working occasionally.
+  function fixcamera {
+    sudo killall VDCAssistant
+  }
 
-# Fix LoL config file (gets overwritten sometimes).
-function fixlol() {
-  cp ~/.misc/PersistedSettings.json "/Applications/League of Legends.app/Contents/LoL/Config/PersistedSettings.json"
-}
+  # Fix LoL config file (gets overwritten sometimes).
+  function fixlol() {
+    cp ~/.misc/PersistedSettings.json "/Applications/League of Legends.app/Contents/LoL/Config/PersistedSettings.json"
+  }
+fi
 
 function spec() {
   test -e package.json && grep -q '"test":' package.json && yarn test $1
@@ -140,7 +162,11 @@ function main() {
 
 # Return PID of process running on the given port:
 function port() {
-  lsof -i tcp:"$1"
+  if [[ -n "$IS_MACOS" ]]; then
+    lsof -i tcp:"$1"
+  elif [[ -n "$IS_LINUX" ]]; then
+    lsof -i tcp:"$1" 2>/dev/null || ss -tlnp | grep ":$1 "
+  fi
 }
 
 # https://docs.openwebui.com/getting-started/quick-start#updating
@@ -179,15 +205,19 @@ function linkmodels() {
   # Note: Ollama cannot directly use .gguf files via symlinks or OLLAMA_MODELS.
 }
 
-alias fixdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
-alias fixsim='sudo killall -9 com.apple.CoreSimulator.CoreSimulatorService'
+# macOS-specific aliases
+if [[ -n "$IS_MACOS" ]]; then
+  alias fixdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
+  alias fixsim='sudo killall -9 com.apple.CoreSimulator.CoreSimulatorService'
+  alias ap='osascript ~/.misc/airpods.applescript'
+fi
+
 alias a="code ."
 alias mp3="youtube-dl --add-metadata -x --extract-audio --audio-format mp3"
 alias most="du -hs * | gsort -rh | head -10"
 alias gti='git'
 alias igt='git'
 alias gt='git'
-alias ap='osascript ~/.misc/airpods.applescript'
 alias cc='claude --model opus'
 alias ccs='claude --model sonnet'
 alias mainp='main && git pull'
@@ -246,26 +276,25 @@ else
 fi
 
 if [[ "$TERM_PROGRAM" != "vscode" ]]; then
-  # OPTIMIZATION: Lazy-load terraform autocomplete (saves ~28ms)
-  terraform() {
-    unfunction terraform
-    autoload -U +X bashcompinit && bashcompinit
-    complete -o nospace -C /opt/homebrew/bin/terraform terraform
-    terraform "$@"
-  }
+  # macOS-specific lazy loading
+  if [[ -n "$IS_MACOS" ]]; then
+    # OPTIMIZATION: Lazy-load terraform autocomplete (saves ~28ms)
+    terraform() {
+      unfunction terraform
+      autoload -U +X bashcompinit && bashcompinit
+      complete -o nospace -C /opt/homebrew/bin/terraform terraform
+      terraform "$@"
+    }
 
-  # OPTIMIZATION: Lazy-load heroku autocomplete (saves ~430ms)
-  heroku() {
-    unfunction heroku
-    HEROKU_AC_ZSH_SETUP_PATH="$HOME/Library/Caches/heroku/autocomplete/zsh_setup"
-    test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH
-    heroku "$@"
-  }
+    # OPTIMIZATION: Lazy-load heroku autocomplete (saves ~430ms)
+    heroku() {
+      unfunction heroku
+      HEROKU_AC_ZSH_SETUP_PATH="$HOME/Library/Caches/heroku/autocomplete/zsh_setup"
+      test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH
+      heroku "$@"
+    }
 
-  ASCII=("totoro" "beach" "stars")
-  cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
+    ASCII=("totoro" "beach" "stars")
+    cat $HOME/.misc/ascii_$ASCII[$RANDOM%$#ASCII+1]
+  fi
 fi
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/peter/.cache/lm-studio/bin"
-# End of LM Studio CLI section
