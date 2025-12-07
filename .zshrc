@@ -255,6 +255,13 @@ if [[ "$OSTYPE" == darwin* ]]; then
   fi
 fi
 
+# ── Linux-specific configuration ──
+if [[ "$OSTYPE" == linux* ]]; then
+  # CUDA paths
+  export PATH=/usr/local/cuda/bin:$PATH
+  export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+fi
+
 # ── ASCII art on terminal open (must be last) ──
 if [[ "$TERM_PROGRAM" != "vscode" ]] && [[ -z "$CCODE" ]] && [[ -d $HOME/.misc ]]; then
   ASCII=("totoro" "beach" "stars")
