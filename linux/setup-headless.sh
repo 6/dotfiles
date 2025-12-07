@@ -40,6 +40,8 @@ apt install -y \
   build-essential \
   ca-certificates \
   python3-dev \
+  gcc-12 \
+  g++-12 \
   gpm \
   htop \
   iotop \

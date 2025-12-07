@@ -1,4 +1,4 @@
-# Ubuntu Server Headless Setup 
+# Ubuntu Server Headless Setup
 
 This directory contains a deterministic setup + verification flow.
 
@@ -355,7 +355,7 @@ nvidia-smi --query-gpu=index,name,pcie.link.gen.current,pcie.link.gen.max,pcie.l
 This is useful for confirming your single-GPU x16 + Gen5 baseline before adding a
 second GPU.
 
-Also enable persistence mode. Rerun this after installing any new GPU: 
+Also enable persistence mode. Rerun this after installing any new GPU:
 
 ```bash
 sudo nvidia-smi -pm 1
