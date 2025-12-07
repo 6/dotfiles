@@ -42,6 +42,7 @@ apt install -y \
   python3-dev \
   gcc-12 \
   g++-12 \
+  cmake \
   gpm \
   htop \
   iotop \
