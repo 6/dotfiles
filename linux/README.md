@@ -364,6 +364,35 @@ sudo nvidia-smi -pm 1
 
 This means faster first use after boot or after long idle. Downside: Slightly higher idle power.
 
+To persist persistence mode:
+
+```bash
+sudo nano /etc/systemd/system/nvidia-persistence.service
+```
+
+Then in this put:
+
+```
+[Unit]
+Description=Enable NVIDIA Persistence Mode
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/nvidia-smi -pm 1
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then enable it:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now nvidia-persistence.service
+```
+
 For CUDA development, also install the CUDA toolkit:
 
 ```bash
