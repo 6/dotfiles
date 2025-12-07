@@ -39,6 +39,7 @@ apt install -y \
   alsa-utils \
   build-essential \
   ca-certificates \
+  python3-dev \
   gpm \
   htop \
   iotop \
