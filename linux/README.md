@@ -473,6 +473,24 @@ Key values to watch:
 - **Power On Hours** — total runtime
 - **Reallocated Sector Count** (SATA) — bad sectors (should be 0)
 
+### df — Disk space usage
+
+**See all physical drives (mounted and unmounted):**
+
+```bash
+lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,LABEL
+```
+
+This shows all connected drives with their sizes and whether they're mounted. Unmounted drives won't show usage until you mount them.
+
+**See usage for mounted drives only:**
+
+```bash
+df -h -x tmpfs -x devtmpfs -x efivarfs
+```
+
+The `df` command only shows mounted filesystems, so unmounted drives won't appear here. This filters out virtual filesystems (tmpfs, efivarfs, etc.) to show only real physical drives.
+
 ### iotop — Disk I/O by process
 
 Find what's hammering your disk.
