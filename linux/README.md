@@ -381,6 +381,8 @@ ls /usr/local/cu...
 
 # Then symlink it
 sudo ln -sfn /usr/local/cuda-13.1 /usr/local/cuda
+# Also symlink nvcc - VLLM expects it here:
+sudo ln -sfn /usr/local/cuda/bin/nvcc /usr/bin/nvcc
 ```
 
 Confirm that this returns expected version (in this case 13.1):
