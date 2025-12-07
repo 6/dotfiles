@@ -366,7 +366,28 @@ This means faster first use after boot or after long idle. Downside: Slightly hi
 For CUDA development, also install the CUDA toolkit:
 
 ```bash
-sudo apt install -y nvidia-cuda-toolkit
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
+sudo apt update
+
+# Install newest cuda toolkit:
+sudo apt install -y cuda-toolkit
+```
+
+Check which version was installed (in my case 13.1):
+
+```bash
+ls /usr/local/cu...
+
+# Then symlink it
+sudo ln -sfn /usr/local/cuda-13.1 /usr/local/cuda
+```
+
+Confirm that this returns expected version (in this case 13.1):
+
+```bash
+which nvcc
+nvcc --version
 ```
 
 ---
