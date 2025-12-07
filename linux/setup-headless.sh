@@ -43,6 +43,7 @@ apt install -y \
   gcc-12 \
   g++-12 \
   cmake \
+  libcurl4-openssl-dev \
   gpm \
   htop \
   iotop \
