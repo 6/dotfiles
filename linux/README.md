@@ -10,7 +10,8 @@ existing SSH public key from GitHub when the installer offered it.
 ## Repo layout
 
 - `linux/setup-headless.sh` — baseline config + packages
-- `linux/doctor-headless.sh` — sanity checker
+- `linux/doctor-headless.sh` — system sanity checker
+- `linux/doctor-cuda.sh` - CUDA sanity checker
 
 ---
 
