@@ -378,7 +378,19 @@ else
   echo "     Then log out and back in for docker group to take effect."
 fi
 
-# 17. IP addresses
+# 17. NVIDIA Container Toolkit (GPU Docker)
+# Only check if both Docker and NVIDIA drivers are available
+if command -v docker &>/dev/null && command -v nvidia-smi &>/dev/null && nvidia-smi &>/dev/null; then
+  echo
+  if docker run --rm --gpus all ubuntu nvidia-smi &>/dev/null; then
+    pass "nvidia-container-toolkit configured (GPU Docker works)."
+  else
+    warn "nvidia-container-toolkit not configured (GPU Docker unavailable)."
+    echo "     See README.md 'NVIDIA Container Toolkit' section for setup instructions."
+  fi
+fi
+
+# 18. IP addresses
 echo
 echo "IP addresses:"
 ip -brief address show | awk '$1 != "lo" {print}'
