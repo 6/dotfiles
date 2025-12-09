@@ -49,7 +49,8 @@ apt install -y \
   iotop \
   iftop \
   ncdu \
-  sysstat
+  sysstat \
+  docker.io
 
 echo "==> Enabling SSH service on boot..."
 systemctl enable ssh
@@ -62,6 +63,11 @@ ufw --force enable
 echo "==> Enabling GPM (mouse copy/paste in console)..."
 systemctl enable gpm
 systemctl start gpm
+
+echo "==> Enabling Docker and adding $USERNAME to docker group..."
+systemctl enable docker
+systemctl start docker
+usermod -aG docker "$USERNAME"
 
 echo "==> Configuring netplan for ethernet interfaces..."
 {
@@ -132,10 +138,16 @@ ip -brief address show | awk '$1 != "lo" {print}'
 PRIMARY_IP="$(ip -4 route get 1.1.1.1 2>/dev/null | awk '/src/ {for(i=1;i<=NF;i++) if ($i=="src") {print $(i+1); exit}}')"
 PRIMARY_IP="${PRIMARY_IP:-<YOUR_SERVER_IP>}"
 
+HOSTNAME="$(hostname)"
+
 echo
 echo "=== Headless base setup done. ==="
 echo
-echo "Server IP: ${PRIMARY_IP}"
+echo "Hostname:  ${HOSTNAME}"
 echo "Username:  ${USERNAME}"
+echo "Server IP: ${PRIMARY_IP}"
+echo
+echo "SSH via mDNS (recommended):"
+echo "  ssh ${USERNAME}@${HOSTNAME}.local"
 echo
 echo "See linux/README.md for next steps."

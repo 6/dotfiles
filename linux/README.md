@@ -54,13 +54,16 @@ sudo ./setup-headless.sh
 
 What this does:
 
-- Installs system packages (openssh-server, zsh, ufw, gpm, etc.)
+- Installs system packages (openssh-server, zsh, ufw, gpm, docker, etc.)
 - Enables SSH and configures UFW firewall
 - Enables GPM (mouse copy/paste in console)
+- Installs Docker and adds your user to the docker group
 - Sets default boot target to text mode (no GUI)
 - Disables sleep/suspend/hibernate
 - Switches your default shell to zsh
 - Installs Oh My Zsh, Powerlevel10k, and zsh-autosuggestions
+
+**Note:** Docker group membership requires logging out and back in to take effect. After reboot, verify with `docker run hello-world`.
 
 ### 3) Symlink dotfiles
 
@@ -200,6 +203,8 @@ sudo ./doctor-headless.sh
 
 ### SSH convenience
 
+The setup script installs `avahi-daemon`, which enables mDNS. This means you can SSH using the hostname instead of an IP address that changes with DHCP.
+
 Add this to `~/.ssh/config` on your other machine:
 
 ```
@@ -208,15 +213,15 @@ Host *
   IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 
 Host INSERT_SERVER_NAME
-  Hostname <SERVER_IP>
+  Hostname INSERT_SERVER_NAME.local
   User <USERNAME>
 ```
 
-Replace `INSERT_SERVER_NAME` with your preferred alias and `<USERNAME>` with your user.
-
-To get the server IP with `hostname -I`
+Replace `INSERT_SERVER_NAME` with your server's hostname (run `hostname` on the server to check) and `<USERNAME>` with your user.
 
 Then connect with `ssh INSERT_SERVER_NAME`.
+
+The `.local` suffix uses mDNS to resolve the hostname, so you don't need to track changing IP addresses.
 
 Then `exit` and fix terminal compatibility:
 
@@ -355,43 +360,6 @@ nvidia-smi --query-gpu=index,name,pcie.link.gen.current,pcie.link.gen.max,pcie.l
 
 This is useful for confirming your single-GPU x16 + Gen5 baseline before adding a
 second GPU.
-
-Also enable persistence mode. Rerun this after installing any new GPU:
-
-```bash
-sudo nvidia-smi -pm 1
-```
-
-This means faster first use after boot or after long idle. Downside: Slightly higher idle power.
-
-To persist persistence mode:
-
-```bash
-sudo nano /etc/systemd/system/nvidia-persistence.service
-```
-
-Then in this put:
-
-```
-[Unit]
-Description=Enable NVIDIA Persistence Mode
-After=multi-user.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/nvidia-smi -pm 1
-RemainAfterExit=yes
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Then enable it:
-
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now nvidia-persistence.service
-```
 
 For CUDA development, also install the CUDA toolkit:
 

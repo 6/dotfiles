@@ -285,18 +285,6 @@ else
       pass "Multiple GPUs detected ($GPU_COUNT). Review PCIe widths above."
     fi
 
-    # Check persistence mode for each GPU
-    echo
-    echo "Checking NVIDIA persistence mode:"
-    for idx in "${indexes[@]}"; do
-      persistence_mode="$(nvidia-smi -q -i "$idx" 2>/dev/null | grep -i "Persistence Mode" | head -n 1 || true)"
-      if echo "$persistence_mode" | grep -qi "Enabled"; then
-        pass "GPU $idx: Persistence Mode is Enabled"
-      else
-        fail "GPU $idx: Persistence Mode is not Enabled"
-        echo "     Fix with: sudo nvidia-smi -pm 1 -i $idx"
-      fi
-    done
   fi
 fi
 
@@ -354,7 +342,44 @@ else
   echo "       sudo systemctl enable --now fail2ban"
 fi
 
-# 16. IP addresses
+# 16. Docker
+echo
+if dpkg -s docker.io &>/dev/null; then
+  pass "docker.io package installed."
+
+  docker_enabled="$(systemctl is-enabled docker 2>/dev/null || echo unknown)"
+  docker_active="$(systemctl is-active docker 2>/dev/null || echo unknown)"
+
+  if [[ "$docker_enabled" == "enabled" && "$docker_active" == "active" ]]; then
+    pass "Docker service is enabled and active."
+  else
+    fail "Docker service status: enabled=$docker_enabled active=$docker_active."
+    echo "     Fix with: sudo systemctl enable --now docker"
+  fi
+
+  # Check if user is in docker group
+  if groups "$USERNAME" 2>/dev/null | grep -qw docker; then
+    pass "$USERNAME is in the docker group."
+  else
+    fail "$USERNAME is not in the docker group."
+    echo "     Fix with: sudo usermod -aG docker $USERNAME"
+    echo "     Then log out and back in."
+  fi
+
+  # Check if docker is accessible (may fail if user not in group yet)
+  if sudo -u "$USERNAME" docker info &>/dev/null; then
+    pass "Docker is accessible for $USERNAME."
+  else
+    warn "Docker not accessible for $USERNAME (may need to log out and back in)."
+  fi
+else
+  fail "docker.io package not installed."
+  echo "     Install with: sudo apt install -y docker.io"
+  echo "     Then: sudo usermod -aG docker \$USER"
+  echo "     Then log out and back in."
+fi
+
+# 17. IP addresses
 echo
 echo "IP addresses:"
 ip -brief address show | awk '$1 != "lo" {print}'

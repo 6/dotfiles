@@ -274,39 +274,5 @@ if command -v ldconfig &>/dev/null; then
   fi
 fi
 
-section "Persistence mode"
-
-if command -v nvidia-smi &>/dev/null && nvidia-smi &>/dev/null; then
-  # Parse per-GPU persistence mode values
-  mapfile -t PM_LINES < <(nvidia-smi -q 2>/dev/null | grep -i "Persistence Mode" || true)
-
-  if [[ "${#PM_LINES[@]}" -eq 0 ]]; then
-    warn "Could not read Persistence Mode from nvidia-smi -q."
-  else
-    disabled_count=0
-    idx=0
-
-    for line in "${PM_LINES[@]}"; do
-      if echo "$line" | grep -qi "Disabled"; then
-        disabled_count=$((disabled_count + 1))
-      fi
-      idx=$((idx + 1))
-    done
-
-    if [[ "$disabled_count" -eq 0 ]]; then
-      pass "Persistence Mode appears enabled for all detected GPUs."
-    else
-      warn "Persistence Mode is disabled on one or more GPUs."
-      echo "    Recommended for headless inference:"
-      echo "      sudo nvidia-smi -pm 1"
-      echo "    Or explicitly:"
-      echo "      sudo nvidia-smi -i 0 -pm 1"
-      echo "      sudo nvidia-smi -i 1 -pm 1"
-    fi
-  fi
-else
-  warn "Skipping persistence check (nvidia-smi unavailable)."
-fi
-
 echo
 echo "Doctor-cuda completed."
