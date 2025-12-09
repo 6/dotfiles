@@ -374,9 +374,8 @@ if dpkg -s docker.io &>/dev/null; then
   fi
 else
   fail "docker.io package not installed."
-  echo "     Install with: sudo apt install -y docker.io"
-  echo "     Then: sudo usermod -aG docker \$USER"
-  echo "     Then log out and back in."
+  echo "     Run: sudo ./setup-headless.sh"
+  echo "     Then log out and back in for docker group to take effect."
 fi
 
 # 17. IP addresses
