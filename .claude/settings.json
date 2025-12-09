@@ -55,6 +55,7 @@
       "WebFetch(domain:databento.com)",
       "WebFetch(domain:datatracker.ietf.org)",
       "WebFetch(domain:date-fns.org)",
+      "WebFetch(domain:deepeval.com)",
       "WebFetch(domain:dev.mysql.com)",
       "WebFetch(domain:dev.twitch.tv)",
       "WebFetch(domain:develop.sentry.dev)",
