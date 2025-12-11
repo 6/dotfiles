@@ -33,6 +33,7 @@
       "WebFetch(domain:bundler.io)",
       "WebFetch(domain:business-api.tiktok.com)",
       "WebFetch(domain:callstack.github.io)",
+      "WebFetch(domain:catalog.ngc.nvidia.com)",
       "WebFetch(domain:claude.ai)",
       "WebFetch(domain:claude.com)",
       "WebFetch(domain:cli.github.com)",
