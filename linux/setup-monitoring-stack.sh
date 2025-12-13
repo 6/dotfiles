@@ -686,10 +686,26 @@ EOF
   echo "Local Grafana (localhost only): http://127.0.0.1:3000"
   echo "Grafana password: sudo cat ${ENV_FILE}"
   echo
-  echo "To trust the HTTPS cert on your Mac (one-time):"
-  echo "  cd /opt/monitoring"
-  echo "  sudo docker compose exec -T caddy sh -lc 'cat /data/caddy/pki/authorities/local/root.crt' > /tmp/caddy-root.crt"
-  echo "  (copy /tmp/caddy-root.crt to your Mac, import into System Keychain, set Always Trust)"
+
+  cat <<EOF
+
+--- macOS: trust the Caddy root CA (stop repeating HTTPS warnings) ---
+1) Export the Caddy root CA from the server (writes /opt/monitoring/caddy-root.crt):
+   cd /opt/monitoring && sudo docker compose -f ${COMPOSE_FILE} cp caddy:/data/caddy/pki/authorities/local/root.crt ./caddy-root.crt
+
+2) Copy it to your Mac (example):
+   scp peter@${GRAFANA_HOSTNAME}:/opt/monitoring/caddy-root.crt ~/Downloads/
+
+3) On the Mac, install it into the *System* keychain as a trusted root:
+   sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/Downloads/caddy-root.crt
+
+   If you get error -25294 (duplicate), delete existing Caddy cert(s) and retry:
+     sudo security find-certificate -a -c "Caddy Local Authority" -Z /Library/Keychains/System.keychain
+     # pick a SHA-1 from output, then:
+     sudo security delete-certificate -Z <SHA1> /Library/Keychains/System.keychain
+     sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/Downloads/caddy-root.crt
+---------------------------------------------------------------------
+EOF
 }
 
 main "$@"
