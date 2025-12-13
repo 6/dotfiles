@@ -5,9 +5,10 @@ PROM_RETENTION_TIME="${PROM_RETENTION_TIME:-7d}"
 PROM_RETENTION_SIZE="${PROM_RETENTION_SIZE:-20GB}"   # "" disables size cap
 SCRAPE_INTERVAL="${SCRAPE_INTERVAL:-5s}"
 
-# 127.0.0.1 = localhost only (ssh tunnel recommended)
-# 0.0.0.0   = accessible from LAN at http://192.168.x.y:\<port\>
-BIND_ADDR="${BIND_ADDR:-127.0.0.1}"
+# Bind addresses (defaults chosen for LAN convenience + safety)
+GRAFANA_BIND="${GRAFANA_BIND:-0.0.0.0}"     # LAN-accessible by default
+PROM_BIND="${PROM_BIND:-127.0.0.1}"         # keep Prometheus private by default
+EXPORTER_BIND="${EXPORTER_BIND:-127.0.0.1}" # keep exporters private by default
 
 BASE_DIR="/opt/monitoring"
 PROM_DIR="$BASE_DIR/prometheus"
@@ -25,11 +26,9 @@ as_root() {
 }
 
 wait_http() {
-  local url="$1" tries="${2:-40}" sleep_s="${3:-1}"
-  for i in $(seq 1 "$tries"); do
-    if curl -fsS --max-time 2 "$url" >/dev/null; then
-      return 0
-    fi
+  local url="$1" tries="${2:-60}" sleep_s="${3:-1}"
+  for _ in $(seq 1 "$tries"); do
+    if curl -fsS --max-time 2 "$url" >/dev/null; then return 0; fi
     sleep "$sleep_s"
   done
   echo "ERROR: timed out waiting for $url"
@@ -37,44 +36,38 @@ wait_http() {
 }
 
 fix_env_permissions_for_user() {
-  # Option B: readable by the invoking user without making it world-readable
-  # Uses the invoking user's primary group (common on Ubuntu: group == username)
   local u="${SUDO_USER:-}"
-  if [[ -z "$u" ]]; then return 0; fi
-  local g
-  g="$(id -gn "$u" 2>/dev/null || true)"
-  if [[ -n "$g" ]]; then
-    chgrp "$g" "$ENV_FILE" || true
-    chmod 640 "$ENV_FILE" || true
-  fi
+  [[ -z "$u" ]] && return 0
+  local g; g="$(id -gn "$u" 2>/dev/null || true)"
+  [[ -z "$g" ]] && return 0
+  chgrp "$g" "$ENV_FILE" || true
+  chmod 640 "$ENV_FILE" || true
 }
 
 ensure_docker_running_socket_activation() {
-  log "Ensuring docker.socket + docker.service are started (socket activation)"
+  log "Ensuring docker.socket + docker.service are running (socket activation)"
   systemctl daemon-reload || true
   systemctl reset-failed docker.service docker.socket || true
   systemctl enable docker.socket docker.service >/dev/null 2>&1 || true
 
-  systemctl stop docker.service docker.socket || true
-  rm -f /run/docker.sock /var/run/docker.sock || true
-
+  # ensure the socket exists before dockerd (-H fd://)
   systemctl start docker.socket
   systemctl start docker.service
 
   systemctl is-active --quiet docker.socket || { systemctl status docker.socket --no-pager -l || true; exit 1; }
   systemctl is-active --quiet docker.service || { systemctl status docker.service --no-pager -l || true; journalctl -u docker -b --no-pager -l | tail -n 200 || true; exit 1; }
+
+  docker compose version >/dev/null 2>&1 || { echo "ERROR: docker compose not found"; exit 1; }
 }
 
 main() {
   as_root "$@"
 
+  # minimal deps
   apt-get update -y
-  apt-get install -y ca-certificates curl gnupg openssl python3
+  apt-get install -y ca-certificates curl openssl
 
-  # assume docker/compose already installed on your box now; just ensure it's running
   has_cmd docker || { echo "ERROR: docker not found"; exit 1; }
-  docker compose version >/dev/null 2>&1 || { echo "ERROR: docker compose not found"; exit 1; }
-
   ensure_docker_running_socket_activation
 
   mkdir -p "$PROM_DIR" \
@@ -148,7 +141,7 @@ services:
     gpus: all
     cap_add: [ "SYS_ADMIN" ]
     ports:
-      - "${BIND_ADDR}:9400:9400"
+      - "${EXPORTER_BIND}:9400:9400"
 
   node-exporter:
     image: quay.io/prometheus/node-exporter:latest
@@ -164,7 +157,7 @@ services:
       - /sys:/host/sys:ro
       - /:/rootfs:ro,rslave
     ports:
-      - "${BIND_ADDR}:9100:9100"
+      - "${EXPORTER_BIND}:9100:9100"
 
   prometheus:
     image: prom/prometheus:latest
@@ -178,7 +171,7 @@ ${size_line}
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus-data:/prometheus
     ports:
-      - "${BIND_ADDR}:9090:9090"
+      - "${PROM_BIND}:9090:9090"
 
   grafana:
     image: grafana/grafana-oss:latest
@@ -189,7 +182,7 @@ ${size_line}
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
     ports:
-      - "${BIND_ADDR}:3000:3000"
+      - "${GRAFANA_BIND}:3000:3000"
 
 volumes:
   prometheus-data:
@@ -200,14 +193,17 @@ EOF
   cd "$BASE_DIR"
   docker compose -f "$COMPOSE_FILE" up -d
 
-  log "Waiting for endpoints (avoids startup race)"
-  wait_http "http://${BIND_ADDR}:9400/metrics" 60 1
-  wait_http "http://${BIND_ADDR}:9100/metrics" 60 1
-  wait_http "http://${BIND_ADDR}:9090/-/ready" 60 1
+  log "Waiting for services (prevents racey curl failures)"
+  wait_http "http://127.0.0.1:9400/metrics" 60 1
+  wait_http "http://127.0.0.1:9100/metrics" 60 1
+  wait_http "http://127.0.0.1:9090/-/ready" 60 1
 
+  local ip
+  ip="$(hostname -I | awk '{print $1}')"
   echo
-  echo "Grafana:    http://$(hostname -I | awk '{print $1}'):3000   (LAN)   or http://${BIND_ADDR}:3000 (local)"
-  echo "Prometheus: http://$(hostname -I | awk '{print $1}'):9090"
-  echo "Password:   sudo cat $ENV_FILE"
+  echo "Grafana LAN URL: http://${ip}:3000"
+  echo "Grafana password: sudo cat ${ENV_FILE}"
+  echo "CPU temp (9950X Tctl):"
+  echo "  node_hwmon_temp_celsius{chip=\"pci0000:00_0000:00:18_3\",sensor=\"temp1\"}"
 }
 main "$@"
