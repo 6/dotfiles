@@ -23,7 +23,7 @@ ALERT_VRAM_PCT="${ALERT_VRAM_PCT:-95}"
 
 # Optional knobs
 ENABLE_HOURLY_SNAPSHOT="${ENABLE_HOURLY_SNAPSHOT:-0}" # installs systemd timer that posts snapshot inline to Slack hourly
-ENABLE_TEST_ALERT="${ENABLE_TEST_ALERT:-0}"           # force immediate test alert to validate pipeline
+ENABLE_TEST_ALERT="${ENABLE_TEST_ALERT:-0}"           # immediate test alert to validate pipeline
 
 # REQUIRED: Slack webhook (used for Alertmanager + optional hourly snapshot)
 SLACK_WEBHOOK_URL="${SLACK_WEBHOOK_URL:-}"
@@ -57,10 +57,10 @@ require_slack_webhook() {
   cat <<EOF
 ERROR: SLACK_WEBHOOK_URL is required.
 
-Run like (recommended):
+Run like:
   SLACK_WEBHOOK_URL='https://hooks.slack.com/services/...' $0
 
-If you insist on sudo yourself:
+If you run sudo yourself:
   SLACK_WEBHOOK_URL='https://hooks.slack.com/services/...' sudo --preserve-env=SLACK_WEBHOOK_URL $0
 EOF
   exit 1
@@ -159,14 +159,8 @@ PROM_URL="${PROM_URL:-http://127.0.0.1:9090}"
 GRAFANA_URL="${GRAFANA_URL:-}"
 SLACK_WEBHOOK_URL="${SLACK_WEBHOOK_URL:-}"
 
-if [[ -z "$SLACK_WEBHOOK_URL" ]]; then
-  echo "SLACK_WEBHOOK_URL missing"
-  exit 1
-fi
-
 need() { command -v "$1" >/dev/null 2>&1 || { echo "missing $1"; exit 1; }; }
-need curl
-need jq
+need curl; need jq
 
 q1() {
   local query="$1"
@@ -180,27 +174,7 @@ qlist() {
     | jq -r '.data.result[]? | "\(.metric | to_entries | map("\(.key)=\(.value)") | join(",")) \(.value[1])"'
 }
 
-fmtf() {
-  local v="${1:-}"
-  [[ -z "$v" ]] && echo "n/a" || printf "%.1f" "$v"
-}
-
-# CPU
-cpu_temp="$(q1 'node_hwmon_temp_celsius{sensor="temp1"} * on (chip) group_left(chip_name) node_hwmon_chip_names{chip_name="k10temp"}')"
-cpu_w="$(q1 'sum(rate(node_rapl_package_joules_total[1m]))')"
-cpu_usage="$(q1 '100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)')"
-cpu_load1="$(q1 'node_load1')"
-
-# GPU
-gpu_temps="$(qlist 'avg by (gpu) (DCGM_FI_DEV_GPU_TEMP)')"
-gpu_pwrs="$(qlist 'sum by (gpu) (DCGM_FI_DEV_POWER_USAGE)')"
-gpu_vram="$(qlist '100 * sum by (gpu) (DCGM_FI_DEV_FB_USED) / clamp_min(sum by (gpu) (DCGM_FI_DEV_FB_USED + DCGM_FI_DEV_FB_FREE + DCGM_FI_DEV_FB_RESERVED), 1)')"
-gpu_clk="$(qlist 'avg by (gpu) (DCGM_FI_DEV_SM_CLOCK)')"
-
-# NVMe temps + disk IO
-nvme_temps="$(qlist 'node_hwmon_temp_celsius{chip=~"nvme_nvme[0-9]+",sensor="temp1"}')"
-disk_read_bps="$(q1 'sum(rate(node_disk_read_bytes_total{device=~"nvme[0-9]+n[0-9]+"}[1m]))')"
-disk_write_bps="$(q1 'sum(rate(node_disk_written_bytes_total{device=~"nvme[0-9]+n[0-9]+"}[1m]))')"
+fmtf() { local v="${1:-}"; [[ -z "$v" ]] && echo "n/a" || printf "%.1f" "$v"; }
 
 human_bps() {
   python3 - <<PY
@@ -214,6 +188,23 @@ print(f"{v:.2f} {units[i]}")
 PY
 }
 
+# CPU
+cpu_temp="$(q1 'node_hwmon_temp_celsius{sensor="temp1"} * on (chip) group_left(chip_name) node_hwmon_chip_names{chip_name="k10temp"}')"
+cpu_w="$(q1 'sum(rate(node_rapl_package_joules_total[1m]))')"
+cpu_usage="$(q1 '100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)')"
+cpu_load1="$(q1 'node_load1')"
+
+# GPU
+gpu_temps="$(qlist 'avg by (gpu) (DCGM_FI_DEV_GPU_TEMP)')"
+gpu_pwrs="$(qlist 'sum by (gpu) (DCGM_FI_DEV_POWER_USAGE)')"
+gpu_vram="$(qlist '100 * sum by (gpu) (DCGM_FI_DEV_FB_USED) / clamp_min( sum by (gpu) (DCGM_FI_DEV_FB_USED) + sum by (gpu) (DCGM_FI_DEV_FB_FREE) + sum by (gpu) (DCGM_FI_DEV_FB_RESERVED), 1)')"
+gpu_clk="$(qlist 'avg by (gpu) (DCGM_FI_DEV_SM_CLOCK)')"
+
+# NVMe temps + disk IO
+nvme_temps="$(qlist 'node_hwmon_temp_celsius{chip=~"nvme_nvme[0-9]+",sensor="temp1"}')"
+disk_read_bps="$(q1 'sum(rate(node_disk_read_bytes_total{device=~"nvme[0-9]+n[0-9]+"}[1m]))')"
+disk_write_bps="$(q1 'sum(rate(node_disk_written_bytes_total{device=~"nvme[0-9]+n[0-9]+"}[1m]))')"
+
 r_h="$(human_bps "${disk_read_bps:-0}")"
 w_h="$(human_bps "${disk_write_bps:-0}")"
 
@@ -223,30 +214,21 @@ ts="$(date -Is)"
 msg="*Hourly snapshot* (${host})\n${ts}\n"
 msg+="\n*CPU*: temp=$(fmtf "$cpu_temp")°C  power=$(fmtf "$cpu_w")W  usage=$(fmtf "$cpu_usage")%  load1=$(fmtf "$cpu_load1")\n"
 
-msg+="\n*GPU temps (°C)*:\n"
-msg+="$(echo "${gpu_temps}" | sed 's/^/  - /')\n"
-msg+="\n*GPU power (W)*:\n"
-msg+="$(echo "${gpu_pwrs}" | sed 's/^/  - /')\n"
-msg+="\n*GPU VRAM (%)*:\n"
-msg+="$(echo "${gpu_vram}" | sed 's/^/  - /')\n"
-msg+="\n*GPU SM clocks (MHz)*:\n"
-msg+="$(echo "${gpu_clk}" | sed 's/^/  - /')\n"
+msg+="\n*GPU temps (°C)*:\n$(echo "${gpu_temps}" | sed 's/^/  - /')\n"
+msg+="\n*GPU power (W)*:\n$(echo "${gpu_pwrs}" | sed 's/^/  - /')\n"
+msg+="\n*GPU VRAM (%)*:\n$(echo "${gpu_vram}" | sed 's/^/  - /')\n"
+msg+="\n*GPU SM clocks (MHz)*:\n$(echo "${gpu_clk}" | sed 's/^/  - /')\n"
 
-msg+="\n*NVMe temps (°C)*:\n"
-msg+="$(echo "${nvme_temps}" | sed 's/^/  - /')\n"
-
+msg+="\n*NVMe temps (°C)*:\n$(echo "${nvme_temps}" | sed 's/^/  - /')\n"
 msg+="\n*NVMe disk IO*: read=${r_h}, write=${w_h}\n"
 
-if [[ -n "$GRAFANA_URL" ]]; then
-  msg+="\nGrafana: ${GRAFANA_URL}\n"
-fi
+[[ -n "$GRAFANA_URL" ]] && msg+="\nGrafana: ${GRAFANA_URL}\n"
 
 payload="$(jq -n --arg text "$msg" '{text:$text}')"
 curl -fsS --max-time 8 -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL" >/dev/null
 EOF
   chmod 755 "$SNAPSHOT_BIN"
 
-  # derive a stable Grafana URL for timer
   local ip graf_url
   ip="$(hostname -I | awk '{print $1}')"
   graf_url="http://${ip}:3000/d/host-overview/host-overview?orgId=1"
@@ -301,7 +283,7 @@ main() {
   download_default_collectors
 
   # -----------------------------
-  # Prometheus alert rules (no hourly ping here; hourly snapshot is systemd timer)
+  # Prometheus alert rules
   # -----------------------------
   cat >"$PROM_DIR/alerts.yml" <<YML
 groups:
@@ -343,11 +325,12 @@ groups:
       - alert: GPUHighVRAMUsage
         expr: |
           (
-            100 *
-            sum by (gpu) (DCGM_FI_DEV_FB_USED)
+            100 * sum by (gpu) (DCGM_FI_DEV_FB_USED)
             /
             clamp_min(
-              sum by (gpu) (DCGM_FI_DEV_FB_USED + DCGM_FI_DEV_FB_FREE + DCGM_FI_DEV_FB_RESERVED),
+              sum by (gpu) (DCGM_FI_DEV_FB_USED)
+              + sum by (gpu) (DCGM_FI_DEV_FB_FREE)
+              + sum by (gpu) (DCGM_FI_DEV_FB_RESERVED),
               1
             )
           ) > ${ALERT_VRAM_PCT}
@@ -431,20 +414,25 @@ providers:
       path: /var/lib/grafana/dashboards
 YML
 
+  # Grab NVIDIA's dashboard too
   if [[ ! -f "$GRAF_DIR/dashboards/dcgm-exporter-dashboard.json" ]]; then
     curl -fsSL -o "$GRAF_DIR/dashboards/dcgm-exporter-dashboard.json" \
       "https://github.com/NVIDIA/dcgm-exporter/raw/main/grafana/dcgm-exporter-dashboard.json"
   fi
 
-  # Host Overview: CPU row, GPU row, NVMe+IO+GPU clocks row
-  cat >"$GRAF_DIR/dashboards/host-overview.json" <<'JSON'
+  # Host Overview with:
+  # - default time range now-15m
+  # - CPU temp threshold shading above 90C
+  # - GPU temp threshold shading above 85C
+  cat >"$GRAF_DIR/dashboards/host-overview.json" <<JSON
 {
   "uid": "host-overview",
   "title": "Host Overview",
   "timezone": "browser",
   "schemaVersion": 39,
-  "version": 1,
+  "version": 2,
   "refresh": "5s",
+  "time": { "from": "now-15m", "to": "now" },
   "panels": [
     {
       "id": 1,
@@ -453,9 +441,25 @@ YML
       "datasource": { "type": "prometheus", "uid": "PROM" },
       "gridPos": { "x": 0, "y": 0, "w": 8, "h": 7 },
       "targets": [
-        { "refId": "A", "expr": "node_hwmon_temp_celsius{sensor=\"temp1\"} * on (chip) group_left(chip_name) node_hwmon_chip_names{chip_name=\"k10temp\"}", "legendFormat": "CPU Tctl" }
+        { "refId": "A", "expr": "node_hwmon_temp_celsius{sensor=\\"temp1\\"} * on (chip) group_left(chip_name) node_hwmon_chip_names{chip_name=\\"k10temp\\"}", "legendFormat": "CPU Tctl" }
       ],
-      "fieldConfig": { "defaults": { "unit": "celsius", "min": 0 }, "overrides": [] }
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": ${ALERT_CPU_TEMP_C}
+            ]
+          },
+          "custom": {
+            "thresholdsStyle": { "mode": "area" }
+          }
+        },
+        "overrides": []
+      }
     },
     {
       "id": 2,
@@ -475,7 +479,7 @@ YML
       "datasource": { "type": "prometheus", "uid": "PROM" },
       "gridPos": { "x": 16, "y": 0, "w": 8, "h": 7 },
       "targets": [
-        { "refId": "A", "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[2m])) * 100)", "legendFormat": "CPU %" }
+        { "refId": "A", "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\\"idle\\"}[2m])) * 100)", "legendFormat": "CPU %" }
       ],
       "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100 }, "overrides": [] }
     },
@@ -489,7 +493,23 @@ YML
       "targets": [
         { "refId": "A", "expr": "avg by (gpu) (DCGM_FI_DEV_GPU_TEMP)", "legendFormat": "GPU {{gpu}}" }
       ],
-      "fieldConfig": { "defaults": { "unit": "celsius", "min": 0 }, "overrides": [] }
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": ${ALERT_GPU_TEMP_C}
+            ]
+          },
+          "custom": {
+            "thresholdsStyle": { "mode": "area" }
+          }
+        },
+        "overrides": []
+      }
     },
     {
       "id": 5,
@@ -533,7 +553,7 @@ YML
       "targets": [
         {
           "refId": "A",
-          "expr": "100 * sum by (gpu) (DCGM_FI_DEV_FB_USED) / clamp_min(sum by (gpu) (DCGM_FI_DEV_FB_USED + DCGM_FI_DEV_FB_FREE + DCGM_FI_DEV_FB_RESERVED), 1)",
+          "expr": "100 * sum by (gpu) (DCGM_FI_DEV_FB_USED) / clamp_min(sum by (gpu) (DCGM_FI_DEV_FB_USED) + sum by (gpu) (DCGM_FI_DEV_FB_FREE) + sum by (gpu) (DCGM_FI_DEV_FB_RESERVED), 1)",
           "legendFormat": "GPU {{gpu}}"
         }
       ],
@@ -547,7 +567,7 @@ YML
       "datasource": { "type": "prometheus", "uid": "PROM" },
       "gridPos": { "x": 0, "y": 14, "w": 8, "h": 7 },
       "targets": [
-        { "refId": "A", "expr": "node_hwmon_temp_celsius{chip=~\"nvme_nvme[0-9]+\",sensor=\"temp1\"}", "legendFormat": "{{chip}}" }
+        { "refId": "A", "expr": "node_hwmon_temp_celsius{chip=~\\"nvme_nvme[0-9]+\\",sensor=\\"temp1\\"}", "legendFormat": "{{chip}}" }
       ],
       "fieldConfig": { "defaults": { "unit": "celsius", "min": 0 }, "overrides": [] }
     },
@@ -558,8 +578,8 @@ YML
       "datasource": { "type": "prometheus", "uid": "PROM" },
       "gridPos": { "x": 8, "y": 14, "w": 8, "h": 7 },
       "targets": [
-        { "refId": "A", "expr": "sum(rate(node_disk_read_bytes_total{device=~\"nvme[0-9]+n[0-9]+\"}[1m]))", "legendFormat": "Read" },
-        { "refId": "B", "expr": "-sum(rate(node_disk_written_bytes_total{device=~\"nvme[0-9]+n[0-9]+\"}[1m]))", "legendFormat": "Write (-)" }
+        { "refId": "A", "expr": "sum(rate(node_disk_read_bytes_total{device=~\\"nvme[0-9]+n[0-9]+\\"}[1m]))", "legendFormat": "Read" },
+        { "refId": "B", "expr": "-sum(rate(node_disk_written_bytes_total{device=~\\"nvme[0-9]+n[0-9]+\\"}[1m]))", "legendFormat": "Write (-)" }
       ],
       "fieldConfig": { "defaults": { "unit": "Bps" }, "overrides": [] }
     },
@@ -722,9 +742,6 @@ EOF
   echo "Grafana:     http://${ip}:3000   (password: sudo cat ${ENV_FILE})"
   echo "Dashboards:  Host Overview, NVIDIA DCGM Exporter Dashboard"
   echo "Alerting:    Prometheus -> Alertmanager -> Slack webhook"
-  if [[ "${ENABLE_TEST_ALERT}" == "1" ]]; then
-    echo "Test alert enabled: should fire immediately (TestSlackPipeline). Disable by rerun with ENABLE_TEST_ALERT=0."
-  fi
 }
 
 main "$@"
