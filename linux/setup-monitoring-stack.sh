@@ -26,7 +26,7 @@ as_root() {
 }
 
 wait_http() {
-  local url="$1" tries="${2:-60}" sleep_s="${3:-1}"
+  local url="$1" tries="${2:-90}" sleep_s="${3:-1}"
   for _ in $(seq 1 "$tries"); do
     if curl -fsS --max-time 2 "$url" >/dev/null; then return 0; fi
     sleep "$sleep_s"
@@ -50,12 +50,15 @@ ensure_docker_running_socket_activation() {
   systemctl reset-failed docker.service docker.socket || true
   systemctl enable docker.socket docker.service >/dev/null 2>&1 || true
 
-  # ensure the socket exists before dockerd (-H fd://)
   systemctl start docker.socket
   systemctl start docker.service
 
   systemctl is-active --quiet docker.socket || { systemctl status docker.socket --no-pager -l || true; exit 1; }
-  systemctl is-active --quiet docker.service || { systemctl status docker.service --no-pager -l || true; journalctl -u docker -b --no-pager -l | tail -n 200 || true; exit 1; }
+  systemctl is-active --quiet docker.service || {
+    systemctl status docker.service --no-pager -l || true
+    journalctl -u docker -b --no-pager -l | tail -n 200 || true
+    exit 1
+  }
 
   docker compose version >/dev/null 2>&1 || { echo "ERROR: docker compose not found"; exit 1; }
 }
@@ -63,7 +66,6 @@ ensure_docker_running_socket_activation() {
 main() {
   as_root "$@"
 
-  # minimal deps
   apt-get update -y
   apt-get install -y ca-certificates curl openssl
 
@@ -90,14 +92,24 @@ scrape_configs:
       - targets: ["dcgm-exporter:9400"]
 YML
 
+  # Datasource provisioning: force uid PROM + prune/delete for idempotency
   cat >"$GRAF_DIR/provisioning/datasources/ds.yml" <<'YML'
 apiVersion: 1
+prune: true
+
+deleteDatasources:
+  - name: Prometheus
+    orgId: 1
+
 datasources:
   - name: Prometheus
+    uid: PROM
     type: prometheus
     access: proxy
     url: http://prometheus:9090
     isDefault: true
+    editable: false
+    version: 1
 YML
 
   cat >"$GRAF_DIR/provisioning/dashboards/dash.yml" <<'YML'
@@ -113,10 +125,75 @@ providers:
       path: /var/lib/grafana/dashboards
 YML
 
+  # NVIDIA dashboard
   if [[ ! -f "$GRAF_DIR/dashboards/dcgm-exporter-dashboard.json" ]]; then
     curl -fsSL -o "$GRAF_DIR/dashboards/dcgm-exporter-dashboard.json" \
       "https://github.com/NVIDIA/dcgm-exporter/raw/main/grafana/dcgm-exporter-dashboard.json"
   fi
+
+  # Host Overview dashboard (CPU temp + CPU watts + GPU watts + CPU usage)
+  cat >"$GRAF_DIR/dashboards/host-overview.json" <<'JSON'
+{
+  "uid": "host-overview",
+  "title": "Host Overview",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5s",
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "CPU Temp (k10temp Tctl)",
+      "datasource": { "type": "prometheus", "uid": "PROM" },
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "node_hwmon_temp_celsius{sensor=\"temp1\"} * on (chip) group_left(chip_name) node_hwmon_chip_names{chip_name=\"k10temp\"}"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "celsius" }, "overrides": [] }
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "CPU Package Power (W) (RAPL)",
+      "datasource": { "type": "prometheus", "uid": "PROM" },
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(node_rapl_package_joules_total[1m]))"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "watt" }, "overrides": [] }
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Total GPU Power (W)",
+      "datasource": { "type": "prometheus", "uid": "PROM" },
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        { "refId": "A", "expr": "sum(DCGM_FI_DEV_POWER_USAGE)" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "watt" }, "overrides": [] }
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "CPU Usage (%)",
+      "datasource": { "type": "prometheus", "uid": "PROM" },
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        { "refId": "A", "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[2m])) * 100)" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "percent" }, "overrides": [] }
+    }
+  ]
+}
+JSON
 
   if [[ ! -f "$ENV_FILE" ]]; then
     PASS="$(openssl rand -base64 18 | tr -d '\n' | tr '/+' 'ab')"
@@ -146,8 +223,11 @@ services:
   node-exporter:
     image: quay.io/prometheus/node-exporter:latest
     restart: unless-stopped
+    user: "0:0"   # REQUIRED: /sys/class/powercap/*/energy_uj is root-only on this host
     pid: "host"
     command:
+      - "--collector.hwmon"
+      - "--collector.rapl"
       - "--path.procfs=/host/proc"
       - "--path.sysfs=/host/sys"
       - "--path.rootfs=/rootfs"
@@ -193,17 +273,34 @@ EOF
   cd "$BASE_DIR"
   docker compose -f "$COMPOSE_FILE" up -d
 
+  # Grafana applies datasource provisioning on startup; restart to apply ds.yml UID changes reliably
+  docker compose -f "$COMPOSE_FILE" restart grafana
+
   log "Waiting for services (prevents racey curl failures)"
-  wait_http "http://127.0.0.1:9400/metrics" 60 1
-  wait_http "http://127.0.0.1:9100/metrics" 60 1
-  wait_http "http://127.0.0.1:9090/-/ready" 60 1
+  wait_http "http://127.0.0.1:9400/metrics" 90 1
+  wait_http "http://127.0.0.1:9100/metrics" 90 1
+  wait_http "http://127.0.0.1:9090/-/ready" 90 1
+  wait_http "http://127.0.0.1:3000/api/health" 120 1 || true
+
+  log "Checking that CPU power metrics (RAPL) are present"
+  tmp="$(mktemp)"
+  if curl -fsS --max-time 3 http://127.0.0.1:9100/metrics -o "$tmp"; then
+    if grep -q '^node_rapl_' "$tmp"; then
+      echo "OK: node_rapl_* metrics found — CPU watts available in Grafana."
+    else
+      echo "WARNING: node_rapl_* metrics not found yet."
+      echo "         Next: cd $BASE_DIR && sudo docker compose logs --tail=250 node-exporter"
+    fi
+  else
+    echo "WARNING: couldn't fetch node-exporter metrics for RAPL check."
+  fi
+  rm -f "$tmp"
 
   local ip
   ip="$(hostname -I | awk '{print $1}')"
   echo
   echo "Grafana LAN URL: http://${ip}:3000"
   echo "Grafana password: sudo cat ${ENV_FILE}"
-  echo "CPU temp (9950X Tctl):"
-  echo "  node_hwmon_temp_celsius{chip=\"pci0000:00_0000:00:18_3\",sensor=\"temp1\"}"
+  echo "Dashboards: Host Overview, NVIDIA DCGM Exporter Dashboard"
 }
 main "$@"
