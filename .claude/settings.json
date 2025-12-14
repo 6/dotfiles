@@ -701,7 +701,7 @@
     "plugin-dev@claude-code-plugins": true,
     "edge-skills@ws-claude-marketplace": true
   },
-  "alwaysThinkingEnabled": false,
+  "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754093691446
   }

@@ -485,53 +485,48 @@ df -h -x tmpfs -x devtmpfs -x efivarfs
 
 The `df` command only shows mounted filesystems, so unmounted drives won't appear here. This filters out virtual filesystems (tmpfs, efivarfs, etc.) to show only real physical drives.
 
-### iotop — Disk I/O by process
+## Formatting drives
 
-Find what's hammering your disk.
-
-```bash
-sudo iotop
-```
-
-Press `o` to show only processes doing I/O, `a` for accumulated stats.
-
-### iftop — Network bandwidth
-
-See network usage by connection in real-time.
+Get name of drive (e.g. "nvme1n1"):
 
 ```bash
-sudo iftop
+lsblk -e7 -o NAME,MODEL,SIZE
 ```
 
-Press `t` to cycle display modes, `n` to toggle DNS resolution, `q` to quit.
-
-### ncdu — Disk usage analyzer
-
-Interactive disk space finder. Much faster than `du` for large filesystems.
+Create partition table and format it (note: this may give warning `Information: You may need to update /etc/fstab.`):
 
 ```bash
-ncdu /           # scan entire system
-ncdu /home       # scan specific directory
+sudo parted /dev/nvme1n1 mklabel gpt
+sudo parted -a opt /dev/nvme1n1 mkpart primary ext4 0% 100%
+sudo mkfs.ext4 /dev/nvme1n1p1
 ```
 
-Use arrow keys to navigate, `d` to delete, `q` to quit.
+**Important**: this will return a "Filesystem UUID" needed for next step.
 
-### sysstat (sar/iostat) — Historical stats
-
-Collects system performance data over time.
+Edit fstab:
 
 ```bash
-# CPU stats from today
-sar -u
-
-# Memory stats
-sar -r
-
-# Disk I/O stats (real-time)
-iostat -x 1
-
-# Per-CPU stats
-mpstat -P ALL 1
+sudo nano /etc/fstab
 ```
 
-Useful for diagnosing issues that happened in the past (check logs in `/var/log/sysstat/`).
+Add this:
+
+```
+UUID=INSERT_UUID_HERE  /data/storage3  ext4  defaults,noatime  0  2
+```
+
+Create a new folder (replace /data/storage3 with anything), mount, and set permissions:
+
+```bash
+MOUNT_PATH="/data/storage3"
+sudo mkdir -p "$MOUNT_PATH"
+sudo systemctl daemon-reload
+sudo mount -a
+sudo chown -R $USER:$USER "$MOUNT_PATH"
+```
+
+Verify it worked:
+
+```bash
+df -h "$MOUNT_PATH"
+```
