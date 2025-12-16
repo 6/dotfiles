@@ -561,6 +561,7 @@
       "Bash(python3:*)",
       "Bash(rails:*)",
       "Bash(rake:*)",
+      "Bash(ruff:*)",
       "Bash(sar:*)",
       "Bash(readlink:*)",
       "Bash(ruby:*)",
@@ -611,7 +612,8 @@
       "Bash(xctrace:*)",
       "Bash(xxd:*)",
       "Bash(xargs:*)",
-      "Bash(yarn:*)"
+      "Bash(yarn:*)",
+      "Bash(/opt/wealthsimple/bin/ws sandbox:*)"
     ],
     "deny": [],
     "ask": [
@@ -631,6 +633,7 @@
       "Bash(npm update:*)",
       "Bash(npm x:*)",
       "Bash(pnpm add:*)",
+      "Bash(pnpm create:*)",
       "Bash(pnpm dlx:*)",
       "Bash(pnpm exec:*)",
       "Bash(pnpm i:*)",
@@ -701,7 +704,7 @@
     "plugin-dev@claude-code-plugins": true,
     "edge-skills@ws-claude-marketplace": true
   },
-  "alwaysThinkingEnabled": false,
+  "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754093691446
   }
