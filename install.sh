@@ -39,6 +39,21 @@ SKIP_ALL=false
 OVERWRITE_ALL=false
 BACKUP_ALL=false
 
+# Parse flags
+FORCE=false
+while [[ "$1" == -* ]]; do
+    case "$1" in
+        -f|--force)
+            FORCE=true
+            OVERWRITE_ALL=true
+            shift
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
 # Function to check if file should be excluded
 should_exclude() {
     local file="$1"
@@ -256,6 +271,12 @@ install_dotfiles() {
         done
     done
 
+    # Post-install: trust mise config if mise is installed
+    if command -v mise &> /dev/null && [[ -d "$DOTFILES_DIR/.config/mise" ]]; then
+        echo -e "\n${BLUE}Trusting mise config...${NC}"
+        mise trust "$DOTFILES_DIR/.config/mise/config.toml" 2>/dev/null || true
+    fi
+
     echo -e "\n${GREEN}=== Installation Complete! ===${NC}\n"
 }
 
@@ -355,7 +376,7 @@ case "${1:-install}" in
         uninstall_dotfiles
         ;;
     *)
-        echo "Usage: $0 {install|uninstall}"
+        echo "Usage: $0 [-f|--force] {install|uninstall}"
         exit 1
         ;;
 esac

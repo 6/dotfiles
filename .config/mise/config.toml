@@ -1,0 +1,4 @@
+[tools]
+java = "temurin-17"
+ruby = "3.4.5"
+node = "22"

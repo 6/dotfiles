@@ -552,6 +552,7 @@
       "Bash(md5:*)",
       "Bash(mdfind:*)",
       "Bash(mdls:*)",
+      "Bash(mise:*)",
       "Bash(mkdir:*)",
       "Bash(mtr:*)",
       "Bash(mpstat:*)",
