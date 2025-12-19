@@ -632,6 +632,10 @@
       "Bash(who:*)",
       "Bash(whois:*)",
       "Bash(wrangler:*)",
+      "Bash(ws doctor:*)",
+      "Bash(ws help:*)",
+      "Bash(ws sandbox:*)",
+      "Bash(ws version:*)",
       "Bash(xcdebug:*)",
       "Bash(xcodebuild:*)",
       "Bash(xcode-select:*)",
@@ -639,8 +643,7 @@
       "Bash(xctrace:*)",
       "Bash(xxd:*)",
       "Bash(xargs:*)",
-      "Bash(yarn:*)",
-      "Bash(/opt/wealthsimple/bin/ws sandbox:*)"
+      "Bash(yarn:*)"
     ],
     "deny": [],
     "ask": [
