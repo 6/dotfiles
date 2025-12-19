@@ -145,9 +145,9 @@ Analyze the changes and generate:
 
 ## Step 4: Create or get PR
 
-Try to create the PR with the generated title and body:
+Try to create the PR in draft mode:
 ```bash
-gh pr create --title "<title>" --body "<body>" 2>&1
+gh pr create --draft --title "<title>" --body "<body>" 2>&1
 ```
 
 If PR creation fails with "already exists" error:
@@ -167,7 +167,7 @@ Store the PR URL to display at the end.
 
 ## Step 4b: Update existing PR description
 
-To update an existing PR's description, use GitHub API:
+**IMPORTANT: Do NOT use `gh pr edit` - it does not work reliably. Always use `gh api` with PATCH:**
 
 ```bash
 gh api repos/<owner>/<repo>/pulls/<pr-number> -X PATCH -f body="<new-body>"
@@ -202,7 +202,13 @@ gh run watch <run-id> --exit-status
 
 After runs complete, get final status. Then check for failures:
 - If any runs failed: Display "❌ Failed:" with list of failed checks and exit with error
-- If all passed: Display "✅ Passed:" with list of successful checks
+- If all passed:
+  1. Display "✅ Passed:" with list of successful checks
+  2. Mark the draft PR as ready for review:
+     ```bash
+     gh pr ready <pr-url>
+     ```
+  3. Display "✅ Marked PR as ready for review"
 
 ## Step 6: Generate Slack-friendly summaries
 
