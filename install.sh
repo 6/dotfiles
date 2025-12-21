@@ -94,7 +94,7 @@ handle_conflict() {
     echo -e "  Source: $source"
 
     while true; do
-        read -p "Action? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all: " choice
+        read -p "Action? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all: " choice < /dev/tty
         case "$choice" in
             s)
                 echo -e "${YELLOW}Skipping${NC} $target"
