@@ -204,9 +204,9 @@ After runs complete, get final status. Then check for failures:
 - If any runs failed: Display "❌ Failed:" with list of failed checks and exit with error
 - If all passed:
   1. Display "✅ Passed:" with list of successful checks
-  2. Mark the draft PR as ready for review:
+  2. Mark the draft PR as ready for review (use API, not `gh pr ready`):
      ```bash
-     gh pr ready <pr-url>
+     gh api repos/<owner>/<repo>/pulls/<pr-number> -X PATCH -f draft=false
      ```
   3. Display "✅ Marked PR as ready for review"
 
