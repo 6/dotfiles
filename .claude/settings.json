@@ -726,7 +726,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "input=$(cat); model=$(echo \"$input\" | jq -r '.model.display_name'); project_dir=$(echo \"$input\" | jq -r '.workspace.project_dir'); dir_name=$(basename \"$project_dir\"); cost=$(echo \"$input\" | jq -r '.cost.total_cost_usd // \"0\"'); formatted_cost=$(printf \"%.2f\" \"$cost\"); branch=\"\"; git_part=\"\"; if git rev-parse --git-dir > /dev/null 2>&1; then branch=$(git branch --show-current 2>/dev/null); if [ -n \"$branch\" ]; then git_part=$(printf \" | \\033[32m🌿 %s\\033[0m\" \"$branch\"); fi; fi; printf \"🤖 %s | \\033[34m📁 %s\\033[0m%s | \\033[36m\\$%s\\033[0m\" \"$model\" \"$dir_name\" \"$git_part\" \"$formatted_cost\"",
+    "command": "~/dotfiles/.claude/statusline.sh",
     "padding": 0
   },
   "alwaysThinkingEnabled": true,
