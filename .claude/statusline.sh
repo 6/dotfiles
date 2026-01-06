@@ -16,7 +16,17 @@ if [ "$usage" != "null" ]; then
     current_tokens=$(echo "$usage" | jq '.input_tokens + .cache_creation_input_tokens + .cache_read_input_tokens')
     pct=$((current_tokens * 100 / context_size))
 else
+    current_tokens=0
     pct=0
+fi
+
+# Format tokens as "Xk" (thousands)
+if [ "$current_tokens" -lt 1000 ]; then
+    token_display="${current_tokens}"
+elif [ "$current_tokens" -lt 10000 ]; then
+    token_display=$(awk "BEGIN {printf \"%.1fk\", $current_tokens/1000}")
+else
+    token_display="$((current_tokens / 1000))k"
 fi
 
 # Color based on percentage (green/yellow/orange)
@@ -39,18 +49,24 @@ bar=""
 for ((i=0; i<filled; i++)); do bar+="█"; done
 for ((i=0; i<empty; i++)); do bar+="░"; done
 
-progress_bar=$(printf "\033[%sm%s\033[0m\033[%sm%s\033[0m %d%%" \
-    "$color" "${bar:0:$filled}" "$gray" "${bar:$filled}" "$pct")
+progress_bar=$(printf "\033[%sm%s\033[0m\033[%sm%s\033[0m %s" \
+    "$color" "${bar:0:$filled}" "$gray" "${bar:$filled}" "$token_display")
 
 # Git branch
 git_part=""
 if git rev-parse --git-dir > /dev/null 2>&1; then
     branch=$(git branch --show-current 2>/dev/null)
     if [ -n "$branch" ]; then
-        git_part=$(printf " | \033[32m🌿 %s\033[0m" "$branch")
+        git_part=$(printf " \033[38;5;245m|\033[0m \033[32m🌿 %s\033[0m" "$branch")
     fi
 fi
 
+# Colors
+reset="\033[0m"
+dim="\033[38;5;245m"  # Gray for separators
+blue="\033[34m"
+cyan="\033[36m"
+
 # Output: Model | Dir | Git | Progress | Cost
-printf "🤖 %s | \033[34m📁 %s\033[0m%s | %s | \033[36m\$%s\033[0m" \
+printf "${reset}🤖 %s ${dim}|${reset} ${blue}📁 %s${reset}%s ${dim}|${reset} %s ${dim}|${reset} ${cyan}\$%s${reset}" \
     "$model" "$dir_name" "$git_part" "$progress_bar" "$formatted_cost"
