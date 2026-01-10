@@ -23,5 +23,5 @@ venv
 .rbenv-gemsets
 
 # Claude
-.claude/settings.local.json
+settings.local.json
 .claude/commands/private-*.md

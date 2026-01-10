@@ -29,7 +29,7 @@ ALERT_VRAM_PCT="${ALERT_VRAM_PCT:-95}"
 ENABLE_HOURLY_SNAPSHOT="${ENABLE_HOURLY_SNAPSHOT:-0}"
 ENABLE_TEST_ALERT="${ENABLE_TEST_ALERT:-0}"
 
-# REQUIRED: Slack webhook used by Alertmanager (+ optional snapshot)
+# Optional: Slack webhook for Alertmanager notifications (+ optional snapshot)
 SLACK_WEBHOOK_URL="${SLACK_WEBHOOK_URL:-}"
 
 # Wait behavior
@@ -51,6 +51,7 @@ SYSTEMD_ENV_FILE="$SYSTEMD_ENV_DIR/slack.env"
 SNAPSHOT_BIN="/usr/local/bin/monitoring-hourly-snapshot.sh"
 SNAPSHOT_SVC="/etc/systemd/system/monitoring-hourly-snapshot.service"
 SNAPSHOT_TMR="/etc/systemd/system/monitoring-hourly-snapshot.timer"
+STACK_SVC="/etc/systemd/system/monitoring-stack.service"
 
 log(){ echo -e "\n==> $*\n"; }
 
@@ -60,20 +61,6 @@ as_root() {
       --preserve-env=SLACK_WEBHOOK_URL,ENABLE_HOURLY_SNAPSHOT,ENABLE_TEST_ALERT,PROM_RETENTION_TIME,PROM_RETENTION_SIZE,SCRAPE_INTERVAL,GRAFANA_HOSTNAME,GRAFANA_PUBLIC_URL,GRAFANA_BIND_LOCAL,PROM_BIND,EXPORTER_BIND,ALERT_BIND,ALERT_CPU_TEMP_C,ALERT_CPU_POWER_W,ALERT_GPU_TEMP_C,ALERT_GPU_POWER_W,ALERT_VRAM_PCT,WAIT_SECS_DEFAULT,WAIT_LOG_EVERY,WAIT_LOG_LINES \
       -E bash "$0" "$@"
   fi
-}
-
-require_slack_webhook() {
-  if [[ -n "${SLACK_WEBHOOK_URL}" ]]; then return 0; fi
-  cat <<EOF
-ERROR: SLACK_WEBHOOK_URL is required.
-
-Run like:
-  SLACK_WEBHOOK_URL='https://hooks.slack.com/services/...' $0
-
-If you run sudo yourself:
-  SLACK_WEBHOOK_URL='https://hooks.slack.com/services/...' sudo --preserve-env=SLACK_WEBHOOK_URL $0
-EOF
-  exit 1
 }
 
 fix_env_permissions_for_user() {
@@ -152,7 +139,20 @@ write_alertmanager_config() {
   local graf_url
   graf_url="${GRAFANA_PUBLIC_URL}/d/host-overview/host-overview?orgId=1"
 
-  cat >"$AM_DIR/alertmanager.yml" <<EOF
+  if [[ -z "${SLACK_WEBHOOK_URL}" ]]; then
+    # No Slack webhook - use null receiver (alerts are silently dropped)
+    cat >"$AM_DIR/alertmanager.yml" <<EOF
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: "null"
+
+receivers:
+  - name: "null"
+EOF
+  else
+    cat >"$AM_DIR/alertmanager.yml" <<EOF
 global:
   resolve_timeout: 5m
 
@@ -173,6 +173,7 @@ receivers:
         title_link: "${graf_url}"
         text: "{{ range .Alerts }}• {{ .Annotations.description }} (value={{ printf \\"%.2f\\" .Value }})\\n{{ end }}\\nGrafana: ${graf_url}"
 EOF
+  fi
 }
 
 install_hourly_snapshot_timer() {
@@ -289,9 +290,32 @@ EOF
   systemctl enable --now monitoring-hourly-snapshot.timer
 }
 
+install_monitoring_stack_service() {
+  log "Installing monitoring-stack systemd service (auto-start on boot)"
+  cat >"$STACK_SVC" <<EOF
+[Unit]
+Description=Monitoring Stack (Prometheus, Grafana, Caddy)
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=${BASE_DIR}
+ExecStart=/usr/bin/docker compose up -d
+ExecStop=/usr/bin/docker compose down
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  systemctl daemon-reload
+  systemctl enable monitoring-stack.service
+}
+
 main() {
   as_root "$@"
-  require_slack_webhook
 
   apt-get update -y
   apt-get install -y ca-certificates curl openssl jq python3
@@ -636,6 +660,8 @@ EOF
   log "Starting/refreshing stack"
   cd "$BASE_DIR"
   docker compose -f "$COMPOSE_FILE" up -d
+
+  install_monitoring_stack_service
 
   log "Recreating prometheus + alertmanager + grafana to apply configs deterministically"
   docker compose -f "$COMPOSE_FILE" up -d --force-recreate prometheus alertmanager grafana
