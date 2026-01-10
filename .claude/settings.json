@@ -135,6 +135,7 @@
       "WebFetch(domain:docs.mixpanel.com)",
       "WebFetch(domain:docs.n8n.io)",
       "WebFetch(domain:docs.npmjs.com)",
+      "WebFetch(domain:docs.nvidia.com)",
       "WebFetch(domain:docs.obsproject.com)",
       "WebFetch(domain:docs.ollama.com)",
       "WebFetch(domain:docs.openwebui.com)",
