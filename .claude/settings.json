@@ -321,6 +321,7 @@
       "WebFetch(domain:vitest.dev)",
       "WebFetch(domain:webpack.js.org)",
       "WebFetch(domain:wealthsimple.com)",
+      "WebFetch(domain:wheels.vllm.ai)",
       "WebFetch(domain:workos.com)",
       "WebFetch(domain:www.algolia.com)",
       "WebFetch(domain:www.alibabacloud.com)",
