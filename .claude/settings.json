@@ -18,6 +18,7 @@
       "WebFetch(domain:api-docs.deepseek.com)",
       "WebFetch(domain:api-docs.preset.io)",
       "WebFetch(domain:api.flutter.dev)",
+      "WebFetch(domain:api.github.com)",
       "WebFetch(domain:api.rubyonrails.org)",
       "WebFetch(domain:api.stackexchange.com)",
       "WebFetch(domain:app.klingai.com)",
