@@ -307,9 +307,14 @@ This script automatically detects your LAN subnet from your default network inte
 
 **Common ports:**
 
-- **vLLM**: 8000
-- **OpenWebUI**: 8080
-- **LiteLLM Proxy**: 4000
+Open these ports to access local LLM servers from other devices on your LAN.
+
+| Port | Service | When to open |
+|------|---------|--------------|
+| 8000 | vLLM / SGLang | Access OpenAI-compatible API from other devices |
+| 8080 | llama.cpp | Access OpenAI-compatible API from other devices |
+| 3080 | Open WebUI | Defaults to 8080, but 3080 used to avoid conflict with llama.cpp |
+| 4000 | LiteLLM Proxy | Unified gateway for multiple backends |
 
 **Note:** The script only manages IPv4 rules. IPv6 is not configured.
 
