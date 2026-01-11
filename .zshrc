@@ -120,13 +120,6 @@ function mainpd() {
   fi
 }
 
-# https://docs.openwebui.com/getting-started/quick-start#updating
-function upgradeoui() {
-  docker rm -f open-webui
-  docker pull ghcr.io/open-webui/open-webui:main
-  docker run -d -p 4455:8080 -v open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:main
-}
-
 function linkmodels() {
   find ~/oss/llama.cpp/models/ -type l -exec rm -f {} \; 2>/dev/null
   find ~/oss/llama.cpp/models/ -type d -empty -delete 2>/dev/null
