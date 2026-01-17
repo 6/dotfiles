@@ -184,6 +184,7 @@
       "WebFetch(domain:forgejo.org)",
       "WebFetch(domain:formulae.brew.sh)",
       "WebFetch(domain:forum.cursor.com)",
+      "WebFetch(domain:geminicli.com)",
       "WebFetch(domain:gist.github.com)",
       "WebFetch(domain:gitbook.com)",
       "WebFetch(domain:gitea.com)",
@@ -563,6 +564,7 @@
       "Bash(mtr:*)",
       "Bash(mpstat:*)",
       "Bash(mv:*)",
+      "Bash(mypy:*)",
       "Bash(nl:*)",
       "Bash(netstat:*)",
       "Bash(nslookup:*)",
@@ -573,6 +575,9 @@
       "Bash(pgrep:*)",
       "Bash(ping:*)",
       "Bash(ping6:*)",
+      "Bash(pip index:*)",
+      "Bash(pip search:*)",
+      "Bash(pip show:*)",
       "Bash(pkill:*)",
       "Bash(plutil:*)",
       "Bash(pkg-config:*)",
@@ -587,9 +592,12 @@
       "Bash(pod spec cat:*)",
       "Bash(pod spec lint:*)",
       "Bash(pod spec which:*)",
+      "Bash(poetry show:*)",
       "Bash(ps:*)",
       "Bash(psql:*)",
       "Bash(pwd:*)",
+      "Bash(pyright:*)",
+      "Bash(pytest:*)",
       "Bash(python:*)",
       "Bash(python3:*)",
       "Bash(rails:*)",
@@ -649,7 +657,24 @@
       "Bash(xctrace:*)",
       "Bash(xxd:*)",
       "Bash(xargs:*)",
-      "Bash(yarn:*)"
+      "Bash(yarn:*)",
+      "mcp__datadog__get_datadog_metric",
+      "mcp__datadog__get_datadog_metric_context",
+      "mcp__datadog__get_datadog_trace",
+      "mcp__datadog__search_datadog_hosts",
+      "mcp__datadog__search_datadog_logs",
+      "mcp__datadog__search_datadog_metrics",
+      "mcp__datadog__search_datadog_services",
+      "mcp__datadog__search_datadog_spans",
+      "mcp__sourcegraph__sg_commit_search",
+      "mcp__sourcegraph__sg_compare_revisions",
+      "mcp__sourcegraph__sg_diff_search",
+      "mcp__sourcegraph__sg_find_references",
+      "mcp__sourcegraph__sg_keyword_search",
+      "mcp__sourcegraph__sg_list_files",
+      "mcp__sourcegraph__sg_list_repos",
+      "mcp__sourcegraph__sg_nls_search",
+      "mcp__sourcegraph__sg_read_file"
     ],
     "deny": [],
     "ask": [
@@ -734,6 +759,13 @@
     "type": "command",
     "command": "~/dotfiles/.claude/statusline.sh",
     "padding": 0
+  },
+  "enabledPlugins": {
+    "pyright-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
+  },
+  "env": {
+    "ENABLE_TOOL_SEARCH": "true"
   },
   "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
