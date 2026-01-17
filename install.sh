@@ -235,6 +235,18 @@ install_dotfiles() {
         done < <(find "$DOTFILES_DIR/.config" -mindepth 1 -maxdepth 1 -print0)
     fi
 
+    # 3.5. macOS-specific: Application Support symlinks
+    if [[ "$PLATFORM" == "macos" ]]; then
+        echo -e "\n${BLUE}Installing macOS Application Support configs...${NC}"
+
+        # Ghostty config
+        if [[ -d "$DOTFILES_DIR/.config/ghostty" ]]; then
+            local ghostty_support_dir="$HOME/Library/Application Support/com.mitchellh.ghostty"
+            mkdir -p "$ghostty_support_dir"
+            create_symlink "$DOTFILES_DIR/.config/ghostty/config" "$ghostty_support_dir/config"
+        fi
+    fi
+
     # 4. Auto-discover and symlink other dot directories (like .claude/)
     # These are directories where we want to symlink contents, not the directory itself
     echo -e "\n${BLUE}Installing other dot directory contents...${NC}"
