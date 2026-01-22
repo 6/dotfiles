@@ -123,22 +123,15 @@ After completion:
   gh api repos/{owner}/{repo}/pulls/{number} -X PATCH -f draft=false
   ```
 
-## Step 6: Slack summaries
+## Step 6: Slack summary
 
-Generate two non-technical summaries:
-
-1. **One-line**: Single present-tense sentence about what shipped
-2. **Detailed**: One-liner + 2-4 plain-language bullets
-
-Output:
+Output the PR title and description for easy copy/paste:
 ```
 ---
-📱 Slack Summary (one-line):
-<summary>
+📱 Slack Summary:
+<PR title>
 
-📱 Slack Summary (detailed):
-<summary>
-• <bullet>
+<PR body>
 
 🔗 PR: <url>
 ```
