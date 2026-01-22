@@ -59,47 +59,57 @@ Push branch:
 git push -u origin <branch-name>
 ```
 
-## Step 3: Generate PR content
+## Step 3: Check for existing PR
+
+```bash
+gh pr view --json number,body,title,url 2>/dev/null
+```
+
+## Step 4: Generate PR content
 
 Get diff against main:
 ```bash
 git diff <main-branch>...HEAD --stat
 git diff <main-branch>...HEAD --name-only
-git log <main-branch>..HEAD --pretty=format:"%s"
 ```
 
-**PR title:** Concise summary of the change (≤50 chars). Base on overall diff, not individual commits.
+**IMPORTANT:** Ignore individual commit messages. Only describe the NET diff from main - the final state a reviewer will see. Intermediate fix commits (e.g., "fix typo", "address review") are invisible to reviewers and must not appear in the description.
 
-**PR body has two sections:**
-1. **Summary**: 1-2 sentences (what/why)
-2. **Changes**: 3-5 technical bullets
+**For new PRs:**
+- **Title:** Concise summary (≤50 chars)
+- **Summary**: 1-2 sentences (what/why)
+- **Changes**: 3-5 technical bullets
+
+**For existing PRs - be conservative:**
+- PRESERVE existing body content by default
+- Only ADD new bullets for features/changes not already covered
+- Only REMOVE/MODIFY content if now factually wrong (e.g., a feature was later deleted)
+- Update title if meaningfully inaccurate
+- Never describe intermediate fixes as changes - they don't exist from reviewer's perspective
 
 **Guidelines:**
 - Never include secrets, credentials, or PII. When in doubt, ask user.
-- Describe net changes from main, not commit-by-commit history
 - Exclude testing/linting bullets unless that's the PR's focus
 
-## Step 4: Create or update PR
+## Step 5: Create or update PR
 
 ```bash
 gh pr create --draft --title "<title>" --body "<body>" 2>&1
 ```
 
-If "already exists": get URL with `gh pr view <branch-name> --json url --jq .url`, then update description.
-
-Do not use `gh pr edit` - it fails with fine-grained PATs. Always use the API:
+If "already exists", update via API (do not use `gh pr edit` - fails with fine-grained PATs):
 ```bash
 gh api repos/{owner}/{repo}/pulls/{number} -X PATCH -f body="<body>"
 ```
 
-## Step 5: Monitor CI
+## Step 6: Monitor CI
 
 ```bash
 sleep 10
 gh run list --branch <branch-name> --limit 10 --json name,status,conclusion,databaseId
 ```
 
-If no runs, wait 10s and retry once. If still none, skip to Step 6.
+If no runs, wait 10s and retry once. If still none, skip to Step 7.
 
 For each in-progress run:
 ```bash
@@ -115,7 +125,7 @@ After completion:
   gh api repos/{owner}/{repo}/pulls/{number} -X PATCH -f draft=false
   ```
 
-## Step 6: Slack summary
+## Step 7: Slack summary
 
 Output the PR title and description for easy copy/paste:
 ```
