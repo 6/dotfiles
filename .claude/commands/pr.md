@@ -2,243 +2,143 @@
 description: Create PR and monitor CI
 ---
 
-You are a GitHub PR automation assistant.
+You are a GitHub PR automation assistant. If the user provided text after `/pr`, use it as guidance.
 
-## Parse optional instructions
+**Avoid compound bash commands** (e.g., `VAR=$(cmd)`, `cmd1 && cmd2`) - these trigger user approval dialogs. Run simple commands separately; you can reference previous output from context.
 
-If the user provided additional text after the command (e.g., `/pr "focus on auth changes"`), extract these instructions and use them as guidance throughout the process.
+## Step 1: Commit uncommitted changes
 
-## Step 1: Handle uncommitted changes
-
-Check if there are uncommitted changes:
 ```bash
 git status --porcelain
 ```
 
-If there are uncommitted changes (output is not empty), proceed with committing them.
-If there are no uncommitted changes, skip to Step 2.
+If empty, skip to Step 2.
 
-**First, check if we're on main/master and create a branch if needed:**
-
-1. Get current branch:
-```bash
-git branch --show-current
-```
-
-2. If on "main" or "master":
-   - Stage all changes first to analyze them:
-   ```bash
-   git add -A
-   ```
-   - Get staged changes:
-   ```bash
-   git diff --cached --stat
-   ```
-   - **Generate branch name as `update-{largest-filename}`** where largest-filename is the file with the most changes (without extension, e.g., "update-auth" if src/auth.ts has most changes).
-   - Create and switch to the new branch:
-   ```bash
-   git checkout -b <generated-branch-name>
-   ```
-   - Display: "✓ Created and switched to branch: <branch-name>"
-
-**Then proceed with commit:**
-
-1. If not already staged (because we didn't create a branch above), stage all changes:
+**If on main/master, create a branch first:**
 ```bash
 git add -A
+git diff --cached --stat
+```
+Generate branch name as `update-{largest-changed-filename}` (without extension). Create it:
+```bash
+git checkout -b <branch-name>
 ```
 
-2. Get the staged changes to analyze:
+**Commit:**
 ```bash
+git add -A  # if not already staged
 git diff --cached --stat
 ```
 
-3. **Analyze the staged changes and generate a meaningful commit message** describing what was changed (follow normal Claude Code commit style). The message should end with:
+Generate commit message describing changes. End with:
 ```
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
-4. Try to commit with the generated message:
 ```bash
-git commit -m "<generated-commit-message>"
+git commit -m "<message>"
 ```
 
-5. If commit fails and the error contains "gitleaks":
-   - Display the full error output
-   - Determine if it's a false positive or a legitimate issue. If legitimate, exit immediately and instruct the user to fix the issue manually. When in doubt, ask the user for clarification.
-   - If it's a false positive, display: "⚠️  Gitleaks blocked commit - retrying with --no-verify" and retry with:
-```bash
-git commit --no-verify -m "<generated-commit-message>"
-```
+If commit fails with "gitleaks": Show error. Only retry with `--no-verify` if you're certain it's a false positive (e.g., example API key in docs, test fixture). If it could be a real secret, exit and tell user to fix manually. When in doubt, ask the user.
 
-6. If commit fails for other reasons:
-   - Display: "❌ Commit failed:"
-   - Display the full error output
-   - Exit with error
+Never use `--amend` or force push after pushing. Make new commits to fix CI failures.
 
-**IMPORTANT: Never use `--amend` or force push after pushing. If CI fails, make new commits to fix.**
+## Step 2: Push branch
 
-## Step 2: Get branch info and push
-
-Get the current branch name:
+Get current branch:
 ```bash
 git branch --show-current
 ```
 
-Get the main branch name from GitHub:
+Get main branch name:
 ```bash
 gh repo view --json defaultBranchRef --jq .defaultBranchRef.name 2>/dev/null || echo "main"
 ```
 
-If the current branch is "main" or "master", exit with error message "❌ Cannot create PR from main/master. Make some changes first so /pr can auto-create a branch."
+If on main/master: exit with "❌ Cannot create PR from main/master. Make changes first so /pr can auto-create a branch."
 
-Check if the branch exists on remote:
+Check if branch exists on remote:
 ```bash
 git ls-remote --heads origin <branch-name>
 ```
 
-If the branch doesn't exist on remote, push it:
+If not found, push it:
 ```bash
 git push -u origin <branch-name>
 ```
 
-If push fails:
-- Display: "❌ Push failed (likely GitHub push protection):"
-- Display the full error output
-- Exit with error
+## Step 3: Generate PR content
 
-## Step 3: Generate PR title and description
-
-**SECURITY: Never include API keys, credentials, PII, or other sensitive information in PR titles or descriptions.**
-
-**IMPORTANT: Generate intelligent 2-section PR content:**
-
-For the **Changes** section: **Exclude testing/linting changes** (e.g., "added tests", "updated eslint config", "fixed type errors") from bullets UNLESS the entire PR is about testing/linting improvements. Focus on actual feature/bug fix/refactor changes.
-
-**CRITICAL: Describe net changes from main, not commit-by-commit history:**
-- Reviewer sees main→HEAD, not the journey. Describe the final state, not iterations.
-- Never mention "fixes" for issues that only existed on this branch.
-
-**When in Claude Code chat:**
-- Analyze conversation history to understand what was implemented
-- Generate concise, clear PR with:
-  1. **Summary**: Non-technical overview (what/why) - 1-2 sentences
-  2. **Changes**: Technical bullet list - 3-5 concise bullets
-- Ignore any mid-implementation fixes or iterations - describe the end result
-
-**When standalone (no chat context):**
-- Analyze git diff against main (NOT individual commits)
-- Generate based on the net code changes
-- Keep it concise: Summary 1-2 sentences, Changes 3-5 bullets
-
-Get the diff stats between main branch and current branch:
+Get diff against main:
 ```bash
 git diff <main-branch>...HEAD --stat
-```
-
-Get the list of changed files:
-```bash
 git diff <main-branch>...HEAD --name-only
-```
-
-Get the commit messages:
-```bash
 git log <main-branch>..HEAD --pretty=format:"%s"
 ```
 
-Analyze the changes and generate:
-- **PR title**: Use the first commit message (shortened to 50 chars max). If no commits, use "Update <repo-name>".
-- **PR body**: Two sections only (Summary and Changes) following the length guidance above.
+**PR title:** Concise summary of the change (≤50 chars). Base on overall diff, not individual commits.
 
-## Step 4: Create or get PR
+**PR body has two sections:**
+1. **Summary**: 1-2 sentences (what/why)
+2. **Changes**: 3-5 technical bullets
 
-Try to create the PR in draft mode:
+**Guidelines:**
+- Never include secrets, credentials, or PII. When in doubt, ask user.
+- Describe net changes from main, not commit-by-commit history
+- Exclude testing/linting bullets unless that's the PR's focus
+
+## Step 4: Create or update PR
+
 ```bash
 gh pr create --draft --title "<title>" --body "<body>" 2>&1
 ```
 
-If PR creation fails with "already exists" error:
-- Get the existing PR URL:
+If "already exists": get URL with `gh pr view <branch-name> --json url --jq .url`, then update description.
+
+Do not use `gh pr edit` - it fails with fine-grained PATs. Always use the API:
 ```bash
-gh pr view <branch-name> --json url --jq .url
-```
-
-If PR creation fails for other reasons:
-- Display: "❌ PR creation failed:"
-- Display the full error output
-- Exit with error
-
-If PR was created successfully, the URL is returned in the output.
-
-Store the PR URL to display at the end.
-
-## Step 4b: Update existing PR description
-
-**IMPORTANT: Do NOT use `gh pr edit` - it does not work reliably. Always use `gh api` with PATCH:**
-
-```bash
-gh api repos/<owner>/<repo>/pulls/<pr-number> -X PATCH -f body="<new-body>"
+gh api repos/{owner}/{repo}/pulls/{number} -X PATCH -f body="<body>"
 ```
 
 ## Step 5: Monitor CI
 
-**NOTE: You have access to all previous command outputs in conversation history - reference them directly instead of using bash variables.**
-
-**IMPORTANT: Use `gh run watch` to monitor in-progress runs. Don't poll repeatedly with sleep - `gh run watch` blocks until completion.**
-
-First, sleep 10 seconds to allow CI checks to start:
 ```bash
 sleep 10
-```
-
-Get workflow runs for the branch:
-```bash
 gh run list --branch <branch-name> --limit 10 --json name,status,conclusion,databaseId
 ```
 
-If no runs found, wait 10 seconds and try again once.
+If no runs, wait 10s and retry once. If still none, skip to Step 6.
 
-If no runs to monitor, skip to Step 6.
-
-If there are in-progress runs to monitor, watch the first one (blocks until complete):
+For each in-progress run:
 ```bash
 gh run watch <run-id> --exit-status
 ```
 
-**Note:** `gh run watch` may show "403 Forbidden" warning about annotations with fine-grained PATs. This is safe to ignore - pass/fail status still works.
+Ignore "403 Forbidden" warnings about annotations - pass/fail status still works.
 
-After runs complete, get final status. Then check for failures:
-- If any runs failed: Display "❌ Failed:" with list of failed checks and exit with error
-- If all passed:
-  1. Display "✅ Passed:" with list of successful checks
-  2. Mark the draft PR as ready for review (use API, not `gh pr ready`):
-     ```bash
-     gh api repos/<owner>/<repo>/pulls/<pr-number> -X PATCH -f draft=false
-     ```
-  3. Display "✅ Marked PR as ready for review"
+After completion:
+- Any failures: "❌ Failed:" + list, exit with error
+- All passed: "✅ Passed:" + list, then mark ready (do not use `gh pr ready` - fails with fine-grained PATs):
+  ```bash
+  gh api repos/{owner}/{repo}/pulls/{number} -X PATCH -f draft=false
+  ```
 
-## Step 6: Generate Slack-friendly summaries
+## Step 6: Slack summaries
 
-Generate two non-technical summaries based on the PR changes:
+Generate two non-technical summaries:
 
-1. **One-line**: Single conversational sentence about what was shipped
-   - Present tense ("Add bulk updates" not "We added bulk updates")
-   - Be specific ("filter by due date" not "find overdue work")
-   - Natural language (avoid e.g. "furthermore", "enhanced", "utilize")
-2. **Detailed**: One-liner + 2-4 plain-language bullets (same guidelines)
+1. **One-line**: Single present-tense sentence about what shipped
+2. **Detailed**: One-liner + 2-4 plain-language bullets
 
-Display format:
+Output:
 ```
 ---
 📱 Slack Summary (one-line):
-<one-line-summary>
+<summary>
 
 📱 Slack Summary (detailed):
-<one-line-summary>
-• <bullet-1>
-• <bullet-2>
+<summary>
+• <bullet>
 
-🔗 PR: <pr-url>
+🔗 PR: <url>
 ```
