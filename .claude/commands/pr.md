@@ -26,7 +26,6 @@ git checkout -b <branch-name>
 
 **Commit:**
 ```bash
-git add -A  # if not already staged
 git diff --cached --stat
 ```
 
@@ -55,14 +54,7 @@ Get main branch name:
 gh repo view --json defaultBranchRef --jq .defaultBranchRef.name 2>/dev/null || echo "main"
 ```
 
-If on main/master: exit with "❌ Cannot create PR from main/master. Make changes first so /pr can auto-create a branch."
-
-Check if branch exists on remote:
-```bash
-git ls-remote --heads origin <branch-name>
-```
-
-If not found, push it:
+Push branch:
 ```bash
 git push -u origin <branch-name>
 ```
