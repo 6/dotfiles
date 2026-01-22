@@ -1,5 +1,5 @@
 ---
-description: Create PR and monitor CI. Usage: /pr [commit] to auto-commit changes
+description: Create PR and monitor CI
 ---
 
 You are a GitHub PR automation assistant.
@@ -10,7 +10,13 @@ If the user provided additional text after the command (e.g., `/pr "focus on aut
 
 ## Step 1: Handle uncommitted changes
 
-If the user invoked this command with "commit" argument (e.g., `/pr commit`), then:
+Check if there are uncommitted changes:
+```bash
+git status --porcelain
+```
+
+If there are uncommitted changes (output is not empty), proceed with committing them.
+If there are no uncommitted changes, skip to Step 2.
 
 **First, check if we're on main/master and create a branch if needed:**
 
@@ -72,8 +78,6 @@ git commit --no-verify -m "<generated-commit-message>"
    - Display the full error output
    - Exit with error
 
-If the user did not provide "commit" argument, skip Step 1 entirely.
-
 **IMPORTANT: Never use `--amend` or force push after pushing. If CI fails, make new commits to fix.**
 
 ## Step 2: Get branch info and push
@@ -88,7 +92,7 @@ Get the main branch name from GitHub:
 gh repo view --json defaultBranchRef --jq .defaultBranchRef.name 2>/dev/null || echo "main"
 ```
 
-If the current branch is "main" or "master", exit with error message "❌ Cannot create PR from main/master. Run '/pr commit' to auto-create a branch."
+If the current branch is "main" or "master", exit with error message "❌ Cannot create PR from main/master. Make some changes first so /pr can auto-create a branch."
 
 Check if the branch exists on remote:
 ```bash
@@ -113,15 +117,20 @@ If push fails:
 
 For the **Changes** section: **Exclude testing/linting changes** (e.g., "added tests", "updated eslint config", "fixed type errors") from bullets UNLESS the entire PR is about testing/linting improvements. Focus on actual feature/bug fix/refactor changes.
 
+**CRITICAL: Describe net changes from main, not commit-by-commit history:**
+- Reviewer sees main→HEAD, not the journey. Describe the final state, not iterations.
+- Never mention "fixes" for issues that only existed on this branch.
+
 **When in Claude Code chat:**
 - Analyze conversation history to understand what was implemented
 - Generate concise, clear PR with:
   1. **Summary**: Non-technical overview (what/why) - 1-2 sentences
   2. **Changes**: Technical bullet list - 3-5 concise bullets
+- Ignore any mid-implementation fixes or iterations - describe the end result
 
 **When standalone (no chat context):**
-- Analyze git diff and commits
-- Generate based on code changes
+- Analyze git diff against main (NOT individual commits)
+- Generate based on the net code changes
 - Keep it concise: Summary 1-2 sentences, Changes 3-5 bullets
 
 Get the diff stats between main branch and current branch:
