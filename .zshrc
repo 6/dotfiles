@@ -139,10 +139,8 @@ function linkmodels() {
 # ── Common aliases ──
 alias gti='git'
 alias igt='git'
-alias gt='git'
 alias mainp='main && git pull'
-alias cc='claude --model opus'
-alias ccs='claude --model sonnet'
+alias cc='claude'
 alias a="code ."
 alias most="du -hs * | sort -rh | head -10"
 
