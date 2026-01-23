@@ -32,6 +32,8 @@ git diff --cached --stat
 Generate commit message describing changes. End with:
 ```
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ```bash
@@ -81,11 +83,12 @@ git diff <main-branch>...HEAD --name-only
 - **Changes**: 3-5 technical bullets
 
 **For existing PRs - be conservative:**
-- PRESERVE existing body content by default
-- Only ADD new bullets for features/changes not already covered
-- Only REMOVE/MODIFY content if now factually wrong (e.g., a feature was later deleted)
-- Update title if meaningfully inaccurate
-- Never describe intermediate fixes as changes - they don't exist from reviewer's perspective
+1. **First, read the existing body** from Step 3's `gh pr view` output - this is your starting point
+2. **PRESERVE all existing content** - the user may have manually edited the PR description
+3. **Only APPEND new bullets** for features/changes not already covered by existing bullets
+4. **Only REMOVE/MODIFY content** if now factually wrong (e.g., a feature was later deleted)
+5. Update title only if meaningfully inaccurate
+6. Never describe intermediate fixes as changes - they don't exist from reviewer's perspective
 
 **Guidelines:**
 - Never include secrets, credentials, or PII. When in doubt, ask user.
