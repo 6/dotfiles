@@ -84,11 +84,10 @@ git diff <main-branch>...HEAD --name-only
 
 **For existing PRs - be conservative:**
 1. **First, read the existing body** from Step 3's `gh pr view` output - this is your starting point
-2. **PRESERVE all existing content** - the user may have manually edited the PR description
+2. **PRESERVE all existing content** unless now factually wrong (e.g., a feature was later deleted) - the user may have manually edited the description
 3. **Only APPEND new bullets** for features/changes not already covered by existing bullets
-4. **Only REMOVE/MODIFY content** if now factually wrong (e.g., a feature was later deleted)
-5. Update title only if meaningfully inaccurate
-6. Never describe intermediate fixes as changes - they don't exist from reviewer's perspective
+4. Update title only if meaningfully inaccurate
+5. Never describe intermediate fixes as changes - they don't exist from reviewer's perspective
 
 **Guidelines:**
 - Never include secrets, credentials, or PII. When in doubt, ask user.
