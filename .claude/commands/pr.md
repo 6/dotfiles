@@ -80,18 +80,19 @@ git diff <main-branch>...HEAD --name-only
 **For new PRs:**
 - **Title:** Concise summary (≤50 chars)
 - **Summary**: 1-2 sentences (what/why)
-- **Changes**: 3-5 technical bullets
+- **Changes**: 2-4 technical bullets (max 4 - consolidate if needed)
 
 **For existing PRs - be conservative:**
 1. **First, read the existing body** from Step 3's `gh pr view` output - this is your starting point
 2. **PRESERVE all existing content** unless now factually wrong (e.g., a feature was later deleted) - the user may have manually edited the description
 3. **Only APPEND new bullets** for features/changes not already covered by existing bullets
-4. Update title only if meaningfully inaccurate
-5. Never describe intermediate fixes as changes - they don't exist from reviewer's perspective
+4. **Consolidate if >4 bullets** - merge related items rather than exceeding the limit
+5. Update title only if meaningfully inaccurate
+6. Never describe intermediate fixes as changes - they don't exist from reviewer's perspective
 
 **Guidelines:**
 - Never include secrets, credentials, or PII. When in doubt, ask user.
-- Exclude testing/linting bullets unless that's the PR's focus
+- **Never add testing/linting bullets** unless that's the PR's sole focus - tests are expected, not noteworthy
 
 ## Step 5: Create or update PR
 
