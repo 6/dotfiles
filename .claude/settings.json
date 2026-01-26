@@ -1,5 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "cleanupPeriodDays": 90,
+  "env": {
+    "ENABLE_TOOL_SEARCH": "true"
+  },
   "permissions": {
     "allow": [
       "Read(**/.claude/**)",
@@ -383,6 +387,8 @@
       "Bash(brew search:*)",
       "Bash(brew services:*)",
       "Bash(brew uses:*)",
+      "Bash(bun run:*)",
+      "Bash(bun test:*)",
       "Bash(bundle check:*)",
       "Bash(bundle config get:*)",
       "Bash(bundle config list:*)",
@@ -743,7 +749,6 @@
       "Bash(yarn upgrade:*)"
     ]
   },
-  "cleanupPeriodDays": 90,
   "model": "opus",
   "hooks": {
     "Notification": [
@@ -774,10 +779,8 @@
   },
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true
-  },
-  "env": {
-    "ENABLE_TOOL_SEARCH": "true"
+    "typescript-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
