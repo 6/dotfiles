@@ -537,6 +537,8 @@
       "Bash(git symbolic-ref:*)",
       "Bash(git tag:*)",
       "Bash(git whatchanged:*)",
+      "Bash(gitleaks protect:*)",
+      "Bash(gitleaks version:*)",
       "Bash(go build:*)",
       "Bash(go doc:*)",
       "Bash(go list:*)",

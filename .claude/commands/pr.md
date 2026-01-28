@@ -123,10 +123,7 @@ Ignore "403 Forbidden" warnings about annotations - pass/fail status still works
 
 After completion:
 - Any failures: "❌ Failed:" + list, exit with error
-- All passed: "✅ Passed:" + list, then mark ready (do not use `gh pr ready` - fails with fine-grained PATs):
-  ```bash
-  gh api repos/{owner}/{repo}/pulls/{number} -X PATCH -f draft=false
-  ```
+- All passed: "✅ Passed:" + list
 
 ## Step 7: Slack summary
 
