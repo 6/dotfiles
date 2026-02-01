@@ -1,0 +1,36 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "preview_tabs": {
+    "enabled": false,
+  },
+  "multi_cursor_modifier": "cmd_or_ctrl",
+  "minimap": {
+    "show": "never",
+  },
+  "auto_indent_on_paste": false,
+  "show_edit_predictions": true,
+  "ensure_final_newline_on_save": true,
+  "soft_wrap": "editor_width",
+  "tab_size": 2,
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "wrap_guides": [80],
+  "ui_font_size": 16,
+  "buffer_font_size": 16,
+  "buffer_font_family": "Meslo LG M DZ",
+  "base_keymap": "VSCode",
+  "theme": {
+    "mode": "system",
+    "light": "GitHub Light",
+    "dark": "GitHub Dark",
+  },
+}
