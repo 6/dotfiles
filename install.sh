@@ -34,6 +34,10 @@ EXCLUDE_PATTERNS=(
     "linux"
 )
 
+# .config directories that should symlink the whole directory (not individual files)
+# By default, we symlink files individually to prevent generated files from polluting the repo
+CONFIG_DIR_SYMLINKS=()
+
 # Conflict resolution state
 SKIP_ALL=false
 OVERWRITE_ALL=false
@@ -216,23 +220,22 @@ install_dotfiles() {
     if [[ -d "$DOTFILES_DIR/.config" ]]; then
         echo -e "\n${BLUE}Installing .config directory contents...${NC}"
 
-        # Use find to get all files and directories in .config, preserving structure
-        while IFS= read -r -d '' item; do
-            # Get relative path from .config directory
-            local rel_path="${item#$DOTFILES_DIR/.config/}"
+        for item in "$DOTFILES_DIR/.config"/*; do
+            [[ -e "$item" ]] || continue
+            local name=$(basename "$item")
+            local target="$HOME/.config/$name"
 
-            # Skip the .config directory itself
-            [[ "$rel_path" == "" ]] && continue
-
-            local source="$item"
-            local target="$HOME/.config/$rel_path"
-
-            # Only symlink top-level items in .config (let subdirectories be handled by their parent symlinks)
-            # This prevents creating individual symlinks for every file when we can symlink the directory
-            if [[ "$rel_path" != */* ]]; then
-                create_symlink "$source" "$target"
+            # Default: symlink files individually. Use CONFIG_DIR_SYMLINKS for whole-directory symlinks.
+            if [[ -d "$item" ]] && [[ ! " ${CONFIG_DIR_SYMLINKS[*]} " =~ " $name " ]]; then
+                mkdir -p "$target"
+                for file in "$item"/*; do
+                    [[ -f "$file" ]] || continue
+                    create_symlink "$file" "$target/$(basename "$file")"
+                done
+            else
+                create_symlink "$item" "$target"
             fi
-        done < <(find "$DOTFILES_DIR/.config" -mindepth 1 -maxdepth 1 -print0)
+        done
     fi
 
     # 3.5. macOS-specific: Application Support symlinks
