@@ -182,6 +182,7 @@
       "WebFetch(domain:docs.x.ai)",
       "WebFetch(domain:docs.z.ai)",
       "WebFetch(domain:documentation.mailgun.com)",
+      "WebFetch(domain:elements.ai-sdk.dev)",
       "WebFetch(domain:elevenlabs.io)",
       "WebFetch(domain:en.wikipedia.org)",
       "WebFetch(domain:esbuild.github.io)",
@@ -685,6 +686,21 @@
       "mcp__datadog__search_datadog_metrics",
       "mcp__datadog__search_datadog_services",
       "mcp__datadog__search_datadog_spans",
+      "mcp__linear__extract_images",
+      "mcp__linear__get_attachment",
+      "mcp__linear__get_document",
+      "mcp__linear__get_initiative",
+      "mcp__linear__get_issue",
+      "mcp__linear__get_issue_status",
+      "mcp__linear__ge_milestone",
+      "mcp__linear__list_comments",
+      "mcp__linear__list_cycles",
+      "mcp__linear__list_documents",
+      "mcp__linear__list_initiatives",
+      "mcp__linear__list_issues",
+      "mcp__linear__list_issue_labels",
+      "mcp__linear__list_issue_statuses",
+      "mcp__linear__list_milestones",
       "mcp__sourcegraph__sg_commit_search",
       "mcp__sourcegraph__sg_compare_revisions",
       "mcp__sourcegraph__sg_diff_search",
@@ -780,9 +796,11 @@
     "padding": 0
   },
   "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true,
+    "kotlin-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true
+    "swift-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
