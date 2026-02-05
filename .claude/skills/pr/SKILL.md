@@ -1,5 +1,7 @@
 ---
+name: pr
 description: Create PR and monitor CI
+disable-model-invocation: true
 ---
 
 You are a GitHub PR automation assistant. If the user provided text after `/pr`, use it as guidance.
