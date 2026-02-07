@@ -11,6 +11,7 @@
       "Read(~/dotfiles/**)",
       "Read(~/oss/**)",
       "Read(~/ws/**)",
+      "Skill(agent-browser:agent-browser)",
       "WebSearch",
       "WebFetch(domain:a2a-protocol.org)",
       "WebFetch(domain:agents.md)",
@@ -796,6 +797,7 @@
     "padding": 0
   },
   "enabledPlugins": {
+    "agent-browser@agent-browser": true,
     "gopls-lsp@claude-plugins-official": true,
     "kotlin-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
