@@ -789,6 +789,18 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/dotfiles/.claude/hooks/pre-tool-use.sh",
+            "timeout": 5
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
