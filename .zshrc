@@ -140,8 +140,8 @@ function linkmodels() {
 alias gti='git'
 alias igt='git'
 alias mainp='main && git pull'
-alias cc='claude'
-alias a="code ."
+alias c='claude'
+alias z="zed ."
 alias most="du -hs * | sort -rh | head -10"
 
 # ── Tool initialization ──
