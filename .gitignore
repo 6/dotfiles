@@ -25,3 +25,4 @@ venv
 # Claude
 settings.local.json
 .claude/skills/private-**/*
+.claude/todo
