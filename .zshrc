@@ -139,7 +139,7 @@ function linkmodels() {
 cct() {
   local name="cc-${1:-code}"
   shift 2>/dev/null
-  tmux attach -d -t "$name" 2>/dev/null || tmux -f ~/.tmux-claude.conf new -s "$name" "claude $*"
+  tmux attach -t "$name" 2>/dev/null || tmux -f ~/.tmux-claude.conf new -s "$name" "claude $*"
 }
 
 cck() {

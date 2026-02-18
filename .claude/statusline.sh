@@ -49,7 +49,7 @@ gray="38;5;240"
 # Tmux session name
 if [ -n "$TMUX" ]; then
     tmux_session=$(tmux display-message -p '#S' 2>/dev/null)
-    tmux_prefix=$(printf "${magenta}📺 %s${reset} ${dim}|${reset} " "$tmux_session")
+    tmux_prefix=$(printf "${magenta}%s${reset} ${dim}|${reset} " "$tmux_session")
 else
     tmux_prefix=""
 fi
@@ -57,15 +57,18 @@ fi
 # Color-coded token display
 token_colored=$(printf "\033[%sm%s\033[0m" "$color" "$token_display")
 
-# Git branch
-git_part=""
+# Project + branch combined
 if git rev-parse --git-dir > /dev/null 2>&1; then
     branch=$(git branch --show-current 2>/dev/null)
     if [ -n "$branch" ]; then
-        git_part=$(printf " \033[38;5;245m|\033[0m \033[32m🌿 %s\033[0m" "$branch")
+        project_part=$(printf "\033[34m%s\033[0m 🌿 \033[32m%s\033[0m" "$dir_name" "$branch")
+    else
+        project_part=$(printf "\033[34m%s\033[0m" "$dir_name")
     fi
+else
+    project_part=$(printf "\033[34m%s\033[0m" "$dir_name")
 fi
 
-# Output: Model | Dir | Git | Tokens | Cost
-printf "${reset}%s%s ${dim}|${reset} ${blue}📁 %s${reset}%s ${dim}|${reset} %s ${dim}|${reset} \$%s" \
-    "$tmux_prefix" "$model" "$dir_name" "$git_part" "$token_colored" "$formatted_cost"
+# Output: Model | Project Branch | Tokens | Cost
+printf "${reset}%s%s ${dim}|${reset} %s ${dim}|${reset} %s ${dim}|${reset} \$%s" \
+    "$tmux_prefix" "$model" "$project_part" "$token_colored" "$formatted_cost"
