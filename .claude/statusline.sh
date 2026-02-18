@@ -39,8 +39,17 @@ else
 fi
 gray="38;5;240"
 
-# Build progress bar (10 chars)
-bar_width=10
+# Tmux session name
+tmux_session=$(tmux display-message -p '#S' 2>/dev/null)
+
+if [ -n "$tmux_session" ]; then
+    tmux_prefix=$(printf "📺 %s ${dim}|${reset} " "$tmux_session")
+else
+    tmux_prefix=""
+fi
+
+# Build progress bar (5 chars)
+bar_width=5
 filled=$((pct * bar_width / 100))
 [ "$filled" -gt "$bar_width" ] && filled=$bar_width
 empty=$((bar_width - filled))
@@ -68,5 +77,5 @@ blue="\033[34m"
 cyan="\033[36m"
 
 # Output: Model | Dir | Git | Progress | Cost
-printf "${reset}🤖 %s ${dim}|${reset} ${blue}📁 %s${reset}%s ${dim}|${reset} %s ${dim}|${reset} ${cyan}\$%s${reset}" \
-    "$model" "$dir_name" "$git_part" "$progress_bar" "$formatted_cost"
+printf "${reset}%s🤖 %s ${dim}|${reset} ${blue}📁 %s${reset}%s ${dim}|${reset} %s ${dim}|${reset} ${cyan}\$%s${reset}" \
+    "$tmux_prefix" "$model" "$dir_name" "$git_part" "$progress_bar" "$formatted_cost"

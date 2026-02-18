@@ -136,6 +136,21 @@ function linkmodels() {
   done < <(find ~/models -type f -name "*.gguf" -print0)
 }
 
+cct() {
+  local name="cc-${1:-code}"
+  shift 2>/dev/null
+  tmux attach -d -t "$name" 2>/dev/null || tmux -f ~/.tmux-claude.conf new -s "$name" "claude $*"
+}
+
+cck() {
+  local name="cc-${1:?usage: cck <name>}"
+  tmux kill-session -t "$name" 2>/dev/null && echo "killed $name" || echo "$name not found"
+}
+
+ccl() {
+  tmux ls -f '#{m:cc-*,#{session_name}}' 2>/dev/null || echo "no claude sessions running"
+}
+
 # ── Common aliases ──
 alias gti='git'
 alias igt='git'
