@@ -54,18 +54,8 @@ else
     tmux_prefix=""
 fi
 
-# Build progress bar (5 chars)
-bar_width=5
-filled=$((pct * bar_width / 100))
-[ "$filled" -gt "$bar_width" ] && filled=$bar_width
-empty=$((bar_width - filled))
-
-bar=""
-for ((i=0; i<filled; i++)); do bar+="█"; done
-for ((i=0; i<empty; i++)); do bar+="░"; done
-
-progress_bar=$(printf "\033[%sm%s\033[0m\033[%sm%s\033[0m %s" \
-    "$color" "${bar:0:$filled}" "$gray" "${bar:$filled}" "$token_display")
+# Color-coded token display
+token_colored=$(printf "\033[%sm%s\033[0m" "$color" "$token_display")
 
 # Git branch
 git_part=""
@@ -76,6 +66,6 @@ if git rev-parse --git-dir > /dev/null 2>&1; then
     fi
 fi
 
-# Output: Model | Dir | Git | Progress | Cost
-printf "${reset}%s🤖 %s ${dim}|${reset} ${blue}📁 %s${reset}%s ${dim}|${reset} %s ${dim}|${reset} ${cyan}\$%s${reset}" \
-    "$tmux_prefix" "$model" "$dir_name" "$git_part" "$progress_bar" "$formatted_cost"
+# Output: Model | Dir | Git | Tokens | Cost
+printf "${reset}%s%s ${dim}|${reset} ${blue}📁 %s${reset}%s ${dim}|${reset} %s ${dim}|${reset} \$%s" \
+    "$tmux_prefix" "$model" "$dir_name" "$git_part" "$token_colored" "$formatted_cost"
