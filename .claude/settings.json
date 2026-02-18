@@ -253,6 +253,7 @@
       "Bash(pkill:*)",
       "Bash(plutil:*)",
       "Bash(pkg-config:*)",
+      "Bash(pmset:*)",
       "Bash(pnpm:*)",
       "Bash(pod cache list:*)",
       "Bash(pod env:*)",
