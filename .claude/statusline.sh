@@ -9,7 +9,7 @@ cyan="\033[36m"
 magenta="\033[35m"
 
 # Parse JSON fields
-model=$(echo "$input" | jq -r '.model.display_name | sub("^Claude "; "") | sub("Sonnet"; "S") | sub("Opus"; "O") | sub("Haiku"; "H") | gsub(" "; "-")')
+model=$(echo "$input" | jq -r '.model.display_name')
 project_dir=$(echo "$input" | jq -r '.workspace.project_dir')
 dir_name=$(basename "$project_dir")
 cost=$(echo "$input" | jq -r '.cost.total_cost_usd // "0"')
