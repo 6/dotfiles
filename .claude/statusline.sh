@@ -9,7 +9,7 @@ cyan="\033[36m"
 magenta="\033[35m"
 
 # Parse JSON fields
-model=$(echo "$input" | jq -r '.model.display_name')
+model=$(echo "$input" | jq -r '.model.display_name | sub("^Claude "; "") | sub("Sonnet"; "S") | sub("Opus"; "O") | sub("Haiku"; "H") | gsub(" "; "-")')
 project_dir=$(echo "$input" | jq -r '.workspace.project_dir')
 dir_name=$(basename "$project_dir")
 cost=$(echo "$input" | jq -r '.cost.total_cost_usd // "0"')
@@ -47,9 +47,8 @@ fi
 gray="38;5;240"
 
 # Tmux session name
-tmux_session=$(tmux display-message -p '#S' 2>/dev/null)
-
-if [ -n "$tmux_session" ]; then
+if [ -n "$TMUX" ]; then
+    tmux_session=$(tmux display-message -p '#S' 2>/dev/null)
     tmux_prefix=$(printf "${magenta}📺 %s${reset} ${dim}|${reset} " "$tmux_session")
 else
     tmux_prefix=""
