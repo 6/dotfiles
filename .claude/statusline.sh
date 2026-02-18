@@ -1,6 +1,13 @@
 #!/bin/bash
 input=$(cat)
 
+# Colors
+reset="\033[0m"
+dim="\033[38;5;245m"  # Gray for separators
+blue="\033[34m"
+cyan="\033[36m"
+magenta="\033[35m"
+
 # Parse JSON fields
 model=$(echo "$input" | jq -r '.model.display_name')
 project_dir=$(echo "$input" | jq -r '.workspace.project_dir')
@@ -43,7 +50,7 @@ gray="38;5;240"
 tmux_session=$(tmux display-message -p '#S' 2>/dev/null)
 
 if [ -n "$tmux_session" ]; then
-    tmux_prefix=$(printf "📺 %s ${dim}|${reset} " "$tmux_session")
+    tmux_prefix=$(printf "${magenta}📺 %s${reset} ${dim}|${reset} " "$tmux_session")
 else
     tmux_prefix=""
 fi
@@ -69,12 +76,6 @@ if git rev-parse --git-dir > /dev/null 2>&1; then
         git_part=$(printf " \033[38;5;245m|\033[0m \033[32m🌿 %s\033[0m" "$branch")
     fi
 fi
-
-# Colors
-reset="\033[0m"
-dim="\033[38;5;245m"  # Gray for separators
-blue="\033[34m"
-cyan="\033[36m"
 
 # Output: Model | Dir | Git | Progress | Cost
 printf "${reset}%s🤖 %s ${dim}|${reset} ${blue}📁 %s${reset}%s ${dim}|${reset} %s ${dim}|${reset} ${cyan}\$%s${reset}" \
