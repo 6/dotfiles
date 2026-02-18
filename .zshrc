@@ -139,7 +139,16 @@ function linkmodels() {
 cct() {
   local name="cc-${1:-code}"
   shift 2>/dev/null
-  tmux attach -d -t "$name" 2>/dev/null || tmux -f ~/.tmux-claude.conf new -s "$name" "claude $*"
+  if tmux has-session -t "$name" 2>/dev/null; then
+    if [ -n "$SSH_CONNECTION" ]; then
+      tmux set-environment -t "$name" CC_REMOTE 1
+    else
+      tmux set-environment -t "$name" -u CC_REMOTE
+    fi
+    tmux attach -d -t "$name"
+  else
+    tmux -f ~/.tmux-claude.conf new -s "$name" \; send-keys "claude $*" Enter
+  fi
 }
 
 cck() {

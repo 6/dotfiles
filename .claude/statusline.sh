@@ -9,7 +9,8 @@ cyan="\033[36m"
 magenta="\033[35m"
 
 # Parse JSON fields
-model=$(echo "$input" | jq -r '.model.display_name')
+model=$(echo "$input" | jq -r '.model.display_name | sub("^Claude "; "")')
+compact_model=$(echo "$model" | sed 's/Sonnet/S/;s/Opus/O/;s/Haiku/H/;s/ //g')
 project_dir=$(echo "$input" | jq -r '.workspace.project_dir')
 dir_name=$(basename "$project_dir")
 cost=$(echo "$input" | jq -r '.cost.total_cost_usd // "0"')
@@ -46,12 +47,16 @@ else
 fi
 gray="38;5;240"
 
-# Tmux session name
+# Tmux
 if [ -n "$TMUX" ]; then
     tmux_session=$(tmux display-message -p '#S' 2>/dev/null)
+    is_remote=$(tmux show-environment CC_REMOTE 2>/dev/null | grep -v '^-' | cut -d= -f2)
     tmux_prefix=$(printf "${magenta}📺 %s${reset} ${dim}|${reset} " "$tmux_session")
+    compact_tmux_prefix=$(printf "${magenta}%s${reset} ${dim}|${reset} " "$tmux_session")
 else
+    is_remote=""
     tmux_prefix=""
+    compact_tmux_prefix=""
 fi
 
 # Build progress bar (5 chars)
@@ -76,6 +81,12 @@ if git rev-parse --git-dir > /dev/null 2>&1; then
     fi
 fi
 
-# Output: Model | Dir | Git | Progress | Cost
-printf "${reset}%s🤖 %s ${dim}|${reset} ${blue}📁 %s${reset}%s ${dim}|${reset} %s ${dim}|${reset} ${cyan}\$%s${reset}" \
-    "$tmux_prefix" "$model" "$dir_name" "$git_part" "$progress_bar" "$formatted_cost"
+if [ -n "$is_remote" ]; then
+  # Compact version for remote:
+  printf "${reset}%s%s ${dim}|${reset} ${blue}%s${reset}%s ${dim}|${reset} %s ${dim}|${reset} ${cyan}\$%s${reset}" \
+      "$compact_tmux_prefix" "$compact_model" "$dir_name" "$git_part" "$token_display" "$formatted_cost"
+else
+  # Output: Model | Dir | Git | Progress | Cost
+  printf "${reset}%s🤖 %s ${dim}|${reset} ${blue}📁 %s${reset}%s ${dim}|${reset} %s ${dim}|${reset} ${cyan}\$%s${reset}" \
+      "$tmux_prefix" "$model" "$dir_name" "$git_part" "$progress_bar" "$formatted_cost"
+fi
