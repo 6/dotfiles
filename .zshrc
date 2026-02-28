@@ -62,6 +62,7 @@ export PATH="$HOME/flutter/bin:$PATH"
 export PATH="$PATH:$HOME/.foundry/bin"
 export PATH="$PATH:/nix/var/nix/profiles/default/bin"
 export PATH="$PATH:$HOME/.cache/lm-studio/bin"
+export PATH="$PATH:$HOME/.opencode/bin"
 
 # Ollama
 export OLLAMA_HOST=0.0.0.0
