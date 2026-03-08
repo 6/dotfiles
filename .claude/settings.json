@@ -476,5 +476,6 @@
   "feedbackSurveyState": {
     "lastShownTime": 1754093691446
   },
-  "effortLevel": "high"
+  "effortLevel": "high",
+  "skipDangerousModePermissionPrompt": true
 }
