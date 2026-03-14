@@ -468,6 +468,7 @@
     "gopls-lsp@claude-plugins-official": true,
     "kotlin-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
+    "ruby-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true
