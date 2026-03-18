@@ -16,7 +16,13 @@ git status --porcelain
 
 If empty, skip to Step 2.
 
-**If on main/master, create a branch first:**
+**Check if on the default branch (no API call needed):**
+```bash
+git rev-parse --abbrev-ref HEAD
+git rev-parse --abbrev-ref origin/HEAD
+```
+
+If both match (e.g. both are `main`), create a new branch first:
 ```bash
 git add -A
 git diff --cached --stat
@@ -48,33 +54,23 @@ Never use `--amend` or force push after pushing. Make new commits to fix CI fail
 
 ## Step 2: Push branch
 
-Get current branch:
-```bash
-git branch --show-current
-```
-
-Get main branch name:
-```bash
-gh repo view --json defaultBranchRef --jq .defaultBranchRef.name 2>/dev/null || echo "main"
-```
-
-Push branch:
 ```bash
 git push -u origin <branch-name>
 ```
 
 ## Step 3: Check for existing PR
 
+Use the branch name from Step 2:
 ```bash
-gh pr view --json number,body,title,url 2>/dev/null
+gh api "repos/{owner}/{repo}/pulls?state=open&head={owner}:<branch-name>" --jq '.[0] | {number,title,body,url:.html_url} // empty' 2>/dev/null
 ```
 
 ## Step 4: Generate PR content
 
-Get diff against main:
+Get diff against the default branch (no API call — uses remote HEAD pointer):
 ```bash
-git diff <main-branch>...HEAD --stat
-git diff <main-branch>...HEAD --name-only
+git diff origin/HEAD...HEAD --stat
+git diff origin/HEAD...HEAD --name-only
 ```
 
 **IMPORTANT:** Ignore individual commit messages. Only describe the NET diff from main - the final state a reviewer will see. Intermediate fix commits (e.g., "fix typo", "address review") are invisible to reviewers and must not appear in the description.
@@ -111,7 +107,7 @@ gh api repos/{owner}/{repo}/pulls/{number} -X PATCH -f body="<body>"
 
 ```bash
 sleep 10
-gh run list --branch <branch-name> --limit 10 --json name,status,conclusion,databaseId
+gh run list --branch <branch-name> --limit 10 --json name,status,conclusion,databaseId 2>/dev/null
 ```
 
 If no runs, wait 10s and retry once. If still none, skip to Step 7.
