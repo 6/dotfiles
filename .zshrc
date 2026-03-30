@@ -157,8 +157,13 @@ alias gti='git'
 alias igt='git'
 alias mainp='main && git pull'
 alias c='claude'
+alias ccd='claude --dangerously-skip-permissions'
 alias z="zed ."
 alias most="du -hs * | sort -rh | head -10"
+
+devc() {
+  devcontainer "$1" --workspace-folder . "${@:2}"
+}
 
 # ── Tool initialization ──
 eval "$(direnv hook zsh)"
