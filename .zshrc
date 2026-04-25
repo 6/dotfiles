@@ -48,6 +48,8 @@ fi
 export UPDATE_ZSH_DAYS=30
 export EDITOR='vim'
 export GOPATH="$HOME/go"
+export GH_TELEMETRY=false
+export DO_NOT_TRACK=true
 
 # For ruby/fastlane:
 export LC_ALL=en_US.UTF-8
