@@ -476,6 +476,7 @@
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "skipDangerousModePermissionPrompt": true,
+  "theme": "auto",
   "feedbackSurveyState": {
     "lastShownTime": 1754093691446
   }
