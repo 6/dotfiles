@@ -157,7 +157,11 @@ ccl() {
 # ── Common aliases ──
 alias gti='git'
 alias igt='git'
-alias mainp='main && git pull'
+function mainp() {
+  main || return
+  local branch=$(git rev-parse --abbrev-ref HEAD)
+  git pull origin "$branch"
+}
 alias c='claude'
 alias ccd='claude --dangerously-skip-permissions'
 alias z="zed ."
