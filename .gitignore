@@ -29,3 +29,5 @@ settings.local.json
 .claude/skills/private-**/*
 .claude/todo
 .claude/agent-memory/
+
+.pi/subagent-schedules/*.json
