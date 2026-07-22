@@ -239,10 +239,24 @@ if [[ "$OSTYPE" == darwin* ]]; then
   }
 
   function fixpg() {
-    rm -f /usr/local/var/postgres/postmaster.pid
-    brew services restart postgresql
-    echo 'If still not working, try running `pg_ctl -D /usr/local/var/postgres start` to see full output.'
-    echo 'or on M1: `pg_ctl -D /opt/homebrew/var/postgres start`'
+    local formula='postgresql@16'
+    local data_dir="$(brew --prefix)/var/$formula"
+    if [[ ! -f "$data_dir/PG_VERSION" ]]; then
+      echo "PostgreSQL data directory missing: $data_dir"
+      return 1
+    fi
+    if [[ -f "$data_dir/postmaster.pid" ]]; then
+      local postmaster_pid="$(head -n 1 "$data_dir/postmaster.pid")"
+      kill -0 "$postmaster_pid" 2>/dev/null || rm -f "$data_dir/postmaster.pid"
+    fi
+    brew services restart "$formula"
+    local attempt
+    for attempt in {1..10}; do
+      pg_isready -h localhost -p 5432 && return 0
+      sleep 1
+    done
+    pg_ctl -D "$data_dir" status
+    return 1
   }
 
   function fixcamera {
