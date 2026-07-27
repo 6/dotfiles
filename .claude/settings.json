@@ -422,7 +422,6 @@
       "Bash(yarn upgrade:*)"
     ]
   },
-  "model": "opus[1m]",
   "hooks": {
     "Notification": [
       {
@@ -479,5 +478,6 @@
   "theme": "auto",
   "feedbackSurveyState": {
     "lastShownTime": 1754093691446
-  }
+  },
+  "model": "opus[1m]"
 }
