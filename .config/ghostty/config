@@ -3,14 +3,17 @@ cursor-style = block
 cursor-style-blink = false
 font-family = "Meslo LG M DZ"
 font-size = 18
-foreground = #46cf46
-palette = 1=#a0a040
-palette = 7=#a0a040
-palette = 15=#a0a040
-palette = 4=#4abaa0
-palette = 5=#7a5a8a
-palette = 6=#2a7a80
-palette = 14=#3a9aa0
+#theme = Darkmatrix
+#foreground = #46cf46
+#palette = 1=#a0a040
+#palette = 7=#a0a040
+#palette = 15=#a0a040
+#palette = 4=#4abaa0
+#palette = 5=#7a5a8a
+#palette = 6=#2a7a80
+#palette = 14=#3a9aa0
+
+
 # minimum-contrast = 1.9
 # palette = 4=#5588ee
 # https://github.com/ghostty-org/ghostty/discussions/4471
@@ -20,7 +23,7 @@ split-divider-color = #224477
 # theme = Cobalt Neon
 # theme = Cobalt2
 # theme = Cyberdyne
-theme = Darkmatrix
+theme = Adwaita
 # theme = Django Reborn Again
 # theme = Forest Blue
 # theme = Grey Green
