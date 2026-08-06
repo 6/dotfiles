@@ -30,7 +30,7 @@
 [push]
 	default = current
 [user]
-	email = peterghm@gmail.com
+	email = 158675+6@users.noreply.github.com
 	name = Peter Graham
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA8+spDSOMyENmBt5lCyJysKdl3KeK7hSzSQKIocpJ/D
 [filter "media"]
