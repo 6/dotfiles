@@ -180,6 +180,10 @@ if [ -f $HOME/.zsh_custom ]; then
   source "$HOME/.zsh_custom"
 fi
 
+if [ -f "$HOME/.zsh_generated" ]; then
+  source "$HOME/.zsh_generated"
+fi
+
 # ── Powerlevel10k config ──
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
