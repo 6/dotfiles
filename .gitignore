@@ -12,7 +12,7 @@ Thumbs.db
 # Pi
 pi-session-*.html
 .pi/subagent-schedules/*.json
-
+.pi/subagents/
 
 # Ruby/js
 .sass-cache
