@@ -4,6 +4,7 @@ ruby = "3.4.5"
 node = "24.14.0"
 uv = "0.11.7"
 go = "1.25.9"
+semgrep = "1.178.0"
 
 [settings]
 experimental = true
